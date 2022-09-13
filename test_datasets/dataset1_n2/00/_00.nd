@@ -1,0 +1,20 @@
+"NDInfoFile", Version 2.0
+"Description", Multi Dimensions Experiment
+"StartTime1", 20200129 11:10:29
+"DoTimelapse", FALSE
+"NTimePoints", 1
+"DoStage", FALSE
+"DoWave", TRUE
+"NWavelengths", 4
+"WaveName1", "DIC SP Camera"
+"WaveDoZ1", TRUE
+"WaveName2", "488 SP 535/50 Nelio"
+"WaveDoZ2", FALSE
+"WaveName3", "488 SP 630/75 Nelio-AF"
+"WaveDoZ3", TRUE
+"WaveName4", "561 SP 630/75 Nelio"
+"WaveDoZ4", TRUE
+"DoZSeries", FALSE
+"WaveInFileName", TRUE
+"NEvents", 0
+"EndFile"
