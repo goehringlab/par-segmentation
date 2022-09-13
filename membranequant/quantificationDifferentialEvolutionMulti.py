@@ -1,3 +1,4 @@
+import time
 from .quantificationDifferentialEvolutionSingle import ImageQuantDifferentialEvolutionSingle
 
 
@@ -49,9 +50,11 @@ class ImageQuantDifferentialEvolutionMulti:
         self.resids_full = [None] * self.n
 
     def run(self):
+        t = time.time()
 
         # Run
-        for iq in self.iq:
+        for i, iq in enumerate(self.iq):
+            print('Quantifying image %s of %s' % (i + 1, self.n))
             iq.run()
 
         # Save membrane/cytoplasmic quantification, offsets
@@ -66,6 +69,9 @@ class ImageQuantDifferentialEvolutionMulti:
         self.roi[:] = [iq.roi for iq in self.iq]
 
         # Save target/simulated/residuals images
-        self.target_full[:] = [iq.target_full for iq in self.iq]
-        self.sim_full[:] = [iq.sim_full for iq in self.iq]
-        self.resids_full[:] = [iq.resids_full for iq in self.iq]
+        self.target_full[:] = [iq.straight_filtered for iq in self.iq]
+        self.sim_full[:] = [iq.straight_fit for iq in self.iq]
+        self.resids_full[:] = [iq.straight_resids for iq in self.iq]
+
+        print('Time elapsed: %.2f seconds ' % (time.time() - t))
+

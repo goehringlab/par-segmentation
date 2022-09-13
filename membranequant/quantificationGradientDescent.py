@@ -119,10 +119,14 @@ class ImageQuantGradientDescent:
 
         # Fitting
         for i in range(self.iterations):
+            print('Iteration %s of %s' % (i + 1, self.iterations))
+            time.sleep(0.1)
+
             if i > 0:
                 self.adjust_roi()
             self.fit()
 
+        time.sleep(0.1)
         print('Time elapsed: %.2f seconds ' % (time.time() - t))
 
     def preprocess(self, frame, roi):

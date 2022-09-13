@@ -3,7 +3,7 @@ from scipy.optimize import differential_evolution
 from joblib import Parallel, delayed
 import multiprocessing
 from .funcs import straighten, rolling_ave_2d, interp_1d_array, interp_2d_array, rotate_roi, error_func, gaus
-from .roi import offset_coordinates, spline_roi, interp_roi
+from .roi import interp_roi, offset_coordinates, spline_roi
 
 
 class ImageQuantDifferentialEvolutionSingle:
@@ -21,7 +21,7 @@ class ImageQuantDifferentialEvolutionSingle:
     roi                coordinates defining cortex. Can use output from def_roi function
 
     Fitting parameters:
-    freedom            amount of freedom allowed in ROI (0=min, 1=max, max offset is +- 0.5 * freedom * thickness)
+    freedom            amount of freedom allowed in ROI (pixel units)
     periodic           True if coordinates form a closed loop
     thickness          thickness of cross-section over which to perform quantification
     itp                amount to interpolate image prior to segmentation (this many points per pixel in original image)
@@ -44,9 +44,9 @@ class ImageQuantDifferentialEvolutionSingle:
 
     """
 
-    def __init__(self, img, roi=None, sigma=2, periodic=True, thickness=50, freedom=0.5, itp=10, rol_ave=10,
-                 parallel=False, cores=None, rotate=False, zerocap=True, nfits=None, iterations=1, interp='cubic',
-                 bg_subtract=False):
+    def __init__(self, img, sigma=2, roi=None, freedom=0.5,
+                 periodic=True, thickness=50, itp=10, rol_ave=10, parallel=False, cores=None, rotate=False,
+                 zerocap=True, nfits=None, iterations=2, interp='cubic', bg_subtract=False):
 
         # Image / stack
         self.img = img
@@ -59,15 +59,12 @@ class ImageQuantDifferentialEvolutionSingle:
         # Background subtraction
         self.bg_subtract = bg_subtract
 
-        # Fitting mode
-        self.method = 0
-
         # Fitting parameters
         self.iterations = iterations
         self.thickness = thickness
         self.itp = itp
         self.thickness_itp = int(itp * self.thickness)
-        self.freedom = freedom
+        self.freedom = freedom / (0.5 * thickness)
         self.rol_ave = rol_ave
         self.rotate = rotate
         self.zerocap = zerocap
@@ -79,7 +76,6 @@ class ImageQuantDifferentialEvolutionSingle:
         self.cytbg = (1 + error_func(np.arange(thickness * 2), thickness, self.sigma)) / 2
         self.cytbg_itp = (1 + error_func(np.arange(2 * self.thickness_itp), self.thickness_itp,
                                          self.sigma * self.itp)) / 2
-
         self.membg = gaus(np.arange(thickness * 2), thickness, self.sigma)
         self.membg_itp = gaus(np.arange(2 * self.thickness_itp), self.thickness_itp, self.sigma * self.itp)
 
@@ -146,7 +142,7 @@ class ImageQuantDifferentialEvolutionSingle:
 
         # Interpolate
         straight = interp_2d_array(self.straight_filtered, self.thickness_itp, method=self.interp)
-        straight = interp_2d_array(straight, self.nfits, ax=0, method=self.interp)
+        straight = interp_2d_array(straight, self.nfits, ax=1, method=self.interp)
 
         # Fit
         if self.parallel:

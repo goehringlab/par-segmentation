@@ -14,6 +14,11 @@ class ImageQuant:
                  roi_knots=20, fit_outer=False, save_training=False, save_sims=False, method='GD', itp=10,
                  parallel=False, zerocap=False, cores=None, bg_subtract=False, interp='cubic'):
 
+        # Input data
+        self.img = img
+        self.roi = roi
+
+        # Set up quantifier
         self.method = method
         if self.method == 'GD':
             self.iq = ImageQuantGradientDescent(img=img, roi=roi, sigma=sigma, periodic=periodic, thickness=thickness,
@@ -32,8 +37,33 @@ class ImageQuant:
         else:
             raise Exception('Method must be "GD" (gradient descent) or "DE" (differential evolution)')
 
+        # Empty results containers
+        self.mems = None
+        self.cyts = None
+        self.offsets = None
+        self.mems_full = None
+        self.cyts_full = None
+        self.offsets_full = None
+        self.target_full = None
+        self.sim_full = None
+        self.resids_full = None
+
     def run(self):
         self.iq.run()
+
+        # Save new ROI
+        self.roi = self.iq.roi
+
+        # Save results
+        self.mems = self.iq.mems
+        self.cyts = self.iq.cyts
+        self.offsets = self.iq.offsets
+        self.mems_full = self.iq.mems_full
+        self.cyts_full = self.iq.cyts_full
+        self.offsets_full = self.iq.offsets_full
+        self.target_full = self.iq.target_full
+        self.sim_full = self.iq.sim_full
+        self.resids_full = self.iq.resids_full
 
     def save(self, save_path, i=None):
         """
@@ -46,13 +76,13 @@ class ImageQuant:
 
         if not os.path.isdir(save_path):
             os.mkdir(save_path)
-        np.savetxt(save_path + '/offsets.txt', self.iq.offsets[i], fmt='%.4f', delimiter='\t')
-        np.savetxt(save_path + '/cytoplasmic_concentrations.txt', self.iq.cyts[i], fmt='%.4f', delimiter='\t')
-        np.savetxt(save_path + '/membrane_concentrations.txt', self.iq.mems[i], fmt='%.4f', delimiter='\t')
-        np.savetxt(save_path + '/roi.txt', self.iq.roi[i], fmt='%.4f', delimiter='\t')
-        save_img(self.iq.target_full[i], save_path + '/target.tif')
-        save_img(self.iq.sim_full[i], save_path + '/fit.tif')
-        save_img(self.iq.resids_full[i], save_path + '/residuals.tif')
+        np.savetxt(save_path + '/offsets.txt', self.offsets[i], fmt='%.4f', delimiter='\t')
+        np.savetxt(save_path + '/cytoplasmic_concentrations.txt', self.cyts[i], fmt='%.4f', delimiter='\t')
+        np.savetxt(save_path + '/membrane_concentrations.txt', self.mems[i], fmt='%.4f', delimiter='\t')
+        np.savetxt(save_path + '/roi.txt', self.roi[i], fmt='%.4f', delimiter='\t')
+        save_img(self.target_full[i], save_path + '/target.tif')
+        save_img(self.sim_full[i], save_path + '/fit.tif')
+        save_img(self.resids_full[i], save_path + '/residuals.tif')
 
     def compile_res(self):
         # Create empty dataframe
@@ -62,7 +92,7 @@ class ImageQuant:
                            'Cytoplasmic signal': []})
 
         # Fill with data
-        for i, (m, c) in enumerate(zip(self.iq.mems, self.iq.cyts)):
+        for i, (m, c) in enumerate(zip(self.mems, self.cyts)):
             df = df.append(pd.DataFrame({'Frame': i,
                                          'Position': range(len(m)),
                                          'Membrane signal': m,
@@ -75,53 +105,53 @@ class ImageQuant:
     def view_frames(self, jupyter=False):
         if not jupyter:
             if self.iq.stack:
-                fig, ax = view_stack(self.iq.img)
+                fig, ax = view_stack(self.img)
             else:
-                fig, ax = view_stack(self.iq.img[0])
+                fig, ax = view_stack(self.img[0])
         else:
             if self.iq.stack:
-                fig, ax = view_stack_jupyter(self.iq.img)
+                fig, ax = view_stack_jupyter(self.img)
             else:
-                fig, ax = view_stack_jupyter(self.iq.img[0])
+                fig, ax = view_stack_jupyter(self.img[0])
         return fig, ax
 
     def plot_quantification(self, jupyter=False):
         if not jupyter:
             if self.iq.stack:
-                fig, ax = plot_quantification(self.iq.mems_full)
+                fig, ax = plot_quantification(self.mems_full)
             else:
-                fig, ax = plot_quantification(self.iq.mems_full[0])
+                fig, ax = plot_quantification(self.mems_full[0])
         else:
             if self.iq.stack:
-                fig, ax = plot_quantification_jupyter(self.iq.mems_full)
+                fig, ax = plot_quantification_jupyter(self.mems_full)
             else:
-                fig, ax = plot_quantification_jupyter(self.iq.mems_full[0])
+                fig, ax = plot_quantification_jupyter(self.mems_full[0])
         return fig, ax
 
     def plot_fits(self, jupyter=False):
         if not jupyter:
             if self.iq.stack:
-                fig, ax = plot_fits(self.iq.target_full, self.iq.sim_full)
+                fig, ax = plot_fits(self.target_full, self.sim_full)
             else:
-                fig, ax = plot_fits(self.iq.target_full[0], self.iq.sim_full[0])
+                fig, ax = plot_fits(self.target_full[0], self.sim_full[0])
         else:
             if self.iq.stack:
-                fig, ax = plot_fits_jupyter(self.iq.target_full, self.iq.sim_full)
+                fig, ax = plot_fits_jupyter(self.target_full, self.sim_full)
             else:
-                fig, ax = plot_fits_jupyter(self.iq.target_full[0], self.iq.sim_full[0])
+                fig, ax = plot_fits_jupyter(self.target_full[0], self.sim_full[0])
         return fig, ax
 
     def plot_segmentation(self, jupyter=False):
         if not jupyter:
             if self.iq.stack:
-                fig, ax = plot_segmentation(self.iq.img, self.iq.roi)
+                fig, ax = plot_segmentation(self.img, self.roi)
             else:
-                fig, ax = plot_segmentation(self.iq.img[0], self.iq.roi[0])
+                fig, ax = plot_segmentation(self.img[0], self.roi[0])
         else:
             if self.iq.stack:
-                fig, ax = plot_segmentation_jupyter(self.iq.img, self.iq.roi)
+                fig, ax = plot_segmentation_jupyter(self.img, self.roi)
             else:
-                fig, ax = plot_segmentation_jupyter(self.iq.img[0], self.iq.roi[0])
+                fig, ax = plot_segmentation_jupyter(self.img[0], self.roi[0])
         return fig, ax
 
     def plot_losses(self, log=False):
