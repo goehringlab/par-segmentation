@@ -376,7 +376,7 @@ def offset_coordinates(roi, offsets, periodic=True):
     :param offsets: array the same length as coors. Direction?
     :return: array in same format as coors containing new coordinates
 
-    To save this in a fiji readable format run:
+    To save this in a fiji readable format quantify:
     np.savetxt(filename, newcoors, fmt='%.4f', delimiter='\t')
 
     """
