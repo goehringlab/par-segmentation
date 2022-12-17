@@ -295,7 +295,8 @@ class ImageQuantGradientDescent:
         mem_curve = tf.reshape(mem_curve, [nimages, nfits, self.thickness])
 
         # Cyt curve
-        cyt_curve = (1 + tf.math.erf((positions - self.thickness / 2) / self.sigma_t)) / 2
+        cyt_curve = (1 + tf.math.erf((positions - self.thickness / 2) / (self.sigma_t * (2 ** 0.5)))) / 2
+        # self.sigma_t * (2 ** 0.5) <- this is what happens when a step is convolved with a Gaussian
         cyt_curve = tf.reshape(cyt_curve, [nimages, nfits, self.thickness])
 
         # Calculate output

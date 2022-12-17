@@ -48,6 +48,11 @@ class ImageQuant:
         self.sim_full = None
         self.resids_full = None
 
+    """
+    Run
+    
+    """
+
     def run(self):
         self.iq.run()
 
@@ -64,6 +69,11 @@ class ImageQuant:
         self.target_full = self.iq.target_full
         self.sim_full = self.iq.sim_full
         self.resids_full = self.iq.resids_full
+
+    """
+    Saving
+    
+    """
 
     def save(self, save_path, i=None):
         """
@@ -101,6 +111,11 @@ class ImageQuant:
         df = df.reindex(columns=['Frame', 'Position', 'Membrane signal', 'Cytoplasmic signal'])
         df = df.astype({'Frame': int, 'Position': int})
         return df
+
+    """
+    Interactive
+    
+    """
 
     def view_frames(self, jupyter=False):
         if not jupyter:
