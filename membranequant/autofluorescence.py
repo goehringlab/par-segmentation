@@ -8,11 +8,20 @@ from sklearn.metrics import r2_score
 from sklearn.linear_model import LinearRegression
 from .funcs import load_image, make_mask
 from .roi import offset_coordinates
+from typing import Tuple, Optional
 
 
 class AfCorrelation:
-    def __init__(self, paths, gfp_regex='*488 SP 535-50*', af_regex='*488 SP 630-75*', rfp_regex=None,
-                 roi_regex='*ROI*', sigma=2, intercept0=False, expand=5, method='OLS'):
+    def __init__(self,
+                 paths: list,
+                 gfp_regex: str = '*488 SP 535-50*',
+                 af_regex: str = '*488 SP 630-75*',
+                 rfp_regex: Optional[str] = None,
+                 roi_regex: str = '*ROI*',
+                 sigma: float = 2.0,
+                 intercept0: bool = False,
+                 expand: float = 5.0,
+                 method: str = 'OLS'):
 
         # Global parameters
         self.sigma = sigma
@@ -75,7 +84,7 @@ class AfCorrelation:
         # Calculate R squared
         self.r2 = r2_score(self.gfp_vals, ypred)
 
-    def plot_correlation(self, s=None):
+    def plot_correlation(self, s: Optional[float] = None):
         if self.rfp is None:
             s = 0.001 if s is None else s
             fig, ax = self._plot_correlation_2channel(s=s)
@@ -84,7 +93,7 @@ class AfCorrelation:
             fig, ax = self._plot_correlation_3channel(s=s)
         return fig, ax
 
-    def _plot_correlation_2channel(self, s=0.001):
+    def _plot_correlation_2channel(self, s: float = 0.001):
         fig, ax = plt.subplots()
 
         # Scatter
@@ -107,7 +116,7 @@ class AfCorrelation:
         ax.set_ylabel('GFP')
         return fig, ax
 
-    def _plot_correlation_3channel(self, s=1):
+    def _plot_correlation_3channel(self, s: float = 1.0):
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
 
@@ -137,14 +146,14 @@ class AfCorrelation:
         ax.set_zlabel('GFP')
         return fig, ax
 
-    def plot_prediction(self, s=0.001):
+    def plot_prediction(self, s: float = 0.001):
         if self.rfp is None:
             fig, ax = self._plot_prediction_2channel(s=s)
         else:
             fig, ax = self._plot_prediction_3channel(s=s)
         return fig, ax
 
-    def _plot_prediction_2channel(self, s=0.001):
+    def _plot_prediction_2channel(self, s: float = 0.001):
         fig, ax = plt.subplots()
 
         # Scatter
@@ -165,7 +174,7 @@ class AfCorrelation:
         ax.set_ylabel('GFP')
         return fig, ax
 
-    def _plot_prediction_3channel(self, s=0.001):
+    def _plot_prediction_3channel(self, s: float = 0.001):
         fig, ax = plt.subplots()
 
         # Scatter plot
@@ -188,14 +197,14 @@ class AfCorrelation:
         ax.set_ylabel('GFP')
         return fig, ax
 
-    def plot_residuals(self, s=0.001):
+    def plot_residuals(self, s: float = 0.001):
         if self.rfp is None:
             fig, ax = self._plot_residuals_2channel(s=s)
         else:
             fig, ax = self._plot_residuals_3channel(s=s)
         return fig, ax
 
-    def _plot_residuals_2channel(self, s=0.001):
+    def _plot_residuals_2channel(self, s: float = 0.001):
         fig, ax = plt.subplots()
 
         # Scatter
@@ -218,7 +227,7 @@ class AfCorrelation:
         ax.set_xlim(np.percentile(self.gfp_vals, 0.01), np.percentile(self.gfp_vals, 99.99))
         return fig, ax
 
-    def _plot_residuals_3channel(self, s=0.001):
+    def _plot_residuals_3channel(self, s: float = 0.001):
         fig, ax = plt.subplots()
 
         # Scatter plot
@@ -244,7 +253,8 @@ class AfCorrelation:
         return fig, ax
 
 
-def af_correlation(img1, img2, mask=None, intercept0=False, method='OLS'):
+def af_correlation(img1: np.ndarray, img2: np.ndarray, mask: np.ndarray = None, intercept0: bool = False,
+                   method: str = 'OLS') -> Tuple[list, np.ndarray, np.ndarray]:
     """
     Calculates pixel-by-pixel correlation between two channels
     Takes 3d image stacks shape [n, 512, 512]
@@ -308,7 +318,9 @@ def af_correlation(img1, img2, mask=None, intercept0=False, method='OLS'):
     return params, xdata, ydata
 
 
-def af_correlation_3channel(img1, img2, img3, mask=None, intercept0=False, method='OLS'):
+def af_correlation_3channel(img1: np.ndarray, img2: np.ndarray, img3: np.ndarray, mask: Optional[np.ndarray] = None,
+                            intercept0: bool = False, method: str = 'OLS') -> Tuple[
+    list, np.ndarray, np.ndarray, np.ndarray]:
     """
     AF correlation taking into account red channel
 
@@ -377,7 +389,7 @@ def af_correlation_3channel(img1, img2, img3, mask=None, intercept0=False, metho
     return params, xdata, ydata, zdata
 
 
-def af_subtraction(ch1, ch2, m, c):
+def af_subtraction(ch1: np.ndarray, ch2: np.ndarray, m: float, c: float) -> np.ndarray:
     """
     Subtract ch2 from ch1
     ch2 is first adjusted to m * ch2 + c
@@ -394,7 +406,8 @@ def af_subtraction(ch1, ch2, m, c):
     return signal
 
 
-def af_subtraction_3channel(ch1, ch2, ch3, m1, m2, c):
+def af_subtraction_3channel(ch1: np.ndarray, ch2: np.ndarray, ch3: np.ndarray, m1: float, m2: float,
+                            c: float) -> np.ndarray:
     """
 
     """

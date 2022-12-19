@@ -1,18 +1,42 @@
 import numpy as np
 import os
 import pandas as pd
-from .funcs import save_img
+from .funcs import save_img, in_notebook
 from .interactive import view_stack, view_stack_jupyter, plot_fits, plot_fits_jupyter, plot_segmentation, \
     plot_segmentation_jupyter, plot_quantification, plot_quantification_jupyter
 from .quantification_gradient_descent import ImageQuantGradientDescent
 from .quantification_differential_evolution_multi import ImageQuantDifferentialEvolutionMulti
+from typing import Union, Optional
 
 
 class ImageQuant:
-    def __init__(self, img, roi, sigma=2, periodic=True, thickness=50, rol_ave=10, rotate=False, nfits=100,
-                 iterations=2, lr=0.01, descent_steps=500, adaptive_sigma=False, batch_norm=False, freedom=10,
-                 roi_knots=20, fit_outer=False, save_training=False, save_sims=False, method='GD', itp=10,
-                 parallel=False, zerocap=False, cores=None, bg_subtract=False, interp='cubic', verbose=True):
+    def __init__(self,
+                 img: Union[np.ndarray, list],
+                 roi: Union[np.ndarray, list],
+                 sigma: float = 2.0,
+                 periodic: bool = True,
+                 thickness: int = 50,
+                 rol_ave: int = 10,
+                 rotate: bool = False,
+                 nfits: int = 100,
+                 iterations: int = 2,
+                 lr: float = 0.01,
+                 descent_steps: int = 500,
+                 adaptive_sigma: bool = False,
+                 batch_norm: bool = False,
+                 freedom: float = 10,
+                 roi_knots: int = 20,
+                 fit_outer: bool = False,
+                 save_training: bool = False,
+                 save_sims: bool = False,
+                 method: str = 'GD',
+                 itp: int = 10,
+                 parallel: bool = False,
+                 zerocap: bool = False,
+                 cores: Optional[float] = None,
+                 bg_subtract: bool = False,
+                 interp: str = 'cubic',
+                 verbose: bool = True):
 
         # Input data
         self.img = img
@@ -76,7 +100,7 @@ class ImageQuant:
     
     """
 
-    def save(self, save_path, i=None):
+    def save(self, save_path: str, i: Optional[int] = None):
         """
         Save all results to save_path
 
@@ -118,7 +142,7 @@ class ImageQuant:
     
     """
 
-    def view_frames(self, jupyter=False):
+    def view_frames(self, jupyter: bool = False):
         if not jupyter:
             if self.iq.stack:
                 fig, ax = view_stack(self.img)
@@ -131,7 +155,7 @@ class ImageQuant:
                 fig, ax = view_stack_jupyter(self.img[0])
         return fig, ax
 
-    def plot_quantification(self, jupyter=False):
+    def plot_quantification(self, jupyter: bool = False):
         if not jupyter:
             if self.iq.stack:
                 fig, ax = plot_quantification(self.mems_full)
@@ -144,7 +168,7 @@ class ImageQuant:
                 fig, ax = plot_quantification_jupyter(self.mems_full[0])
         return fig, ax
 
-    def plot_fits(self, jupyter=False):
+    def plot_fits(self, jupyter: bool = False):
         if not jupyter:
             if self.iq.stack:
                 fig, ax = plot_fits(self.target_full, self.sim_full)
@@ -157,7 +181,7 @@ class ImageQuant:
                 fig, ax = plot_fits_jupyter(self.target_full[0], self.sim_full[0])
         return fig, ax
 
-    def plot_segmentation(self, jupyter=False):
+    def plot_segmentation(self, jupyter: bool = False):
         if not jupyter:
             if self.iq.stack:
                 fig, ax = plot_segmentation(self.img, self.roi)
@@ -170,7 +194,7 @@ class ImageQuant:
                 fig, ax = plot_segmentation_jupyter(self.img[0], self.roi[0])
         return fig, ax
 
-    def plot_losses(self, log=False):
+    def plot_losses(self, log: bool = False):
         if self.method == 'GD':
             self.iq.plot_losses(log=log)
         else:

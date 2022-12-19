@@ -9,6 +9,7 @@ import glob
 import copy
 import os
 from .roi import offset_coordinates
+from typing import Optional
 
 """
 os.walk for direcslist
@@ -20,7 +21,7 @@ Straighten: errors at end for non-periodic?
 ########## IMAGE HANDLING ###########
 
 
-def load_image(filename):
+def load_image(filename: str) -> np.ndarray:
     """
     Given the filename of a TIFF, creates numpy array with pixel intensities
 
@@ -31,11 +32,7 @@ def load_image(filename):
     return io.imread(filename).astype(float)
 
 
-def load_all_images(path):
-    return [load_image(i) for i in sorted(glob.glob(path + '/*.TIF') + glob.glob(path + '/*.tif'))]
-
-
-def save_img(img, direc):
+def save_img(img: np.ndarray, direc: str):
     """
     Saves 2D array as .tif file
 
@@ -47,7 +44,8 @@ def save_img(img, direc):
     io.imsave(direc, img.astype('float32'))
 
 
-def save_img_jpeg(img, direc, cmin=None, cmax=None, cmap='gray'):
+def save_img_jpeg(img: np.ndarray, direc: str, cmin: Optional[float] = None, cmax: Optional[float] = None,
+                  cmap: str = 'gray'):
     """
     Saves 2D array as jpeg, according to min and max pixel intensities
 
@@ -64,7 +62,8 @@ def save_img_jpeg(img, direc, cmin=None, cmax=None, cmap='gray'):
 ########### IMAGE OPERATIONS ###########
 
 
-def straighten(img, roi, thickness, periodic=True, interp='cubic', ninterp=None):
+def straighten(img: np.ndarray, roi: np.ndarray, thickness: int, periodic: bool = True, interp: str = 'cubic',
+               ninterp: Optional[int] = None) -> np.ndarray:
     """
     Creates straightened image based on coordinates
 
@@ -112,7 +111,7 @@ def straighten(img, roi, thickness, periodic=True, interp='cubic', ninterp=None)
     return straight.astype(np.float64).T
 
 
-def polycrop(img, polyline, enlarge):
+def polycrop(img: np.ndarray, polyline: np.ndarray, enlarge: float) -> np.ndarray:
     """
     Crops image according to polyline coordinates
     Expand or contract selection with enlarge parameter
@@ -130,7 +129,8 @@ def polycrop(img, polyline, enlarge):
     return newimg
 
 
-def rotated_embryo(img, roi, l=None, h=None, order=1, return_roi=False):
+def rotated_embryo(img: np.ndarray, roi: np.ndarray, l: int, h: int, order: int = 1,
+                   return_roi: bool = False) -> np.ndarray:
     """
     Takes an image and rotates according to coordinates so that anterior is on left, posterior on right
 
@@ -166,7 +166,7 @@ def rotated_embryo(img, roi, l=None, h=None, order=1, return_roi=False):
     roi_transformed = roi_transformed - np.expand_dims([centre_x - (l / 2), centre_y - (h / 2)], -1)
 
     # Transform coordinate grid back
-    [xvals_back, yvals_back] = np.dot(coeff, np.array([xvals_grid.flatten(), yvals_grid.flatten()]))
+    [xvals_back, yvals_back] = np.dot(coeff, np.ndarray([xvals_grid.flatten(), yvals_grid.flatten()]))
     xvals_back_grid = np.reshape(xvals_back, [len(yvals), len(xvals)])
     yvals_back_grid = np.reshape(yvals_back, [len(yvals), len(xvals)])
 
@@ -184,7 +184,7 @@ def rotated_embryo(img, roi, l=None, h=None, order=1, return_roi=False):
         return zvals
 
 
-def bg_subtraction(img, roi, band=(25, 75)):
+def bg_subtraction(img: np.ndarray, roi: np.ndarray, band: tuple = (25, 75)) -> np.ndarray:
     a = polycrop(img, roi, band[1]) - polycrop(img, roi, band[0])
     a = [np.nanmean(a[np.nonzero(a)])]
     return img - a
@@ -193,7 +193,7 @@ def bg_subtraction(img, roi, band=(25, 75)):
 ########### ROI OPERATIONS ###########
 
 
-def rotate_roi(roi):
+def rotate_roi(roi: np.ndarray) -> np.ndarray:
     """
     Rotates coordinate array so that most posterior point is at the beginning
 
@@ -221,7 +221,7 @@ def rotate_roi(roi):
     return newcoors
 
 
-def norm_roi(roi):
+def norm_roi(roi: np.ndarray):
     """
     Aligns coordinates to their long axis
 
@@ -244,7 +244,7 @@ def norm_roi(roi):
 ########### ARRAY OPERATIONS ###########
 
 
-def interp_1d_array(array, n, method='cubic'):
+def interp_1d_array(array: np.ndarray, n: int, method: str = 'cubic') -> np.ndarray:
     """
     Interpolates a one dimensional array into n points
 
@@ -262,7 +262,7 @@ def interp_1d_array(array, n, method='cubic'):
         return CubicSpline(np.arange(len(array)), array)(np.linspace(0, len(array) - 1, n))
 
 
-def interp_2d_array(array, n, ax=0, method='cubic'):
+def interp_2d_array(array: np.ndarray, n: int, ax: int = 0, method: str = 'cubic') -> np.ndarray:
     """
     Interpolates values along y axis into n points, for each x value
     :param array:
@@ -288,7 +288,7 @@ def interp_2d_array(array, n, ax=0, method='cubic'):
         raise ValueError('ax must be 0 or 1')
 
 
-def rolling_ave_1d(array, window, periodic=True):
+def rolling_ave_1d(array: np.ndarray, window: int, periodic: bool = True) -> np.ndarray:
     """
 
     :param array:
@@ -307,7 +307,7 @@ def rolling_ave_1d(array, window, periodic=True):
     return (cumsum[window:] - cumsum[:-window]) / window
 
 
-def rolling_ave_2d(array, window, periodic=True):
+def rolling_ave_2d(array: np.ndarray, window: int, periodic: bool = True) -> np.ndarray:
     """
     Returns rolling average across the x axis of an image (used for straightened profiles)
 
@@ -328,7 +328,7 @@ def rolling_ave_2d(array, window, periodic=True):
     return (cumsum[:, window:] - cumsum[:, :-window]) / window
 
 
-def bounded_mean_1d(array, bounds, weights=None):
+def bounded_mean_1d(array: np.ndarray, bounds: tuple, weights: Optional[np.ndarray] = None) -> float:
     """
     Averages 1D array over region specified by bounds
 
@@ -353,7 +353,7 @@ def bounded_mean_1d(array, bounds, weights=None):
     return mean
 
 
-def bounded_mean_2d(array, bounds):
+def bounded_mean_2d(array: np.ndarray, bounds: tuple) -> np.ndarray:
     """
     Averages 2D array in y dimension over region specified by bounds
 
@@ -376,7 +376,7 @@ def bounded_mean_2d(array, bounds):
 ########### REFERENCE PROFILES ###########
 
 
-def gaus(x, centre, width):
+def gaus(x: np.ndarray, centre: float, width: float) -> np.ndarray:
     """
     Create Gaussian curve with centre and width specified
 
@@ -384,7 +384,7 @@ def gaus(x, centre, width):
     return np.exp(-((x - centre) ** 2) / (2 * width ** 2))
 
 
-def error_func(x, centre, width):
+def error_func(x: np.ndarray, centre: float, width: float) -> np.ndarray:
     """
     Create error function with centre and width specified
 
@@ -396,7 +396,7 @@ def error_func(x, centre, width):
 ########### MISC FUNCTIONS ###########
 
 
-def asi(mems, size):
+def asi(mems: np.ndarray, size: float) -> float:
     """
     Calculates asymmetry index based on membrane concentration profile
 
@@ -407,28 +407,28 @@ def asi(mems, size):
     return (ant - post) / (2 * (ant + post))
 
 
-def dosage(img, roi, expand):
+def dosage(img: np.ndarray, roi: np.ndarray, expand: float) -> np.ndarray:
     return np.nanmean(img * make_mask([512, 512], offset_coordinates(roi, expand)))
 
 
-def calc_vol(normcoors):
+def calc_vol(normcoors: np.ndarray) -> float:
     r1 = (max(normcoors[:, 0]) - min(normcoors[:, 0])) / 2
     r2 = (max(normcoors[:, 1]) - min(normcoors[:, 1])) / 2
     return (4 / 3) * np.pi * r2 * r2 * r1
 
 
-def calc_sa(normcoors):
+def calc_sa(normcoors: np.ndarray) -> float:
     r1 = (max(normcoors[:, 0]) - min(normcoors[:, 0])) / 2
     r2 = (max(normcoors[:, 1]) - min(normcoors[:, 1])) / 2
     e = (1 - (r2 ** 2) / (r1 ** 2)) ** 0.5
     return 2 * np.pi * r2 * r2 * (1 + (r1 / (r2 * e)) * np.arcsin(e))
 
 
-def make_mask(shape, roi):
+def make_mask(shape: tuple, roi: np.ndarray) -> np.ndarray:
     return cv2.fillPoly(np.zeros(shape) * np.nan, [np.int32(roi)], 1)
 
 
-def readnd(path):
+def readnd(path: str) -> dict:
     """
 
     :param path: directory to embryo folder containing nd file
@@ -442,7 +442,7 @@ def readnd(path):
     return nd
 
 
-def organise_by_nd(path):
+def organise_by_nd(path: str):
     """
     Organises images in a folder using the nd files
 
@@ -462,7 +462,8 @@ def organise_by_nd(path):
             os.rename(file, f'{path}/{folder}/{os.path.basename(os.path.normpath(file))}')
 
 
-def _direcslist(dest, levels=0, exclude=('!',), exclusive=None):
+def _direcslist(dest: str, levels: int = 0, exclude: Optional[tuple] = ('!',),
+                exclusive: Optional[tuple] = None) -> list:
     lis = sorted(glob.glob(f'{dest}/*/'))
 
     for level in range(levels):
@@ -494,7 +495,8 @@ def _direcslist(dest, levels=0, exclude=('!',), exclusive=None):
     return sorted(lis2)
 
 
-def direcslist(dest, levels=0, exclude=('!',), exclusive=None):
+def direcslist(dest: str, levels: int = 0, exclude: Optional[tuple] = ('!',),
+               exclusive: Optional[tuple] = None) -> list:
     """
     Gives a list of directories in a given directory (full path)
 
@@ -514,8 +516,17 @@ def direcslist(dest, levels=0, exclude=('!',), exclusive=None):
         return _direcslist(dest, levels, exclude, exclusive)
 
 
-def import_all(direcs, key):
-    data = []
-    for d in direcs:
-        data.extend([np.loadtxt(f'{d}/{key}')])
-    return np.array(data)
+def in_notebook():
+    """
+    https://stackoverflow.com/questions/15411967/how-can-i-check-if-code-is-executed-in-the-ipython-notebook
+
+    """
+    try:
+        from IPython import get_ipython
+        if 'IPKernelApp' not in get_ipython().config:  # pragma: no cover
+            return False
+    except ImportError:
+        return False
+    except AttributeError:
+        return False
+    return True

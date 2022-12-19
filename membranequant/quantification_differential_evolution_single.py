@@ -4,6 +4,7 @@ from joblib import Parallel, delayed
 import multiprocessing
 from .funcs import straighten, rolling_ave_2d, interp_1d_array, interp_2d_array, rotate_roi, error_func, gaus
 from .roi import interp_roi, offset_coordinates, spline_roi
+from typing import Union, Optional, Tuple
 
 
 class ImageQuantDifferentialEvolutionSingle:
@@ -44,9 +45,23 @@ class ImageQuantDifferentialEvolutionSingle:
 
     """
 
-    def __init__(self, img, sigma=2, roi=None, freedom=0.5,
-                 periodic=True, thickness=50, itp=10, rol_ave=10, parallel=False, cores=None, rotate=False,
-                 zerocap=True, nfits=None, iterations=2, interp='cubic', bg_subtract=False):
+    def __init__(self,
+                 img: Union[np.ndarray, list],
+                 sigma: float = 2.0,
+                 roi: Union[np.ndarray, list] = None,
+                 freedom: float = 0.5,
+                 periodic: bool = True,
+                 thickness: int = 50,
+                 itp: int = 10,
+                 rol_ave: int = 10,
+                 parallel: bool = False,
+                 cores: Optional[int] = None,
+                 rotate: bool = False,
+                 zerocap: bool = True,
+                 nfits: Optional[int] = None,
+                 iterations: int = 2,
+                 interp: str = 'cubic',
+                 bg_subtract: bool = False):
 
         # Image / stack
         self.img = img
@@ -160,7 +175,7 @@ class ImageQuantDifferentialEvolutionSingle:
         self.cyts_full = interp_1d_array(self.cyts, len(self.roi[:, 0]), method='linear')
         self.mems_full = interp_1d_array(self.mems, len(self.roi[:, 0]), method='linear')
 
-    def _fit_profile(self, profile):
+    def _fit_profile(self, profile: np.ndarray) -> Tuple[float, float, float]:
         if self.zerocap:
             bounds = (
                 ((self.thickness_itp / 2) * (1 - self.freedom), (self.thickness_itp / 2) * (1 + self.freedom)),
@@ -173,7 +188,7 @@ class ImageQuantDifferentialEvolutionSingle:
         o = (res.x[0] - self.thickness_itp / 2) / self.itp
         return o, res.x[1], res.x[2]
 
-    def _mse(self, l_c_m, profile):
+    def _mse(self, l_c_m: list, profile: np.ndarray) -> np.ndarray:
         l, c, m = l_c_m
         y = (c * self.cytbg_itp[int(l):int(l) + self.thickness_itp]) + (
                 m * self.membg_itp[int(l):int(l) + self.thickness_itp])

@@ -1,11 +1,28 @@
 import time
 from .quantification_differential_evolution_single import ImageQuantDifferentialEvolutionSingle
+from typing import Union, Optional
+import numpy as np
 
 
 class ImageQuantDifferentialEvolutionMulti:
-    def __init__(self, img, roi=None, sigma=2, periodic=True, thickness=50, freedom=0.5, itp=10, rol_ave=10,
-                 parallel=False, cores=None, rotate=False, zerocap=True, nfits=None, iterations=1, interp='cubic',
-                 bg_subtract=False, verbose=True):
+    def __init__(self,
+                 img: Union[np.ndarray, list],
+                 roi: Union[np.ndarray, list] = None,
+                 sigma: float = 2.0,
+                 periodic: bool = True,
+                 thickness: int = 50,
+                 freedom: bool = 0.5,
+                 itp: int = 10,
+                 rol_ave: int = 10,
+                 parallel: bool = False,
+                 cores: Optional[int] = None,
+                 rotate: bool = False,
+                 zerocap: bool = True,
+                 nfits: Optional[int] = None,
+                 iterations: int = 1,
+                 interp: str = 'cubic',
+                 bg_subtract: bool = False,
+                 verbose: bool = True):
 
         # Detect if single frame or stack
         if type(img) is list:

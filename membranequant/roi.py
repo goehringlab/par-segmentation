@@ -4,6 +4,8 @@ from matplotlib.widgets import Slider
 from scipy.interpolate import splprep, splev, interp1d
 from matplotlib.widgets import Button
 import ipywidgets as widgets
+from typing import Union, Optional
+from matplotlib.backend_bases import MouseEvent, KeyEvent
 
 """
 This no longer works with multiple channels - intensity ranges
@@ -12,7 +14,8 @@ Ability to specify a directory and open all channels. Or an nd file
 """
 
 
-def def_roi(stack, spline=True, start_frame=0, end_frame=None, periodic=True, show_fit=True, k=3):
+def def_roi(stack: Union[np.ndarray, list], spline: bool = True, start_frame: int = 0, end_frame: Optional[int] = None,
+            periodic: bool = True, show_fit: bool = True, k: int = 3):
     r = ROI(stack, spline=spline, start_frame=start_frame, end_frame=end_frame, periodic=periodic, show_fit=show_fit,
             k=k)
     r.run()
@@ -33,7 +36,14 @@ class ROI:
     :return: cell boundary coordinates
     """
 
-    def __init__(self, img, spline=True, start_frame=0, end_frame=None, periodic=True, show_fit=True, k=3):
+    def __init__(self,
+                 img: Union[np.ndarray, list],
+                 spline: bool = True,
+                 start_frame: int = 0,
+                 end_frame: Optional[int] = None,
+                 periodic: bool = True,
+                 show_fit: bool = True,
+                 k: int = 3):
 
         # Detect if single frame or stack
         if type(img) is list:
@@ -102,7 +112,7 @@ class ROI:
         self.fig.canvas.mpl_connect('close_event', lambda event: self.fig.canvas.stop_event_loop())
         self.fig.canvas.start_event_loop(timeout=-1)
 
-    def draw_frame(self, i):
+    def draw_frame(self, i: int):
         self._current_frame = i
         self.ax.clear()
 
@@ -125,7 +135,7 @@ class ROI:
         self.display_points()
         self.fig.canvas.draw()
 
-    def button_press_callback(self, event):
+    def button_press_callback(self, event: MouseEvent):
         if not self._fitted:
             if isinstance(event.inaxes, type(self.ax)):
                 # Add points to list
@@ -136,7 +146,7 @@ class ROI:
                 self.display_points()
                 self.fig.canvas.draw()
 
-    def key_press_callback(self, event):
+    def key_press_callback(self, event: KeyEvent):
         if event.key == 'backspace':
             if not self._fitted:
                 # Remove last drawn point
@@ -193,7 +203,15 @@ class ROI:
 
 class ROI_jupyter:
 
-    def __init__(self, img, spline=True, start_frame=0, end_frame=None, periodic=True, show_fit=True):
+    def __init__(self,
+                 img: Union[np.ndarray, list],
+                 spline: bool = True,
+                 start_frame: int = 0,
+                 end_frame: Optional[int] = None,
+                 periodic: bool = True,
+                 show_fit: bool = True,
+                 k: int = 3):
+
         self.fig = None
         self.ax = None
 
@@ -215,6 +233,7 @@ class ROI_jupyter:
         self.end_frame = end_frame
         self.periodic = periodic
         self.show_fit = show_fit
+        self.k = k
 
         # Specify vlim
         self.vmax = max([np.percentile(i, 99.9) for i in self.images])
@@ -247,7 +266,7 @@ class ROI_jupyter:
 
         self.fig.set_size_inches(4, 4)
 
-    def button_press_callback(self, event):
+    def button_press_callback(self, event: MouseEvent):
         if isinstance(event.inaxes, type(self.ax)):
             # Add points to list
             self.xpoints.extend([event.xdata])
@@ -294,7 +313,7 @@ class ROI_jupyter:
             self._points = self.ax.scatter(self.xpoints, self.ypoints, c='lime', s=10)
             self._point0 = self.ax.scatter(self.xpoints[0], self.ypoints[0], c='r', s=10)
 
-    def draw_frame(self, i):
+    def draw_frame(self, i: int):
         self.ax.clear()
 
         # Plot image
@@ -312,7 +331,7 @@ class ROI_jupyter:
         self.fig.canvas.draw()
 
 
-def spline_roi(roi, periodic=True, s=0, k=3):
+def spline_roi(roi: np.ndarray, periodic: bool = True, s: float = 0.0, k: int = 3) -> np.ndarray:
     """
     Fits a spline to points specifying the coordinates of the cortex, then interpolates to pixel distances
 
@@ -338,7 +357,7 @@ def spline_roi(roi, periodic=True, s=0, k=3):
     return interp_roi(np.vstack((xi, yi)).T, periodic=periodic)
 
 
-def interp_roi(roi, periodic=True, npoints=None, gap=1):
+def interp_roi(roi: np.ndarray, periodic: bool = True, npoints: Optional[int] = None, gap: int = 1) -> np.ndarray:
     """
     Interpolates coordinates to one pixel distances (or as close as possible to one pixel)
     Linear interpolation
@@ -368,7 +387,7 @@ def interp_roi(roi, periodic=True, npoints=None, gap=1):
     return newpoints
 
 
-def offset_coordinates(roi, offsets, periodic=True):
+def offset_coordinates(roi: np.ndarray, offsets: np.ndarray, periodic: bool = True) -> np.ndarray:
     """
     Reads in coordinates, adjusts according to offsets
 

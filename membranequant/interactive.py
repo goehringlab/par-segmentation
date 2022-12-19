@@ -2,9 +2,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
 import ipywidgets as widgets
+from typing import Union, Optional
 
 
-def view_stack_tk(frames, start_frame=0, end_frame=None, show=True):
+# TODO: auto-detect if jupyter
+# TODO: plot_segmentation fails if only one image
+
+def view_stack_tk(frames: Union[list, np.ndarray], start_frame: int = 0, end_frame: Optional[int] = None,
+                  show: bool = True):
     """
     Interactive stack viewer
 
@@ -60,7 +65,7 @@ def view_stack_tk(frames, start_frame=0, end_frame=None, show=True):
     return fig, ax
 
 
-def view_stack_jupyter(frames, start_frame=0, end_frame=None):
+def view_stack_jupyter(frames: Union[list, np.ndarray], start_frame: int = 0, end_frame: Optional[int] = None):
     # Detect if single frame or stack
     if type(frames) is list:
         stack = True
@@ -103,14 +108,15 @@ def view_stack_jupyter(frames, start_frame=0, end_frame=None):
     return fig, ax
 
 
-def view_stack(frames, start_frame=0, end_frame=None, jupyter=False):
+def view_stack(frames: Union[list, np.ndarray], start_frame: int = 0, end_frame: Optional[int] = None,
+               jupyter: bool = False):
     if jupyter:
         view_stack_jupyter(frames, start_frame, end_frame)
     else:
         view_stack_tk(frames, start_frame, end_frame)
 
 
-def plot_segmentation(frames, rois):
+def plot_segmentation(frames: Union[list, np.ndarray], rois: Union[list, np.ndarray]):
     """
     Plot segmentation results
 
@@ -166,7 +172,7 @@ def plot_segmentation(frames, rois):
     return fig, ax
 
 
-def plot_segmentation_jupyter(frames, rois):
+def plot_segmentation_jupyter(frames: Union[list, np.ndarray], rois: Union[list, np.ndarray]):
     fig, ax = plt.subplots()
 
     # Detect if single frame or stack
@@ -209,7 +215,7 @@ def plot_segmentation_jupyter(frames, rois):
     return fig, ax
 
 
-def plot_quantification(mems):
+def plot_quantification(mems: Union[list, np.ndarray]):
     """
     Plot quantification results
 
@@ -263,7 +269,7 @@ def plot_quantification(mems):
     return fig, ax
 
 
-def plot_quantification_jupyter(mems):
+def plot_quantification_jupyter(mems: Union[list, np.ndarray]):
     """
     Plot quantification results
 
@@ -311,7 +317,9 @@ def plot_quantification_jupyter(mems):
 
 
 class FitPlotter:
-    def __init__(self, target, fit):
+    def __init__(self,
+                 target: Union[list, np.ndarray],
+                 fit: Union[list, np.ndarray]):
 
         # Detect if single frame or stack
         if type(target) is list:
@@ -360,12 +368,12 @@ class FitPlotter:
         self.fig.canvas.set_window_title('Local fits')
         plt.show(block=True)
 
-    def update_pos(self, p):
+    def update_pos(self, p: float):
         self.pos = int(p)
         self.ax1_update()
         self.ax2_update()
 
-    def update_frame(self, i):
+    def update_frame(self, i: int):
         self._target = self.target[i]
         self._fit = self.fit[i]
 
@@ -395,12 +403,12 @@ class FitPlotter:
         self.ax2.set_ylim(bottom=self.ylim_bottom, top=self.ylim_top)
 
 
-def plot_fits(target, fit_total):
+def plot_fits(target: Union[list, np.ndarray], fit_total: Union[list, np.ndarray]):
     fp = FitPlotter(target, fit_total)
     return fp.fig, (fp.ax1, fp.ax2)
 
 
-def plot_fits_jupyter(target, fit):
+def plot_fits_jupyter(target: Union[list, np.ndarray], fit: Union[list, np.ndarray]):
     # Detect if single frame or stack
     if type(target) is list:
         stack = True
@@ -432,7 +440,7 @@ def plot_fits_jupyter(target, fit):
     if stack:
 
         @widgets.interact(Frame=(0, len(target) - 1, 1), Position=(0, 1, 0.01))
-        def update(Frame=0, Position=0.1):
+        def update(Frame: int = 0, Position: float = 0.1):
             position = int(Position * target[int(Frame)].shape[1] - 1)
 
             ax1.clear()
@@ -453,7 +461,7 @@ def plot_fits_jupyter(target, fit):
     else:
 
         @widgets.interact(Position=(0, 1, 0.01))
-        def update(Position=0.1):
+        def update(Position: float = 0.1):
             position = int(Position * (target[0].shape[1] - 1))
 
             ax1.clear()

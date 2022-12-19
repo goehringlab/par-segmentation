@@ -7,6 +7,7 @@ from tqdm import tqdm
 import time
 from .tgf_interpolate import interpolate
 import matplotlib.pyplot as plt
+from typing import Union, Optional, Tuple
 
 
 class ImageQuantGradientDescent:
@@ -45,9 +46,26 @@ class ImageQuantGradientDescent:
 
     """
 
-    def __init__(self, img, roi, sigma=2, periodic=True, thickness=50, rol_ave=10, rotate=False, nfits=100,
-                 iterations=2, lr=0.01, descent_steps=500, adaptive_sigma=False, batch_norm=False, freedom=10,
-                 roi_knots=20, fit_outer=False, save_training=False, save_sims=False, verbose=True):
+    def __init__(self,
+                 img: Union[np.ndarray, list],
+                 roi: Union[np.ndarray, list],
+                 sigma: float = 2.0,
+                 periodic: bool = True,
+                 thickness: int = 50,
+                 rol_ave: int = 10,
+                 rotate: bool = False,
+                 nfits: int = 100,
+                 iterations: int = 2,
+                 lr: float = 0.01,
+                 descent_steps: int = 500,
+                 adaptive_sigma: bool = False,
+                 batch_norm: bool = False,
+                 freedom: int = 10,
+                 roi_knots: int = 20,
+                 fit_outer: bool = False,
+                 save_training: bool = False,
+                 save_sims: bool = False,
+                 verbose: bool = True):
 
         # Detect if single frame or stack
         if type(img) is list:
@@ -132,7 +150,7 @@ class ImageQuantGradientDescent:
             time.sleep(0.1)
             print('Time elapsed: %.2f seconds ' % (time.time() - t))
 
-    def preprocess(self, frame, roi):
+    def preprocess(self, frame: np.ndarray, roi: np.ndarray) -> Tuple[np.ndarray, float, np.ndarray]:
         """
         Preprocesses a single image with roi specified
 
@@ -206,7 +224,7 @@ class ImageQuantGradientDescent:
         if self.adaptive_sigma:
             self.vars['sigma'] = self.sigma_t
 
-    def create_offsets_spline(self):
+    def create_offsets_spline(self) -> tf.Tensor:
         nimages = self.mems_t.shape[0]
         if self.nfits is None:
             nfits = max([len(r[:, 0]) for r in self.roi])
@@ -255,7 +273,7 @@ class ImageQuantGradientDescent:
 
         return offsets_spline
 
-    def sim_images(self):
+    def sim_images(self) -> Tuple[tf.Tensor, tf.Tensor]:
         """
         Simulates images according to current membrane and cytoplasm concentration estimates and offsets
 
@@ -312,7 +330,7 @@ class ImageQuantGradientDescent:
         # Sum outputs
         return tf.transpose(tf.math.add(mem_total, cyt_total), [0, 2, 1]), tf.transpose(mask_, [0, 2, 1])
 
-    def losses_full(self):
+    def losses_full(self) -> tf.Tensor:
 
         # Simulate images
         self.sim, mask = self.sim_images()
@@ -445,7 +463,7 @@ class ImageQuantGradientDescent:
     
     """
 
-    def plot_losses(self, log=False):
+    def plot_losses(self, log: bool = False):
         fig, ax = plt.subplots()
         if not log:
             ax.plot(self.losses.T)
