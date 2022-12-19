@@ -1,5 +1,5 @@
 import time
-from .quantificationDifferentialEvolutionSingle import ImageQuantDifferentialEvolutionSingle
+from .quantification_differential_evolution_single import ImageQuantDifferentialEvolutionSingle
 
 
 class ImageQuantDifferentialEvolutionMulti:
@@ -54,7 +54,7 @@ class ImageQuantDifferentialEvolutionMulti:
 
         # Run
         for i, iq in enumerate(self.iq):
-            print('Quantifying image %s of %s' % (i + 1, self.n))
+            print(f'Quantifying image {i + 1} of {self.n}')
             iq.run()
 
         # Save membrane/cytoplasmic quantification, offsets
@@ -74,4 +74,3 @@ class ImageQuantDifferentialEvolutionMulti:
         self.resids_full[:] = [iq.straight_resids for iq in self.iq]
 
         print('Time elapsed: %.2f seconds ' % (time.time() - t))
-

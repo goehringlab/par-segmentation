@@ -20,16 +20,16 @@ class AfCorrelation:
         self.method = method
 
         # Import images
-        self.gfp = [load_image(sorted(glob.glob('%s/%s' % (p, gfp_regex)))[0]) for p in paths]
-        self.af = [load_image(sorted(glob.glob('%s/%s' % (p, af_regex)))[0]) for p in paths]
+        self.gfp = [load_image(sorted(glob.glob(f'{p}/{gfp_regex}'))[0]) for p in paths]
+        self.af = [load_image(sorted(glob.glob(f'{p}/{af_regex}'))[0]) for p in paths]
         if rfp_regex is not None:
-            self.rfp = [load_image(sorted(glob.glob('%s/%s' % (p, rfp_regex)))[0]) for p in paths]
+            self.rfp = [load_image(sorted(glob.glob(f'{p}/{rfp_regex}'))[0]) for p in paths]
         else:
             self.rfp = None
 
         # Import rois
         if roi_regex is not None:
-            self.roi = [offset_coordinates(np.loadtxt(sorted(glob.glob('%s/%s' % (p, roi_regex)))[0]), expand) for p in
+            self.roi = [offset_coordinates(np.loadtxt(sorted(glob.glob(f'{p}/{roi_regex}'))[0]), expand) for p in
                         paths]
         else:
             self.roi = None

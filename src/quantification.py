@@ -4,8 +4,8 @@ import pandas as pd
 from .funcs import save_img
 from .interactive import view_stack, view_stack_jupyter, plot_fits, plot_fits_jupyter, plot_segmentation, \
     plot_segmentation_jupyter, plot_quantification, plot_quantification_jupyter
-from .quantificationGradientDescent import ImageQuantGradientDescent
-from .quantificationDifferentialEvolutionMulti import ImageQuantDifferentialEvolutionMulti
+from .quantification_gradient_descent import ImageQuantGradientDescent
+from .quantification_differential_evolution_multi import ImageQuantDifferentialEvolutionMulti
 
 
 class ImageQuant:

@@ -119,7 +119,7 @@ class ImageQuantGradientDescent:
 
         # Fitting
         for i in range(self.iterations):
-            print('Iteration %s of %s' % (i + 1, self.iterations))
+            print(f'Iteration {i + 1} of {self.iterations}')
             time.sleep(0.1)
 
             if i > 0:

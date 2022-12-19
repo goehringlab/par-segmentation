@@ -28,8 +28,6 @@ def load_image(filename):
     :return:
     """
 
-    # img = np.array(Image.open(filename), dtype=np.float64)
-    # img[img == 0] = np.nan
     return io.imread(filename).astype(float)
 
 
@@ -47,9 +45,6 @@ def save_img(img, direc):
     """
 
     io.imsave(direc, img.astype('float32'))
-
-    # im = Image.fromarray(img)
-    # im.save(direc)
 
 
 def save_img_jpeg(img, direc, cmin=None, cmax=None, cmap='gray'):
@@ -112,6 +107,8 @@ def straighten(img, roi, thickness, periodic=True, interp='cubic', ninterp=None)
         straight = map_coordinates(img.T, [gridcoors_x, gridcoors_y], order=1, mode='nearest')
     elif interp == 'cubic':
         straight = map_coordinates(img.T, [gridcoors_x, gridcoors_y], order=3, mode='nearest')
+    else:
+        raise ValueError('interp must be "linear" or "cubic"')
     return straight.astype(np.float64).T
 
 
@@ -204,7 +201,7 @@ def rotate_roi(roi):
 
     # PCA to find long axis
     M = (roi - np.mean(roi.T, axis=1)).T
-    [latent, coeff] = np.linalg.eig(np.cov(M))
+    [_, coeff] = np.linalg.eig(np.cov(M))
     score = np.dot(coeff.T, M)
 
     # Find most extreme points
@@ -234,7 +231,7 @@ def norm_roi(roi):
 
     # PCA
     M = (roi - np.mean(roi.T, axis=1)).T
-    [latent, coeff] = np.linalg.eig(np.cov(M))
+    [_, coeff] = np.linalg.eig(np.cov(M))
     score = np.dot(coeff.T, M).T
 
     # Find long axis
@@ -288,7 +285,7 @@ def interp_2d_array(array, n, ax=0, method='cubic'):
             interped[x, :] = interp_1d_array(array[x, :], n, method)
         return interped
     else:
-        return None
+        raise ValueError('ax must be 0 or 1')
 
 
 def rolling_ave_1d(array, window, periodic=True):
@@ -452,26 +449,26 @@ def organise_by_nd(path):
     :param path:
     :return:
     """
-    a = glob.glob('%s/*.nd' % path)
+    a = glob.glob(f'{path}/*.nd')
     for b in a:
         name = os.path.basename(os.path.normpath(b))
         if name[0] == '_':
             folder = name[1:-3]
         else:
             folder = name[:-3]
-        os.makedirs('%s/%s' % (path, folder))
-        os.rename(b, '%s/%s/%s' % (path, folder, name))
-        for file in glob.glob('%s_*' % b[:-3]):
-            os.rename(file, '%s/%s/%s' % (path, folder, os.path.basename(os.path.normpath(file))))
+        os.makedirs(f'{path}/{folder}')
+        os.rename(b, f'{path}/{folder}/{name}')
+        for file in glob.glob(f'{b[:-3]}_*'):
+            os.rename(file, f'{path}/{folder}/{os.path.basename(os.path.normpath(file))}')
 
 
 def _direcslist(dest, levels=0, exclude=('!',), exclusive=None):
-    lis = sorted(glob.glob('%s/*/' % dest))
+    lis = sorted(glob.glob(f'{dest}/*/'))
 
     for level in range(levels):
         newlis = []
         for e in lis:
-            newlis.extend(sorted(glob.glob('%s/*/' % e)))
+            newlis.extend(sorted(glob.glob(f'{e}/*/')))
         lis = newlis
         lis = [x[:-1] for x in lis]
 
@@ -520,5 +517,5 @@ def direcslist(dest, levels=0, exclude=('!',), exclusive=None):
 def import_all(direcs, key):
     data = []
     for d in direcs:
-        data.extend([np.loadtxt('%s/%s' % (d, key))])
+        data.extend([np.loadtxt(f'{d}/{key}')])
     return np.array(data)
