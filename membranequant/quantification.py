@@ -12,7 +12,7 @@ class ImageQuant:
     def __init__(self, img, roi, sigma=2, periodic=True, thickness=50, rol_ave=10, rotate=False, nfits=100,
                  iterations=2, lr=0.01, descent_steps=500, adaptive_sigma=False, batch_norm=False, freedom=10,
                  roi_knots=20, fit_outer=False, save_training=False, save_sims=False, method='GD', itp=10,
-                 parallel=False, zerocap=False, cores=None, bg_subtract=False, interp='cubic'):
+                 parallel=False, zerocap=False, cores=None, bg_subtract=False, interp='cubic', verbose=True):
 
         # Input data
         self.img = img
@@ -25,7 +25,8 @@ class ImageQuant:
                                                 rol_ave=rol_ave, rotate=rotate, nfits=nfits, iterations=iterations,
                                                 lr=lr, descent_steps=descent_steps, adaptive_sigma=adaptive_sigma,
                                                 batch_norm=batch_norm, freedom=freedom, roi_knots=roi_knots,
-                                                fit_outer=fit_outer, save_training=save_training, save_sims=save_sims)
+                                                fit_outer=fit_outer, save_training=save_training, save_sims=save_sims,
+                                                verbose=verbose)
 
         elif self.method == 'DE':
             self.iq = ImageQuantDifferentialEvolutionMulti(img=img, roi=roi, sigma=sigma, periodic=periodic,
@@ -33,7 +34,7 @@ class ImageQuant:
                                                            rol_ave=rol_ave, parallel=parallel, cores=cores,
                                                            rotate=rotate, zerocap=zerocap, nfits=nfits,
                                                            iterations=iterations, interp=interp,
-                                                           bg_subtract=bg_subtract)
+                                                           bg_subtract=bg_subtract, verbose=verbose)
         else:
             raise Exception('Method must be "GD" (gradient descent) or "DE" (differential evolution)')
 

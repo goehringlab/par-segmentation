@@ -5,7 +5,7 @@ from .quantification_differential_evolution_single import ImageQuantDifferential
 class ImageQuantDifferentialEvolutionMulti:
     def __init__(self, img, roi=None, sigma=2, periodic=True, thickness=50, freedom=0.5, itp=10, rol_ave=10,
                  parallel=False, cores=None, rotate=False, zerocap=True, nfits=None, iterations=1, interp='cubic',
-                 bg_subtract=False):
+                 bg_subtract=False, verbose=True):
 
         # Detect if single frame or stack
         if type(img) is list:
@@ -36,7 +36,8 @@ class ImageQuantDifferentialEvolutionMulti:
                                                   freedom=freedom, itp=itp, rol_ave=rol_ave, parallel=parallel,
                                                   cores=cores, rotate=rotate, zerocap=zerocap, nfits=nfits,
                                                   iterations=iterations, interp=interp,
-                                                  bg_subtract=bg_subtract) for i, r in zip(self.img, self.roi)]
+                                                  bg_subtract=bg_subtract) for i, r in
+            zip(self.img, self.roi)]
 
         # Initial results containers
         self.mems = [None] * self.n
@@ -49,12 +50,16 @@ class ImageQuantDifferentialEvolutionMulti:
         self.sim_full = [None] * self.n
         self.resids_full = [None] * self.n
 
+        # Verbosity
+        self.verbose = verbose
+
     def run(self):
         t = time.time()
 
         # Run
         for i, iq in enumerate(self.iq):
-            print(f'Quantifying image {i + 1} of {self.n}')
+            if self.verbose:
+                print(f'Quantifying image {i + 1} of {self.n}')
             iq.run()
 
         # Save membrane/cytoplasmic quantification, offsets
@@ -73,4 +78,5 @@ class ImageQuantDifferentialEvolutionMulti:
         self.sim_full[:] = [iq.straight_fit for iq in self.iq]
         self.resids_full[:] = [iq.straight_resids for iq in self.iq]
 
-        print('Time elapsed: %.2f seconds ' % (time.time() - t))
+        if self.verbose:
+            print('Time elapsed: %.2f seconds ' % (time.time() - t))

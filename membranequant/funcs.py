@@ -143,7 +143,7 @@ def rotated_embryo(img, roi, l=None, h=None, order=1, return_roi=False):
     """
 
     # PCA on ROI coordinates
-    [latent, coeff] = np.linalg.eig(np.cov(roi.T))
+    [_, coeff] = np.linalg.eig(np.cov(roi.T))
 
     # Transform ROI
     roi_transformed = np.dot(coeff.T, roi.T)

@@ -47,7 +47,7 @@ class ImageQuantGradientDescent:
 
     def __init__(self, img, roi, sigma=2, periodic=True, thickness=50, rol_ave=10, rotate=False, nfits=100,
                  iterations=2, lr=0.01, descent_steps=500, adaptive_sigma=False, batch_norm=False, freedom=10,
-                 roi_knots=20, fit_outer=False, save_training=False, save_sims=False):
+                 roi_knots=20, fit_outer=False, save_training=False, save_sims=False, verbose=True):
 
         # Detect if single frame or stack
         if type(img) is list:
@@ -92,6 +92,7 @@ class ImageQuantGradientDescent:
         self.save_training = save_training
         self.save_sims = save_sims
         self.swish_factor = 10
+        self.verbose = verbose
 
         # Learning
         self.adaptive_sigma = adaptive_sigma
@@ -119,15 +120,17 @@ class ImageQuantGradientDescent:
 
         # Fitting
         for i in range(self.iterations):
-            print(f'Iteration {i + 1} of {self.iterations}')
+            if self.verbose:
+                print(f'Iteration {i + 1} of {self.iterations}')
             time.sleep(0.1)
 
             if i > 0:
                 self.adjust_roi()
             self.fit()
 
-        time.sleep(0.1)
-        print('Time elapsed: %.2f seconds ' % (time.time() - t))
+        if self.verbose:
+            time.sleep(0.1)
+            print('Time elapsed: %.2f seconds ' % (time.time() - t))
 
     def preprocess(self, frame, roi):
         """
@@ -347,7 +350,7 @@ class ImageQuantGradientDescent:
         self.saved_sims = []
         opt = tf.keras.optimizers.Adam(learning_rate=self.lr)
         self.losses = np.zeros([len(self.img), self.descent_steps])
-        for i in tqdm(range(self.descent_steps)):
+        for i in tqdm(range(self.descent_steps), disable=~self.verbose):
             with tf.GradientTape() as tape:
                 losses_full = self.losses_full()
                 self.losses[:, i] = losses_full
