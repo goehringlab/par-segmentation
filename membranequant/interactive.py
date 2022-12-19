@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
 import ipywidgets as widgets
 from typing import Union, Optional
+from .funcs import in_notebook
 
 
 # TODO: auto-detect if jupyter
@@ -116,8 +117,8 @@ def view_stack_jupyter(frames: Union[list, np.ndarray], start_frame: int = 0, en
     return fig, ax
 
 
-def view_stack(frames: Union[list, np.ndarray], start_frame: int = 0, end_frame: Optional[int] = None,
-               jupyter: bool = False):
+def view_stack(frames: Union[list, np.ndarray], start_frame: int = 0, end_frame: Optional[int] = None):
+    jupyter = in_notebook()
     if jupyter:
         view_stack_jupyter(frames, start_frame, end_frame)
     else:

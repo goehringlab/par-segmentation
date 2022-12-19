@@ -148,7 +148,8 @@ class ImageQuant:
     
     """
 
-    def view_frames(self, jupyter: bool = False):
+    def view_frames(self):
+        jupyter = in_notebook()
         if not jupyter:
             if self.iq.stack:
                 fig, ax = view_stack(self.img)
@@ -161,7 +162,8 @@ class ImageQuant:
                 fig, ax = view_stack_jupyter(self.img[0])
         return fig, ax
 
-    def plot_quantification(self, jupyter: bool = False):
+    def plot_quantification(self):
+        jupyter = in_notebook()
         if not jupyter:
             if self.iq.stack:
                 fig, ax = plot_quantification(self.mems_full)
@@ -174,7 +176,8 @@ class ImageQuant:
                 fig, ax = plot_quantification_jupyter(self.mems_full[0])
         return fig, ax
 
-    def plot_fits(self, jupyter: bool = False):
+    def plot_fits(self):
+        jupyter = in_notebook()
         if not jupyter:
             if self.iq.stack:
                 fig, ax = plot_fits(self.target_full, self.sim_full)
@@ -187,7 +190,8 @@ class ImageQuant:
                 fig, ax = plot_fits_jupyter(self.target_full[0], self.sim_full[0])
         return fig, ax
 
-    def plot_segmentation(self, jupyter: bool = False):
+    def plot_segmentation(self):
+        jupyter = in_notebook()
         if not jupyter:
             if self.iq.stack:
                 fig, ax = plot_segmentation(self.img, self.roi)
