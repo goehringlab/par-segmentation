@@ -104,6 +104,12 @@ class ImageQuant:
         """
         Save all results to save_path
 
+        Args:
+            save_path:
+            i:
+
+        Returns:
+
         """
 
         if not self.iq.stack:

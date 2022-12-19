@@ -13,6 +13,14 @@ def view_stack_tk(frames: Union[list, np.ndarray], start_frame: int = 0, end_fra
     """
     Interactive stack viewer
 
+    Args:
+        frames:
+        start_frame:
+        end_frame:
+        show:
+
+    Returns:
+
     """
 
     # Detect if single frame or stack
@@ -120,6 +128,12 @@ def plot_segmentation(frames: Union[list, np.ndarray], rois: Union[list, np.ndar
     """
     Plot segmentation results
 
+    Args:
+        frames:
+        rois:
+
+    Returns:
+
     """
 
     fig, ax = plt.subplots()
@@ -219,6 +233,11 @@ def plot_quantification(mems: Union[list, np.ndarray]):
     """
     Plot quantification results
 
+    Args:
+        mems:
+
+    Returns:
+
     """
     fig, ax = plt.subplots()
 
@@ -272,6 +291,11 @@ def plot_quantification(mems: Union[list, np.ndarray]):
 def plot_quantification_jupyter(mems: Union[list, np.ndarray]):
     """
     Plot quantification results
+
+    Args:
+        mems:
+
+    Returns:
 
     """
     fig, ax = plt.subplots()

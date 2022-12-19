@@ -8,8 +8,8 @@ from typing import Union, Optional
 from matplotlib.backend_bases import MouseEvent, KeyEvent
 
 """
-This no longer works with multiple channels - intensity ranges
-Ability to specify a directory and open all channels. Or an nd file
+Todo: This no longer works with multiple channels - intensity ranges
+Todo: Ability to specify a directory and open all channels. Or an nd file
 
 """
 
@@ -335,8 +335,14 @@ def spline_roi(roi: np.ndarray, periodic: bool = True, s: float = 0.0, k: int = 
     """
     Fits a spline to points specifying the coordinates of the cortex, then interpolates to pixel distances
 
-    :param roi:
-    :return:
+    Args:
+        roi:
+        periodic:
+        s:
+        k:
+
+    Returns:
+
     """
 
     # Append the starting x,y coordinates
@@ -362,8 +368,14 @@ def interp_roi(roi: np.ndarray, periodic: bool = True, npoints: Optional[int] = 
     Interpolates coordinates to one pixel distances (or as close as possible to one pixel)
     Linear interpolation
 
-    :param roi:
-    :return:
+    Args:
+        roi:
+        periodic:
+        npoints:
+        gap:
+
+    Returns:
+
     """
 
     if periodic:
@@ -387,16 +399,19 @@ def interp_roi(roi: np.ndarray, periodic: bool = True, npoints: Optional[int] = 
     return newpoints
 
 
-def offset_coordinates(roi: np.ndarray, offsets: np.ndarray, periodic: bool = True) -> np.ndarray:
+def offset_coordinates(roi: np.ndarray, offsets: Union[np.ndarray, float], periodic: bool = True) -> np.ndarray:
     """
     Reads in coordinates, adjusts according to offsets
 
-    :param roi: two column array containing x and y coordinates. e.g. coors = np.loadtxt(filename)
-    :param offsets: array the same length as coors. Direction?
-    :return: array in same format as coors containing new coordinates
+    Args:
+        roi:  two column array containing x and y coordinates. e.g. coors = np.loadtxt(filename)
+        offsets: array the same length as coors. Direction?
+        periodic:
 
-    To save this in a fiji readable format quantify:
-    np.savetxt(filename, newcoors, fmt='%.4f', delimiter='\t')
+    Returns:
+         array in same format as coors containing new coordinates.
+         To save this in a fiji readable format:
+         np.savetxt(filename, newcoors, fmt='%.4f', delimiter='\t')
 
     """
 

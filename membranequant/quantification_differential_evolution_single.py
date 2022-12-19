@@ -119,8 +119,8 @@ class ImageQuantDifferentialEvolutionSingle:
             self.reset_res()
 
     """
-     Run
-     """
+    Run
+    """
 
     def run(self):
 

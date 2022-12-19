@@ -12,8 +12,6 @@ from .roi import offset_coordinates
 from typing import Optional
 
 """
-os.walk for direcslist
-Straighten: errors at end for non-periodic?
 
 """
 
@@ -25,8 +23,11 @@ def load_image(filename: str) -> np.ndarray:
     """
     Given the filename of a TIFF, creates numpy array with pixel intensities
 
-    :param filename:
-    :return:
+    Args:
+        filename:
+
+    Returns:
+
     """
 
     return io.imread(filename).astype(float)
@@ -36,9 +37,12 @@ def save_img(img: np.ndarray, direc: str):
     """
     Saves 2D array as .tif file
 
-    :param img:
-    :param direc:
-    :return:
+    Args:
+        img:
+        direc:
+
+    Returns:
+
     """
 
     io.imsave(direc, img.astype('float32'))
@@ -49,11 +53,15 @@ def save_img_jpeg(img: np.ndarray, direc: str, cmin: Optional[float] = None, cma
     """
     Saves 2D array as jpeg, according to min and max pixel intensities
 
-    :param img:
-    :param direc:
-    :param cmin:
-    :param cmax:
-    :return:
+    Args:
+        img:
+        direc:
+        cmin:
+        cmax:
+        cmap:
+
+    Returns:
+
     """
 
     plt.imsave(direc, img, vmin=cmin, vmax=cmax, cmap=cmap)
@@ -66,13 +74,17 @@ def straighten(img: np.ndarray, roi: np.ndarray, thickness: int, periodic: bool 
                ninterp: Optional[int] = None) -> np.ndarray:
     """
     Creates straightened image based on coordinates
+    Todo: Doesn't work properly for non-periodic rois
 
-    Doesn't work properly for non-periodic rois
+    Args:
+        img:
+        roi: Coordinates. Should be 1 pixel length apart in a loop
+        thickness:
+        periodic:
+        interp:
+        ninterp:
 
-    :param img:
-    :param roi: Coordinates. Should be 1 pixel length apart in a loop
-    :param thickness:
-    :return:
+    Returns:
 
     """
 
@@ -116,10 +128,13 @@ def polycrop(img: np.ndarray, polyline: np.ndarray, enlarge: float) -> np.ndarra
     Crops image according to polyline coordinates
     Expand or contract selection with enlarge parameter
 
-    :param img:
-    :param polyline:
-    :param enlarge:
-    :return:
+    Args:
+        img:
+        polyline:
+        enlarge:
+
+    Returns:
+
     """
 
     newcoors = np.int32(offset_coordinates(polyline, enlarge * np.ones([len(polyline[:, 0])])))
@@ -133,12 +148,17 @@ def rotated_embryo(img: np.ndarray, roi: np.ndarray, l: int, h: int, order: int 
                    return_roi: bool = False) -> np.ndarray:
     """
     Takes an image and rotates according to coordinates so that anterior is on left, posterior on right
-
     PROBLEM: some of the returned coordinates are anticlockwise
 
-    :param img:
-    :param roi:
-    :return:
+    Args:
+        img:
+        roi:
+        l:
+        h:
+        order:
+        return_roi:
+
+    Returns:
 
     """
 
@@ -185,6 +205,16 @@ def rotated_embryo(img: np.ndarray, roi: np.ndarray, l: int, h: int, order: int 
 
 
 def bg_subtraction(img: np.ndarray, roi: np.ndarray, band: tuple = (25, 75)) -> np.ndarray:
+    """
+
+    Args:
+        img:
+        roi:
+        band:
+
+    Returns:
+
+    """
     a = polycrop(img, roi, band[1]) - polycrop(img, roi, band[0])
     a = [np.nanmean(a[np.nonzero(a)])]
     return img - a
@@ -196,6 +226,11 @@ def bg_subtraction(img: np.ndarray, roi: np.ndarray, band: tuple = (25, 75)) -> 
 def rotate_roi(roi: np.ndarray) -> np.ndarray:
     """
     Rotates coordinate array so that most posterior point is at the beginning
+
+    Args:
+        roi:
+
+    Returns:
 
     """
 
@@ -225,8 +260,11 @@ def norm_roi(roi: np.ndarray):
     """
     Aligns coordinates to their long axis
 
-    :param roi:
-    :return:
+    Args:
+        roi:
+
+    Returns:
+
     """
 
     # PCA
@@ -248,11 +286,14 @@ def interp_1d_array(array: np.ndarray, n: int, method: str = 'cubic') -> np.ndar
     """
     Interpolates a one dimensional array into n points
 
-    :param array:
-    :param n:
-    :return:
+    TODO: Combine with 2d function
 
-    Combine with 2d function
+    Args:
+        array:
+        n:
+        method:
+
+    Returns:
 
     """
 
@@ -265,12 +306,15 @@ def interp_1d_array(array: np.ndarray, n: int, method: str = 'cubic') -> np.ndar
 def interp_2d_array(array: np.ndarray, n: int, ax: int = 0, method: str = 'cubic') -> np.ndarray:
     """
     Interpolates values along y axis into n points, for each x value
-    :param array:
-    :param n:
-    :param ax:
-    :return:
-
     Todo: no loops
+
+    Args:
+        array:
+        n:
+        ax:
+        method:
+
+    Returns:
 
     """
 
@@ -291,12 +335,15 @@ def interp_2d_array(array: np.ndarray, n: int, ax: int = 0, method: str = 'cubic
 def rolling_ave_1d(array: np.ndarray, window: int, periodic: bool = True) -> np.ndarray:
     """
 
-    :param array:
-    :param window:
-    :param periodic:
-    :return:
+    Args:
+        array:
+        window:
+        periodic:
+
+    Returns:
 
     """
+
     if window == 1:
         return array
     if not periodic:
@@ -311,10 +358,12 @@ def rolling_ave_2d(array: np.ndarray, window: int, periodic: bool = True) -> np.
     """
     Returns rolling average across the x axis of an image (used for straightened profiles)
 
-    :param array: image data
-    :param window: number of pixels to average over. Odd number is best
-    :param periodic: is true, rolls over at ends
-    :return: ave
+    Args:
+        array: image data
+        window: number of pixels to average over. Odd number is best
+        periodic: if true, rolls over at ends
+
+    Returns:
 
     """
 
@@ -331,14 +380,16 @@ def rolling_ave_2d(array: np.ndarray, window: int, periodic: bool = True) -> np.
 def bounded_mean_1d(array: np.ndarray, bounds: tuple, weights: Optional[np.ndarray] = None) -> float:
     """
     Averages 1D array over region specified by bounds
-
-    Should add interpolation step first
-
     Array and weights should be same length
+    Todo: Should add interpolation step first?
 
-    :param array:
-    :param bounds:
-    :return:
+    Args:
+        array:
+        bounds:
+        weights:
+
+    Returns:
+
     """
 
     if weights is None:
@@ -356,13 +407,15 @@ def bounded_mean_1d(array: np.ndarray, bounds: tuple, weights: Optional[np.ndarr
 def bounded_mean_2d(array: np.ndarray, bounds: tuple) -> np.ndarray:
     """
     Averages 2D array in y dimension over region specified by bounds
+    Todo: Should add axis parameter
+    Todo: Should add interpolation step first
 
-    Should add axis parameter
-    Should add interpolation step first
+    Args:
+        array:
+        bounds:
 
-    :param array:
-    :param bounds:
-    :return:
+    Returns:
+
     """
 
     if bounds[0] < bounds[1]:
@@ -380,13 +433,28 @@ def gaus(x: np.ndarray, centre: float, width: float) -> np.ndarray:
     """
     Create Gaussian curve with centre and width specified
 
+    Args:
+        x:
+        centre:
+        width:
+
+    Returns:
+
     """
+
     return np.exp(-((x - centre) ** 2) / (2 * width ** 2))
 
 
 def error_func(x: np.ndarray, centre: float, width: float) -> np.ndarray:
     """
     Create error function with centre and width specified
+
+    Args:
+        x:
+        centre:
+        width:
+
+    Returns:
 
     """
 
@@ -408,7 +476,7 @@ def asi(mems: np.ndarray, size: float) -> float:
 
 
 def dosage(img: np.ndarray, roi: np.ndarray, expand: float) -> np.ndarray:
-    return np.nanmean(img * make_mask([512, 512], offset_coordinates(roi, expand)))
+    return np.nanmean(img * make_mask((512, 512), offset_coordinates(roi, expand)))
 
 
 def calc_vol(normcoors: np.ndarray) -> float:
@@ -431,8 +499,12 @@ def make_mask(shape: tuple, roi: np.ndarray) -> np.ndarray:
 def readnd(path: str) -> dict:
     """
 
-    :param path: directory to embryo folder containing nd file
-    :return: dictionary containing data from nd file
+    Args:
+        path: directory to embryo folder containing nd file
+
+    Returns:
+        dictionary containing data from nd file
+
     """
 
     nd = {}
@@ -446,8 +518,11 @@ def organise_by_nd(path: str):
     """
     Organises images in a folder using the nd files
 
-    :param path:
-    :return:
+    Args:
+        path:
+
+    Returns:
+
     """
     a = glob.glob(f'{path}/*.nd')
     for b in a:
@@ -499,12 +574,16 @@ def direcslist(dest: str, levels: int = 0, exclude: Optional[tuple] = ('!',),
                exclusive: Optional[tuple] = None) -> list:
     """
     Gives a list of directories in a given directory (full path)
+    Todo: os.walk
 
-    :param dest:
-    :param levels:
-    :param exclude: exclude directories containing this string
-    :param exclusive: exclude directories that don't contain this string
-    :return:
+    Args:
+        dest:
+        levels:
+        exclude: exclude directories containing this string
+        exclusive: exclude directories that don't contain this string
+
+    Returns:
+
     """
 
     if type(dest) is list:
