@@ -15,12 +15,13 @@ def view_stack_tk(frames: Union[list, np.ndarray], start_frame: int = 0, end_fra
     Interactive stack viewer
 
     Args:
-        frames:
-        start_frame:
-        end_frame:
-        show:
+        frames: either a numpy array of a 2D image or a list of 2D arrays
+        start_frame: optional. If speficied only show frames after this index
+        end_frame: optional. If specified only show frames before this index
+        show: if True, show the image
 
     Returns:
+        figure and axis
 
     """
 
@@ -130,10 +131,11 @@ def plot_segmentation(frames: Union[list, np.ndarray], rois: Union[list, np.ndar
     Plot segmentation results
 
     Args:
-        frames:
-        rois:
+        frames: either a numpy array of a 2D image or a list of 2D arrays
+        rois: either a single two-column numpy array of ROI coordinates or a list of arrays
 
     Returns:
+        figure and axis
 
     """
 
@@ -188,6 +190,18 @@ def plot_segmentation(frames: Union[list, np.ndarray], rois: Union[list, np.ndar
 
 
 def plot_segmentation_jupyter(frames: Union[list, np.ndarray], rois: Union[list, np.ndarray]):
+    """
+    Plot segmentation results - use this function in a jupyter notebook environment
+
+    Args:
+        frames: either a numpy array of a 2D image or a list of 2D arrays
+        rois: either a single two-column numpy array of ROI coordinates or a list of arrays
+
+    Returns:
+        figure and axis
+
+    """
+
     fig, ax = plt.subplots()
 
     # Detect if single frame or stack
@@ -235,9 +249,10 @@ def plot_quantification(mems: Union[list, np.ndarray]):
     Plot quantification results
 
     Args:
-        mems:
+        mems: either a numpy array of membrane concentrations for one image or a list of arrays for multiple images
 
     Returns:
+        figure and axis
 
     """
     fig, ax = plt.subplots()
@@ -291,12 +306,13 @@ def plot_quantification(mems: Union[list, np.ndarray]):
 
 def plot_quantification_jupyter(mems: Union[list, np.ndarray]):
     """
-    Plot quantification results
+    Plot quantification results - use this function in a jupyter notebook environment
 
     Args:
-        mems:
+        mems: either a numpy array of membrane concentrations for one image or a list of arrays for multiple images
 
     Returns:
+        figure and axis
 
     """
     fig, ax = plt.subplots()

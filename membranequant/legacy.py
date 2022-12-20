@@ -1,10 +1,18 @@
+import time
 import numpy as np
 from scipy.optimize import differential_evolution
 from joblib import Parallel, delayed
 import multiprocessing
-from .funcs import straighten, rolling_ave_2d, interp_1d_array, interp_2d_array, rotate_roi, error_func, gaus
+from .funcs import straighten, rolling_ave_2d, interp_1d_array, interp_2d_array, rotate_roi
+from scipy.special import erf
 from .roi import interp_roi, offset_coordinates, spline_roi
 from typing import Union, Optional, Tuple
+import cv2
+
+"""
+Legacy code including differential evolution algorithm and other functions no longer used
+
+"""
 
 
 class ImageQuantDifferentialEvolutionSingle:
@@ -267,3 +275,186 @@ class ImageQuantDifferentialEvolutionSingle:
         self.straight_filtered = np.zeros([self.thickness, len(self.roi[:, 0])])
         self.straight_fit = np.zeros([self.thickness, len(self.roi[:, 0])])
         self.straight_resids = np.zeros([self.thickness, len(self.roi[:, 0])])
+
+
+class ImageQuantDifferentialEvolutionMulti:
+    def __init__(self,
+                 img: Union[np.ndarray, list],
+                 roi: Union[np.ndarray, list] = None,
+                 sigma: float = 2.0,
+                 periodic: bool = True,
+                 thickness: int = 50,
+                 freedom: float = 0.5,
+                 itp: int = 10,
+                 rol_ave: int = 10,
+                 parallel: bool = False,
+                 cores: Optional[int] = None,
+                 rotate: bool = False,
+                 zerocap: bool = True,
+                 nfits: Optional[int] = None,
+                 iterations: int = 1,
+                 interp: str = 'cubic',
+                 bg_subtract: bool = False,
+                 verbose: bool = True):
+
+        # Detect if single frame or stack
+        if type(img) is list:
+            self.stack = True
+            self.img = img
+        elif len(img.shape) == 3:
+            self.stack = True
+            self.img = list(img)
+        else:
+            self.stack = False
+            self.img = [img, ]
+        self.n = len(self.img)
+
+        # ROI
+        if not self.stack:
+            self.roi = [roi, ]
+        elif type(roi) is list:
+            if len(roi) > 1:
+                self.roi = roi
+            else:
+                self.roi = roi * self.n
+        else:
+            self.roi = [roi] * self.n
+
+        # Set up list of classes
+        self.iq = [
+            ImageQuantDifferentialEvolutionSingle(img=i, roi=r, sigma=sigma, periodic=periodic, thickness=thickness,
+                                                  freedom=freedom, itp=itp, rol_ave=rol_ave, parallel=parallel,
+                                                  cores=cores, rotate=rotate, zerocap=zerocap, nfits=nfits,
+                                                  iterations=iterations, interp=interp,
+                                                  bg_subtract=bg_subtract) for i, r in
+            zip(self.img, self.roi)]
+
+        # Initial results containers
+        self.mems = [None] * self.n
+        self.cyts = [None] * self.n
+        self.offsets = [None] * self.n
+        self.mems_full = [None] * self.n
+        self.cyts_full = [None] * self.n
+        self.offsets_full = [None] * self.n
+        self.target_full = [None] * self.n
+        self.sim_full = [None] * self.n
+        self.resids_full = [None] * self.n
+
+        # Verbosity
+        self.verbose = verbose
+
+    def run(self):
+        t = time.time()
+
+        # Run
+        for i, iq in enumerate(self.iq):
+            if self.verbose:
+                print(f'Quantifying image {i + 1} of {self.n}')
+            iq.run()
+
+        # Save membrane/cytoplasmic quantification, offsets
+        self.mems[:] = [iq.mems for iq in self.iq]
+        self.cyts[:] = [iq.cyts for iq in self.iq]
+        self.offsets[:] = [iq.offsets for iq in self.iq]
+        self.mems_full[:] = [iq.mems_full for iq in self.iq]
+        self.cyts_full[:] = [iq.cyts_full for iq in self.iq]
+        self.offsets_full[:] = [iq.offsets_full for iq in self.iq]
+
+        # Save new ROIs
+        self.roi[:] = [iq.roi for iq in self.iq]
+
+        # Save target/simulated/residuals images
+        self.target_full[:] = [iq.straight_filtered for iq in self.iq]
+        self.sim_full[:] = [iq.straight_fit for iq in self.iq]
+        self.resids_full[:] = [iq.straight_resids for iq in self.iq]
+
+        if self.verbose:
+            print('Time elapsed: %.2f seconds ' % (time.time() - t))
+
+
+def gaus(x: np.ndarray, centre: float, width: float) -> np.ndarray:
+    """
+    Create Gaussian curve with centre and width specified
+
+    Args:
+        x: array of input x values
+        centre: centre of the Gaussian curve (in x units)
+        width: width of the gaussian curve (in x units)
+
+    Returns:
+        Gaussian curve
+
+    """
+
+    return np.exp(-((x - centre) ** 2) / (2 * width ** 2))
+
+
+def error_func(x: np.ndarray, centre: float, width: float) -> np.ndarray:
+    """
+    Create error function with centre and width specified
+
+    Args:
+        x: array of input x values
+        centre: centre of the error function curve (in x units)
+        width: width of the error function curve (in x units)
+
+    Returns:
+        error function curve
+
+    """
+
+    return erf((x - centre) / width)
+
+
+def polycrop(img: np.ndarray, polyline: np.ndarray, enlarge: float) -> np.ndarray:
+    """
+    Crops image according to polyline coordinates by setting values not contained within the coordinates to zero
+
+    Args:
+        img: numpy array of image
+        polyline: roi specifying the bounding region (two columns specifying x and y coordinates)
+        enlarge: amount by which to expand or contract the ROI (pixel units)
+
+    Returns:
+        numpy array of same shape img, with regions outside of polyline set to zero
+
+    """
+
+    newcoors = np.int32(offset_coordinates(polyline, enlarge * np.ones([len(polyline[:, 0])])))
+    mask = np.zeros(img.shape)
+    mask = cv2.fillPoly(mask, [newcoors], 1)
+    newimg = img * mask
+    return newimg
+
+
+def bg_subtraction(img: np.ndarray, roi: np.ndarray, band: tuple = (25, 75)) -> np.ndarray:
+    """
+
+    Subtracts background intensity from an image of a cell. Background intensity calculated as the mean intensity within
+    a band surronding the cell (specified by ROI)
+
+    Args:
+        img: numpy array of image to subtract background from
+        roi: two column numpy array specifying coordinates of the cell boundary
+        band: inner and outer distance of the band from the roi
+
+    Returns:
+        numpy array of image with background subtracted
+
+    """
+    a = polycrop(img, roi, band[1]) - polycrop(img, roi, band[0])
+    a = [np.nanmean(a[np.nonzero(a)])]
+    return img - a
+
+
+def calc_vol(normcoors: np.ndarray) -> float:
+    r1 = (max(normcoors[:, 0]) - min(normcoors[:, 0])) / 2
+    r2 = (max(normcoors[:, 1]) - min(normcoors[:, 1])) / 2
+    return (4 / 3) * np.pi * r2 * r2 * r1
+
+
+def calc_sa(normcoors: np.ndarray) -> float:
+    r1 = (max(normcoors[:, 0]) - min(normcoors[:, 0])) / 2
+    r2 = (max(normcoors[:, 1]) - min(normcoors[:, 1])) / 2
+    e = (1 - (r2 ** 2) / (r1 ** 2)) ** 0.5
+    return 2 * np.pi * r2 * r2 * (1 + (r1 / (r2 * e)) * np.arcsin(e))

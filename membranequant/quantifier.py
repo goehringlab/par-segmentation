@@ -4,12 +4,67 @@ import pandas as pd
 from .funcs import save_img, in_notebook
 from .interactive import view_stack, view_stack_jupyter, plot_fits, plot_fits_jupyter, plot_segmentation, \
     plot_segmentation_jupyter, plot_quantification, plot_quantification_jupyter
-from .quantification_gradient_descent import ImageQuantGradientDescent
-from .quantification_differential_evolution_multi import ImageQuantDifferentialEvolutionMulti
+from .model import ImageQuantGradientDescent
+from .legacy import ImageQuantDifferentialEvolutionMulti
 from typing import Union, Optional
 
 
 class ImageQuant:
+    """
+
+    Main class to perform image segmentation
+
+    Instructions:
+    1. (Optional) Perform SAIBR on image
+    2. Specify rough manual ROI
+    3. Initialise class
+    4. run()
+    5. New ROI coordinates will be found at self.roi
+
+    Input data:
+    img                numpy array of image or list of numpy arrays
+    roi                coordinates defining the cortex (two column numpy array of x and y coordinates at 1-pixel width
+                       intervals), or a list of arrays
+
+    ROI:
+    roi_knots          number of knots in cubic-spline fit ROI
+    freedom            amount by which the roi can move (pixel units)
+
+    Fitting parameters:
+    sigma              gaussian/error function width (pixels units)
+    periodic           True if coordinates form a closed loop
+    thickness          thickness of cross section over which to perform quantification (pixel units)
+    rol_ave            width of rolling average to apply to images prior to fitting (pixel units)
+    rotate             if True, will automatically rotate ROI so that the first/last points are at the end of the long
+                       axis
+    nfits              performs this many fits at regular intervals around ROI. If none, will fit at pixel-width
+                       intervals
+    iterations         if >1, adjusts ROI and re-fits
+    batch_norm         if True, images will be globally, rather than internally, normalised. Shouldn't affect
+                       quantification but is recommended during model optimisation
+    fit_outer          if True, will fit the outer portion of each profile to a nonzero value
+    method             'GD' for gradient descent or 'DE' for differential evolution. The former is highly recommended,
+                       the latter works but is much slower and no longer maintained
+    zerocap            if True, limits output concentrations to positive (or very weakly negative) values
+    interp             interpolation type, 'cubic' or 'linear'
+
+    Gradient descent:
+    lr                 learning rate
+    descent_steps      number of gradient descent steps
+
+    Model optimisation:
+    adaptive_sigma     if True, sigma will be trained by gradient descent
+
+    Miscellaneous:
+    verbose            False suppresses onscreen output while model is running (e.g. progress bar)
+
+    Legacy parameters (for 'DE' method):
+    parallel           if True will run in parallel on number of cores specified. NB Very buggy
+    cores              number of cores to use if parallel is True
+    itp                amount of interpolation - allows for subpixel alignment
+
+    """
+
     def __init__(self,
                  img: Union[np.ndarray, list],
                  roi: Union[np.ndarray, list],

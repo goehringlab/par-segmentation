@@ -7,44 +7,10 @@ from tqdm import tqdm
 import time
 from .tgf_interpolate import interpolate
 import matplotlib.pyplot as plt
-from typing import Union, Optional, Tuple
+from typing import Union, Tuple
 
 
 class ImageQuantGradientDescent:
-    """
-    Quantification works by taking cross sections across the membrane, and fitting the resulting profile as the sum of
-    a cytoplasmic signal component and a membrane signal component. Gradient descent algorithm
-
-    Input data:
-    img                image
-    roi                initial coordinates defining cortex, which can be quite rough. Can use output from def_roi
-                       function
-
-    ROI:
-    roi_knots          number of knots in cubic-spline fit ROI
-    freedom            amount by which the roi can move with each iteration
-
-    Fitting parameters:
-    sigma              if either of above are not specified, assume gaussian/error function with width set by sigma
-    periodic           True if coordinates form a closed loop
-    thickness          thickness of cross section over which to perform quantification
-    rol_ave            width of rolling average
-    rotate             if True, will automatically rotate ROI so that the first/last points are at the end of the long
-                       axis
-    nfits              performs this many fits at regular intervals around ROI
-    iterations         if >1, adjusts ROI and re-fits
-    batch_norm         if True, images will be globally, rather than internally, normalised. Shouldn't affect
-                       quantification but is recommended for model optimisation
-    fit_outer          if True, will fit the outer portion of each profile to a nonzero value
-
-    Gradient descent:
-    lr                 learning rate
-    descent_steps      number of gradient descent steps
-
-    Model optimisation:
-    adaptive_sigma     if True, sigma will be trained by gradient descent
-
-    """
 
     def __init__(self,
                  img: Union[np.ndarray, list],
@@ -60,7 +26,7 @@ class ImageQuantGradientDescent:
                  descent_steps: int = 500,
                  adaptive_sigma: bool = False,
                  batch_norm: bool = False,
-                 freedom: int = 10,
+                 freedom: float = 10,
                  roi_knots: int = 20,
                  fit_outer: bool = False,
                  save_training: bool = False,

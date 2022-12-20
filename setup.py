@@ -1,7 +1,7 @@
 from setuptools import find_packages, setup
 
 setup(
-    name='membranequantsimple',
+    name='membranequant',
     version='1.0',
     license="MIT",
     author='Tom Bland',

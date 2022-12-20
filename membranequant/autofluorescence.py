@@ -23,6 +23,27 @@ class AfCorrelation:
                  expand: float = 5.0,
                  method: str = 'OLS'):
 
+        """
+
+        Convenient class for performing SAIBR calibration
+        Imports data according to paths and regular expressions, blurs images, and performs the regression
+
+        Args:
+            paths: list of paths containing n2 images
+            gfp_regex: regular expression found in gfp channel image files
+            af_regex: regular expression found in af channel image files
+            rfp_regex: regular expression found in rfp channel files (optional)
+            roi_regex: regular exxpression found in ROI files
+            sigma: gaussian blur to apply to images prior to regression
+            intercept0: if True, force intercept of regression to go through zero. Not recommended
+            expand: expand ROIs by this many pixels (useful to include a portion of background)
+            method: fitting method, either 'OLS' for ordinary least squares or 'ODR' for orthogonal distance regression
+
+        To run regression, initialise class and run()
+        SAIBR parameters will then be found at self.params
+
+        """
+
         # Global parameters
         self.sigma = sigma
         self.intercept0 = intercept0
@@ -259,10 +280,18 @@ def af_correlation(img1: np.ndarray, img2: np.ndarray, mask: np.ndarray = None, 
     Calculates pixel-by-pixel correlation between two channels
     Takes 3d image stacks shape [n, 512, 512]
 
-    :param img1: gfp channel
-    :param img2: af channel
-    :param mask: from make_mask function
-    :return:
+    Args:
+        img1: gfp channel
+        img2: af channel
+        mask: mask specifying region of images to use for regression, from make_mask function
+        intercept0: if True, force the intercept to go through zero. Not recommended
+        method: fitting method, either 'OLS' for ordinary least squares or 'ODR' for orthogonal distance regression
+
+    Returns:
+        parameters from regression [m, c]
+        numpy array of all af channel pixels used for regression
+        numpy array of all gfp channel pixels used for regression
+
     """
 
     # Convert to arrays
@@ -322,13 +351,23 @@ def af_correlation_3channel(img1: np.ndarray, img2: np.ndarray, img3: np.ndarray
                             intercept0: bool = False, method: str = 'OLS') -> Tuple[
     list, np.ndarray, np.ndarray, np.ndarray]:
     """
-    AF correlation taking into account red channel
+    Calculates pixel-by-pixel correlation between three channels
+    Takes 3d image stacks shape [n, 512, 512]
 
-    :param img1: GFP channel
-    :param img2: AF channel
-    :param img3: RFP channel
-    :param mask:
-    :return:
+    Args:
+        img1: gfp channel
+        img2: af channel
+        img3: third channel
+        mask: mask specifying region of images to use for regression, from make_mask function
+        intercept0: if True, force the intercept to go through zero. Not recommended
+        method: fitting method, either 'OLS' for ordinary least squares or 'ODR' for orthogonal distance regression
+
+    Returns:
+        parameters from regression [m, c]
+        numpy array of all af channel pixels used for regression
+        numpy array of all third channel pixels used for regression
+        numpy array of all gfp channel pixels used for regression
+
     """
 
     # Convert to arrays
@@ -394,11 +433,15 @@ def af_subtraction(ch1: np.ndarray, ch2: np.ndarray, m: float, c: float) -> np.n
     Subtract ch2 from ch1
     ch2 is first adjusted to m * ch2 + c
 
-    :param ch1:
-    :param ch2:
-    :param m:
-    :param c:
-    :return:
+    Args:
+        ch1: numpy array of channel 1
+        ch2: numpy array of channel 2
+        m: m parameter obtained from n2 data
+        c: c parameter obtained from n2 data
+
+    Returns:
+        numpy array of af corrected image
+
     """
 
     af = m * ch2 + c
@@ -409,6 +452,19 @@ def af_subtraction(ch1: np.ndarray, ch2: np.ndarray, m: float, c: float) -> np.n
 def af_subtraction_3channel(ch1: np.ndarray, ch2: np.ndarray, ch3: np.ndarray, m1: float, m2: float,
                             c: float) -> np.ndarray:
     """
+    Subtract ch2 and ch3 from ch1
+    ch2 and ch3 are first adjusted to m1 * ch2 + m2 * ch3 + c
+
+    Args:
+        ch1: numpy array of channel 1
+        ch2: numpy array of channel 2
+        ch3: numpy array of channel 3
+        m1: m1 parameter obtained from n2 data
+        m2: m2 parameter obtained from n2 data
+        c: c parameter obtained from n2 data
+
+    Returns:
+        numpy array of af corrected image
 
     """
 

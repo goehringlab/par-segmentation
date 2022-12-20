@@ -2,14 +2,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.ndimage.interpolation import map_coordinates
 from scipy.interpolate import CubicSpline
-from scipy.special import erf
 from skimage import io
 import cv2
 import glob
 import copy
 import os
 from .roi import offset_coordinates
-from typing import Optional
+from typing import Optional, Union, Tuple
 
 """
 
@@ -24,9 +23,10 @@ def load_image(filename: str) -> np.ndarray:
     Given the filename of a TIFF, creates numpy array with pixel intensities
 
     Args:
-        filename:
+        filename: full path to the file to import (including extension)
 
     Returns:
+        A numpy array of the image
 
     """
 
@@ -38,10 +38,8 @@ def save_img(img: np.ndarray, direc: str):
     Saves 2D array as .tif file
 
     Args:
-        img:
-        direc:
-
-    Returns:
+        img: numpy array of the image to save
+        direc: file path to save to (including '.tif' extension)
 
     """
 
@@ -54,13 +52,11 @@ def save_img_jpeg(img: np.ndarray, direc: str, cmin: Optional[float] = None, cma
     Saves 2D array as jpeg, according to min and max pixel intensities
 
     Args:
-        img:
-        direc:
-        cmin:
-        cmax:
-        cmap:
-
-    Returns:
+        img: numpy array of the image to save
+        direc: file path to save to (including '.jpeg' extension)
+        cmin: optional, sets intensity scaling (along with cmax)
+        cmax: optional, sets intensity scaling (along with cmin)
+        cmap: colour map (use string corresponding to matplotlib colormap)
 
     """
 
@@ -77,14 +73,17 @@ def straighten(img: np.ndarray, roi: np.ndarray, thickness: int, periodic: bool 
     Todo: Doesn't work properly for non-periodic rois
 
     Args:
-        img:
-        roi: Coordinates. Should be 1 pixel length apart in a loop
-        thickness:
-        periodic:
-        interp:
-        ninterp:
+        img: numpy array of image to straighten
+        roi: coordinates of roi (two column array with x and y coordinates), should be 1 pixel length apart in a loop
+        thickness: thickness (pixel units) of the region surrounding the ROI to straighten
+        periodic: set to True is the ROI is periodic (a full loop)
+        interp: interpolation type, 'cubic' or 'linear
+        ninterp: optional. If specified, interpolation along the y axis of the straight image will be at this many
+        evenly spaced points. If not specified, interpolation will be performed at pixel-width distances.
 
     Returns:
+        Straightened image as 2D numpy array. Will have dimensions [thickness, roi.shape[0]] unless ninterp is
+        specified, in which case [ninterp, roi.shape[0]]
 
     """
 
@@ -123,42 +122,23 @@ def straighten(img: np.ndarray, roi: np.ndarray, thickness: int, periodic: bool 
     return straight.astype(np.float64).T
 
 
-def polycrop(img: np.ndarray, polyline: np.ndarray, enlarge: float) -> np.ndarray:
-    """
-    Crops image according to polyline coordinates
-    Expand or contract selection with enlarge parameter
-
-    Args:
-        img:
-        polyline:
-        enlarge:
-
-    Returns:
-
-    """
-
-    newcoors = np.int32(offset_coordinates(polyline, enlarge * np.ones([len(polyline[:, 0])])))
-    mask = np.zeros(img.shape)
-    mask = cv2.fillPoly(mask, [newcoors], 1)
-    newimg = img * mask
-    return newimg
-
-
 def rotated_embryo(img: np.ndarray, roi: np.ndarray, l: int, h: int, order: int = 1,
-                   return_roi: bool = False) -> np.ndarray:
+                   return_roi: bool = False) -> Union[np.ndarray, Tuple[np.array, np.array]]:
     """
     Takes an image and rotates according to coordinates so that anterior is on left, posterior on right
-    PROBLEM: some of the returned coordinates are anticlockwise
+    Todo: some of the returned coordinates are anticlockwise
 
     Args:
-        img:
-        roi:
-        l:
-        h:
-        order:
-        return_roi:
+        img: numpy array of image to rotate
+        roi: roi of cell boundary (two columns specifying x and y coordinates)
+        l: length of output image (pixel units)
+        h: height of output image (pixel units)
+        order: interpolation order. 1 or 3 for linear or cubic interpolation
+        return_roi: if True, will return roi corresponding to the cell edge in the new image
 
     Returns:
+        numpy array of rotated image with dimensions [h, l]
+        if return_roi is True, will also return roi corresponding to the cell edge in the new image
 
     """
 
@@ -204,22 +184,6 @@ def rotated_embryo(img: np.ndarray, roi: np.ndarray, l: int, h: int, order: int 
         return zvals
 
 
-def bg_subtraction(img: np.ndarray, roi: np.ndarray, band: tuple = (25, 75)) -> np.ndarray:
-    """
-
-    Args:
-        img:
-        roi:
-        band:
-
-    Returns:
-
-    """
-    a = polycrop(img, roi, band[1]) - polycrop(img, roi, band[0])
-    a = [np.nanmean(a[np.nonzero(a)])]
-    return img - a
-
-
 ########### ROI OPERATIONS ###########
 
 
@@ -228,9 +192,10 @@ def rotate_roi(roi: np.ndarray) -> np.ndarray:
     Rotates coordinate array so that most posterior point is at the beginning
 
     Args:
-        roi:
+        roi: two column numpy array of coordinates to rotate
 
     Returns:
+        numpy array of same shape as roi with rotated coordinates
 
     """
 
@@ -261,9 +226,10 @@ def norm_roi(roi: np.ndarray):
     Aligns coordinates to their long axis
 
     Args:
-        roi:
+        roi: two column numpy array of coordinates to normalise
 
     Returns:
+        numpy array of same shape as roi with normalised coordinates
 
     """
 
@@ -285,15 +251,16 @@ def norm_roi(roi: np.ndarray):
 def interp_1d_array(array: np.ndarray, n: int, method: str = 'cubic') -> np.ndarray:
     """
     Interpolates a one dimensional array into n points
-
     TODO: Combine with 2d function
 
     Args:
-        array:
-        n:
-        method:
+        array: one dimensional numpy array
+        n: number of points to evaluate. Will evaluate this many points at evenly space intervals along the length of
+        array
+        method: 'linear' or 'cubic'
 
     Returns:
+        interpolated array (one dimensional array of length n)
 
     """
 
@@ -305,16 +272,17 @@ def interp_1d_array(array: np.ndarray, n: int, method: str = 'cubic') -> np.ndar
 
 def interp_2d_array(array: np.ndarray, n: int, ax: int = 0, method: str = 'cubic') -> np.ndarray:
     """
-    Interpolates values along y axis into n points, for each x value
+    Interpolates a two dimensional array along one axis into n points
     Todo: no loops
 
     Args:
-        array:
-        n:
-        ax:
-        method:
+        array: two dimensional numpy array
+        n: number of points to evaluate along the specified axis
+        ax: 0 or 1, specifies the axis to interpolate along
+        method: 'linear' or 'cubic'
 
     Returns:
+        Interpolated array. 2D array of shape [array.shape[0], n] if ax==1, or [n, array.shape[1] if ax==0
 
     """
 
@@ -334,13 +302,17 @@ def interp_2d_array(array: np.ndarray, n: int, ax: int = 0, method: str = 'cubic
 
 def rolling_ave_1d(array: np.ndarray, window: int, periodic: bool = True) -> np.ndarray:
     """
+    Performs a rolling window average along a one dimensional array
+    Todo: document boundary conditions for non-periodic
+    Todo: combine with rolling_ave_2d
 
     Args:
-        array:
-        window:
-        periodic:
+        array: one dimensional array
+        window: rolling average window size
+        periodic: specifies if array is periodic. If true, averaging rolls over at ends
 
     Returns:
+        numpy array same size as input array
 
     """
 
@@ -356,14 +328,15 @@ def rolling_ave_1d(array: np.ndarray, window: int, periodic: bool = True) -> np.
 
 def rolling_ave_2d(array: np.ndarray, window: int, periodic: bool = True) -> np.ndarray:
     """
-    Returns rolling average across the x axis of an image (used for straightened profiles)
+    Returns rolling average across the x axis of a 2D array
 
     Args:
-        array: image data
-        window: number of pixels to average over. Odd number is best
-        periodic: if true, rolls over at ends
+        array: two dimensional array
+        window: rolling average window size
+        periodic: specifies if array is periodic. If true, averaging rolls over at ends
 
     Returns:
+        numpy array same size as input array
 
     """
 
@@ -382,13 +355,15 @@ def bounded_mean_1d(array: np.ndarray, bounds: tuple, weights: Optional[np.ndarr
     Averages 1D array over region specified by bounds
     Array and weights should be same length
     Todo: Should add interpolation step first?
+    Todo: combine with 2d function
 
     Args:
-        array:
-        bounds:
-        weights:
+        array: one dimensional numpy array
+        bounds: specifies window to average over. (min, max) from 0 to 1 specifying start and end of the array
+        weights: if weights are specified a weighted average will be performed
 
     Returns:
+        single number corresponding to mean value over the bounds specified
 
     """
 
@@ -411,10 +386,11 @@ def bounded_mean_2d(array: np.ndarray, bounds: tuple) -> np.ndarray:
     Todo: Should add interpolation step first
 
     Args:
-        array:
-        bounds:
+        array: two dimensional numpy array
+        bounds: specifies window to average over. (min, max) from 0 to 1 specifying start and end of the array
 
     Returns:
+        one dimensional numpy array of length array.shape[0], corresponding to mean value over the bounds specified
 
     """
 
@@ -426,47 +402,20 @@ def bounded_mean_2d(array: np.ndarray, bounds: tuple) -> np.ndarray:
     return mean
 
 
-########### REFERENCE PROFILES ###########
-
-
-def gaus(x: np.ndarray, centre: float, width: float) -> np.ndarray:
-    """
-    Create Gaussian curve with centre and width specified
-
-    Args:
-        x:
-        centre:
-        width:
-
-    Returns:
-
-    """
-
-    return np.exp(-((x - centre) ** 2) / (2 * width ** 2))
-
-
-def error_func(x: np.ndarray, centre: float, width: float) -> np.ndarray:
-    """
-    Create error function with centre and width specified
-
-    Args:
-        x:
-        centre:
-        width:
-
-    Returns:
-
-    """
-
-    return erf((x - centre) / width)
-
-
 ########### MISC FUNCTIONS ###########
 
 
 def asi(mems: np.ndarray, size: float) -> float:
     """
     Calculates asymmetry index based on membrane concentration profile
+
+    Args:
+        mems: numpy array of membrane concentration values. Periodic array starting from extreme posterior
+        size: size of region to average over when calculating anterior and posterior concentrations (ffrom 0 to 1, where
+        1 indicates the whole embryo)
+
+    Returns:
+        asymmetry index
 
     """
 
@@ -479,25 +428,13 @@ def dosage(img: np.ndarray, roi: np.ndarray, expand: float) -> np.ndarray:
     return np.nanmean(img * make_mask((512, 512), offset_coordinates(roi, expand)))
 
 
-def calc_vol(normcoors: np.ndarray) -> float:
-    r1 = (max(normcoors[:, 0]) - min(normcoors[:, 0])) / 2
-    r2 = (max(normcoors[:, 1]) - min(normcoors[:, 1])) / 2
-    return (4 / 3) * np.pi * r2 * r2 * r1
-
-
-def calc_sa(normcoors: np.ndarray) -> float:
-    r1 = (max(normcoors[:, 0]) - min(normcoors[:, 0])) / 2
-    r2 = (max(normcoors[:, 1]) - min(normcoors[:, 1])) / 2
-    e = (1 - (r2 ** 2) / (r1 ** 2)) ** 0.5
-    return 2 * np.pi * r2 * r2 * (1 + (r1 / (r2 * e)) * np.arcsin(e))
-
-
 def make_mask(shape: tuple, roi: np.ndarray) -> np.ndarray:
     return cv2.fillPoly(np.zeros(shape) * np.nan, [np.int32(roi)], 1)
 
 
 def readnd(path: str) -> dict:
     """
+    Read an nd file
 
     Args:
         path: directory to embryo folder containing nd file
@@ -519,9 +456,7 @@ def organise_by_nd(path: str):
     Organises images in a folder using the nd files
 
     Args:
-        path:
-
-    Returns:
+        path: path to folder containing nd files
 
     """
     a = glob.glob(f'{path}/*.nd')
@@ -573,16 +508,18 @@ def _direcslist(dest: str, levels: int = 0, exclude: Optional[tuple] = ('!',),
 def direcslist(dest: str, levels: int = 0, exclude: Optional[tuple] = ('!',),
                exclusive: Optional[tuple] = None) -> list:
     """
-    Gives a list of directories in a given directory (full path)
+    Gives a list of directories within a given directory (full path)
     Todo: os.walk
 
     Args:
-        dest:
-        levels:
-        exclude: exclude directories containing this string
-        exclusive: exclude directories that don't contain this string
+        dest: path of parent directory
+        levels: number of levels to go down. E.g. if 0, only return folders within the parent folder; if 1, return
+        folders within folders within the parent folder
+        exclude: exclude directories containing any strings within this tuple
+        exclusive: exclude directories that don't contain all the strings within this tuple
 
     Returns:
+        list of directories
 
     """
 
@@ -597,6 +534,8 @@ def direcslist(dest: str, levels: int = 0, exclude: Optional[tuple] = ('!',),
 
 def in_notebook():
     """
+    Tests whether python is being run within a notebook
+
     https://stackoverflow.com/questions/15411967/how-can-i-check-if-code-is-executed-in-the-ipython-notebook
 
     """
