@@ -22,7 +22,9 @@ Advantages:
 
 Schematic of model
 
-![image](docs/model schematic.png)
+<p align="center">
+    <img src="docs/model schematic.png" width="100%" height="100%"/>
+</p>
 
 Based on a model found in Gross et al
 
