@@ -37,10 +37,14 @@ Some examples from the papers it's been used in
 
 Could try it on some images of cells from other systems e.g. yeast?
 
+## Instructions
+
+Link to a tutorial notebook. Also make a binder link
+
 ## Publications
 
-List of publications that used this code: KB micropub, Rukshala's paper, Filopodia paper?, 
-(Nelio's paper, KB P1 paper, my paper)
+List of publications that used this code: KB micropub, Rukshala's paper, Filopodia paper?
+(Nelio's paper, KB P1 paper, my paper, Joana's paper)
 
 (Some of these use an older variant of the code)
 
