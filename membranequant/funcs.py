@@ -166,7 +166,7 @@ def rotated_embryo(img: np.ndarray, roi: np.ndarray, l: int, h: int, order: int 
     roi_transformed = roi_transformed - np.expand_dims([centre_x - (l / 2), centre_y - (h / 2)], -1)
 
     # Transform coordinate grid back
-    [xvals_back, yvals_back] = np.dot(coeff, np.ndarray([xvals_grid.flatten(), yvals_grid.flatten()]))
+    [xvals_back, yvals_back] = np.dot(coeff, np.array([xvals_grid.flatten(), yvals_grid.flatten()]))
     xvals_back_grid = np.reshape(xvals_back, [len(yvals), len(xvals)])
     yvals_back_grid = np.reshape(yvals_back, [len(yvals), len(xvals)])
 
