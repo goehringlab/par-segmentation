@@ -37,6 +37,11 @@ Some examples from the papers it's been used in
 
 Could try it on some images of cells from other systems e.g. yeast?
 
+## Installation
+
+Instructions on how to create conda environment
+
+
 ## Instructions
 
 Link to a tutorial notebook. Also make a binder link

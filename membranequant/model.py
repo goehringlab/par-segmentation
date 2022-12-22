@@ -334,7 +334,11 @@ class ImageQuantGradientDescent:
         self.saved_sims = []
         opt = tf.keras.optimizers.Adam(learning_rate=self.lr)
         self.losses = np.zeros([len(self.img), self.descent_steps])
-        for i in tqdm(range(self.descent_steps), disable=~self.verbose):
+        if self.verbose:
+            iterable = tqdm(range(self.descent_steps))
+        else:
+            iterable = range(self.descent_steps)
+        for i in iterable:
             with tf.GradientTape() as tape:
                 losses_full = self.losses_full()
                 self.losses[:, i] = losses_full
