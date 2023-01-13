@@ -114,7 +114,7 @@ class ImageQuantGradientDescent:
 
         if self.verbose:
             time.sleep(0.1)
-            print('Time elapsed: %.2f seconds ' % (time.time() - t))
+            print('Time elapsed: %.2f seconds \n' % (time.time() - t))
 
     def preprocess(self, frame: np.ndarray, roi: np.ndarray) -> Tuple[np.ndarray, float, np.ndarray]:
         """

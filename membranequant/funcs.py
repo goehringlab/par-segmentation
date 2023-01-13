@@ -251,7 +251,6 @@ def norm_roi(roi: np.ndarray):
 def interp_1d_array(array: np.ndarray, n: int, method: str = 'cubic') -> np.ndarray:
     """
     Interpolates a one dimensional array into n points
-    TODO: Combine with 2d function
 
     Args:
         array: one dimensional numpy array
@@ -263,9 +262,10 @@ def interp_1d_array(array: np.ndarray, n: int, method: str = 'cubic') -> np.ndar
         interpolated array (one dimensional array of length n)
 
     """
-
+    # If using linear interpolation, return the result of np.interp applied to the input array
     if method == 'linear':
         return np.interp(np.linspace(0, len(array) - 1, n), np.array(range(len(array))), array)
+    # If using cubic interpolation, return the result of CubicSpline applied to the input array
     elif method == 'cubic':
         return CubicSpline(np.arange(len(array)), array)(np.linspace(0, len(array) - 1, n))
 
@@ -273,26 +273,28 @@ def interp_1d_array(array: np.ndarray, n: int, method: str = 'cubic') -> np.ndar
 def interp_2d_array(array: np.ndarray, n: int, ax: int = 0, method: str = 'cubic') -> np.ndarray:
     """
     Interpolates a two dimensional array along one axis into n points
-    Todo: no loops
 
     Args:
         array: two dimensional numpy array
         n: number of points to evaluate along the specified axis
-        ax: 0 or 1, specifies the axis to interpolate along
+        ax: 0 or 1, specifies the axis to interpolate along. 0 corresponds to the rows and 1 corresponds to the columns.
         method: 'linear' or 'cubic'
 
     Returns:
         Interpolated array. 2D array of shape [array.shape[0], n] if ax==1, or [n, array.shape[1] if ax==0
 
     """
-
+    # If interpolating along the rows (axis 0), create a new array with shape [n, len(array[0, :])]
     if ax == 0:
         interped = np.zeros([n, len(array[0, :])])
+        # Loop through each column and interpolate the values along axis 0
         for x in range(len(array[0, :])):
             interped[:, x] = interp_1d_array(array[:, x], n, method)
         return interped
+    # If interpolating along the columns (axis 1), create a new array with shape [len(array[:, 0]), n]
     elif ax == 1:
         interped = np.zeros([len(array[:, 0]), n])
+        # Loop through each row and interpolate the values along axis 1
         for x in range(len(array[:, 0])):
             interped[x, :] = interp_1d_array(array[x, :], n, method)
         return interped
@@ -303,26 +305,31 @@ def interp_2d_array(array: np.ndarray, n: int, ax: int = 0, method: str = 'cubic
 def rolling_ave_1d(array: np.ndarray, window: int, periodic: bool = True) -> np.ndarray:
     """
     Performs a rolling window average along a one dimensional array
-    Todo: document boundary conditions for non-periodic
-    Todo: combine with rolling_ave_2d
 
     Args:
         array: one dimensional array
-        window: rolling average window size
-        periodic: specifies if array is periodic. If true, averaging rolls over at ends
+        window: rolling average window size. The function will compute the average of `window` consecutive elements at a
+            time.
+        periodic: specifies if array is periodic. If true, averaging rolls over at ends. If false, the function will not
+            average over the elements at the ends of the array.
 
     Returns:
-        numpy array same size as input array
+        numpy array same size as input array, containing the rolling average of the input array.
 
     """
-
+    # If window size is 1, return the input array as is
     if window == 1:
         return array
+
+    # If the array is not periodic, pad the array with its own reflected values on both ends
     if not periodic:
         array_padded = np.r_[array[:int(window / 2)][::-1], array, array[-int(window / 2):][::-1]]
+    # If the array is periodic, pad the array with its own values on both ends
     else:
         array_padded = np.r_[array[-int(window / 2):], array, array[:int(window / 2)]]
+    # Compute the cumulative sum of the padded array
     cumsum = np.cumsum(array_padded)
+    # Return the rolling average of the padded array
     return (cumsum[window:] - cumsum[:-window]) / window
 
 
