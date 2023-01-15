@@ -1,5 +1,5 @@
 import unittest
-from membranequant import *
+from discoseg import *
 
 path = 'data/dataset2_par2_neon'
 paths = direcslist(path)[:2]

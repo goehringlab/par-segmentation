@@ -1,6 +1,8 @@
-# Package name
+# DiSCo-Seg: Differentiable simulation for cortex segmentation
 
-Performs dual segmentation and membrane-signal quantification on images of cells by fitting images to a differentiable model
+An unsupervised gradient-descent based method for cell cortex segmentation, based on differentiable simmulation.
+Given an image of a cell and a rough preliminary ROI, disco-seg provides both the coordinates of the cell cortex and spatial measures of membrane and cytoplasmic concentrations.
+Designed primarily for use on images of C. elegans embryos.
 
 ## Introduction
 

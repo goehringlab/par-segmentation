@@ -1,4 +1,3 @@
-from .autofluorescence import *
 from .funcs import *
 from .interactive import *
 from .model import *
