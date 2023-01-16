@@ -1,6 +1,8 @@
-# DiSCo-Seg: Differentiable simulation for cortex segmentation
+# discus: Cell cortex segmentation
 
-An unsupervised gradient-descent based method for cell cortex segmentation, based on differentiable simmulation.
+*discus = Differentiable Simulation for cell Cortex Unsupervised Segmentation*
+
+An unsupervised gradient-descent based method for cell cortex segmentation, based on differentiable simulation.
 Given an image of a cell and a rough preliminary ROI, disco-seg provides both the coordinates of the cell cortex and spatial measures of membrane and cytoplasmic concentrations.
 Designed primarily for use on images of C. elegans embryos.
 

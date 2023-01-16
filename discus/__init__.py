@@ -5,4 +5,5 @@ from .legacy import *
 from .quantifier import *
 from .roi import *
 
-# Todo: seperate repositories for quantification code and all the helper functions?
+# Legacy naming
+ImageQuant = Discus

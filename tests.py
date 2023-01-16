@@ -1,5 +1,5 @@
 import unittest
-from discoseg import *
+from discus import *
 
 path = 'data/dataset2_par2_neon'
 paths = direcslist(path)[:2]
@@ -22,33 +22,33 @@ class GdCompletionTests(unittest.TestCase):
 
     def test1(self):
         # Testing that it runs to completion with default parameters
-        iq = ImageQuant(img=imgs, roi=rois, method='GD', descent_steps=10, verbose=False)
+        iq = Discus(img=imgs, roi=rois, method='GD', descent_steps=10, verbose=False)
         iq.run()
         res = iq.compile_res()
 
     def test2(self):
         # Testing that it runs to completion with periodic False
-        iq = ImageQuant(img=imgs, roi=rois, method='GD', descent_steps=10, verbose=False, periodic=False)
+        iq = Discus(img=imgs, roi=rois, method='GD', descent_steps=10, verbose=False, periodic=False)
         iq.run()
 
     def test3(self):
         # Testing that it runs to completion with rotate True
-        iq = ImageQuant(img=imgs, roi=rois, method='GD', descent_steps=10, verbose=False, rotate=True)
+        iq = Discus(img=imgs, roi=rois, method='GD', descent_steps=10, verbose=False, rotate=True)
         iq.run()
 
     def test4(self):
         # Testing that it runs to completion with adaptive sigma True
-        iq = ImageQuant(img=imgs, roi=rois, method='GD', descent_steps=10, verbose=False, adaptive_sigma=True)
+        iq = Discus(img=imgs, roi=rois, method='GD', descent_steps=10, verbose=False, adaptive_sigma=True)
         iq.run()
 
     def test5(self):
         # Testing that it runs to completion with adaptive batch_norm True
-        iq = ImageQuant(img=imgs, roi=rois, method='GD', descent_steps=10, verbose=False, batch_norm=True)
+        iq = Discus(img=imgs, roi=rois, method='GD', descent_steps=10, verbose=False, batch_norm=True)
         iq.run()
 
     def test6(self):
         # Testing that it runs to completion with fit_outer True
-        iq = ImageQuant(img=imgs, roi=rois, method='GD', descent_steps=10, verbose=False, fit_outer=True)
+        iq = Discus(img=imgs, roi=rois, method='GD', descent_steps=10, verbose=False, fit_outer=True)
         iq.run()
 
 
@@ -61,7 +61,7 @@ class DeCompletionTests(unittest.TestCase):
 
     def test1(self):
         # Testing that it runs to completion with default parameters
-        iq = ImageQuant(img=imgs, roi=rois, method='DE', verbose=False, parallel=False)
+        iq = Discus(img=imgs, roi=rois, method='DE', verbose=False, parallel=False)
         iq.run()
         res = iq.compile_res()
         # Weirdly when this is uncommented the script will sometimes only run this test

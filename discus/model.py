@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 from typing import Union, Tuple
 
 
-class ImageQuantGradientDescent:
+class DiscusModel:
 
     def __init__(self,
                  img: Union[np.ndarray, list],
