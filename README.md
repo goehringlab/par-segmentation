@@ -3,12 +3,13 @@
 [![CC BY 4.0][cc-by-shield]][cc-by]
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=flat&logo=tensorflow&logoColor=white)
 
+An gradient-descent based method for cell cortex segmentation and quantificaton based on differentiable simulation of images.
+Given an image of a cell and a rough preliminary ROI, it learns both the coordinates of the cell cortex and spatial measures of membrane and cytoplasmic concentrations.
+Designed primarily for use on images of C. elegans zygotes.
+
+    pip install discco
 
 *DISCCo = Differentiable Image Simulation of the Cell Cortex*
-
-An unsupervised gradient-descent based method for cell cortex segmentation, based on differentiable simulation.
-Given an image of a cell and a rough preliminary ROI, *discco* provides both the coordinates of the cell cortex and spatial measures of membrane and cytoplasmic concentrations.
-Designed primarily for use on images of C. elegans embryos.
 
 ## Introduction
 
@@ -39,20 +40,9 @@ Based on a model found in Gross et al
 More figures/animations showing the model in action
 
 
-## Applications
+## Notebooks
 
-Some examples from the papers it's been used in
-
-Could try it on some images of cells from other systems e.g. yeast?
-
-## Installation
-
-Instructions on how to create conda environment
-
-
-## Instructions
-
-Link to a tutorial notebook. Also make a binder link
+Binder link
 
 ## Publications
 
