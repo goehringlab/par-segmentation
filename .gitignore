@@ -1,3 +1,5 @@
 .idea/
-docs/setup
-/docs/model schematic.ai
+.docs/setup
+./docs/model schematic.ai
+.dist/
+.discus.egg.info/

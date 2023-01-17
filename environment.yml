@@ -1,4 +1,4 @@
-name: membranequantsimple
+name: discco
 channels:
   - conda-forge
   - defaults

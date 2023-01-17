@@ -4,12 +4,12 @@ import pandas as pd
 from .funcs import save_img, in_notebook
 from .interactive import view_stack, view_stack_jupyter, plot_fits, plot_fits_jupyter, plot_segmentation, \
     plot_segmentation_jupyter, plot_quantification, plot_quantification_jupyter
-from .model import DiscusModel
+from .model import DisccoModel
 from .legacy import ImageQuantDifferentialEvolutionMulti
 from typing import Union, Optional
 
 
-class Discus:
+class Discco:
     """
 
     Main class to perform image segmentation
@@ -100,7 +100,7 @@ class Discus:
         # Set up quantifier
         self.method = method
         if self.method == 'GD':
-            self.iq = DiscusModel(img=img, roi=roi, sigma=sigma, periodic=periodic, thickness=thickness,
+            self.iq = DisccoModel(img=img, roi=roi, sigma=sigma, periodic=periodic, thickness=thickness,
                                   rol_ave=rol_ave, rotate=rotate, nfits=nfits, iterations=iterations,
                                   lr=lr, descent_steps=descent_steps, adaptive_sigma=adaptive_sigma,
                                   batch_norm=batch_norm, freedom=freedom, roi_knots=roi_knots,

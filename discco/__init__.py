@@ -6,4 +6,4 @@ from .quantifier import *
 from .roi import *
 
 # Legacy naming
-ImageQuant = Discus
+ImageQuant = Discco

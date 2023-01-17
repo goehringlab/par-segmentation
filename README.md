@@ -1,9 +1,13 @@
-# DiSCUS: Cell cortex segmentation
+# PAR Segmentation
 
-*DiSCUS = Differentiable Simulation of the cell Cortex for Unsupervised Segmentation*
+[![CC BY 4.0][cc-by-shield]][cc-by]
+![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=flat&logo=tensorflow&logoColor=white)
+
+
+*DISCCo = Differentiable Image Simulation of the Cell Cortex*
 
 An unsupervised gradient-descent based method for cell cortex segmentation, based on differentiable simulation.
-Given an image of a cell and a rough preliminary ROI, *discus* provides both the coordinates of the cell cortex and spatial measures of membrane and cytoplasmic concentrations.
+Given an image of a cell and a rough preliminary ROI, *discco* provides both the coordinates of the cell cortex and spatial measures of membrane and cytoplasmic concentrations.
 Designed primarily for use on images of C. elegans embryos.
 
 ## Introduction
@@ -56,4 +60,15 @@ List of publications that used this code: KB micropub, Rukshala's paper, Filopod
 (Nelio's paper, KB P1 paper, my paper, Joana's paper)
 
 (Some of these use an older variant of the code)
+
+## License
+
+This work is licensed under a
+[Creative Commons Attribution 4.0 International License][cc-by].
+
+[![CC BY 4.0][cc-by-image]][cc-by]
+
+[cc-by]: http://creativecommons.org/licenses/by/4.0/
+[cc-by-image]: https://i.creativecommons.org/l/by/4.0/88x31.png
+[cc-by-shield]: https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg
 
