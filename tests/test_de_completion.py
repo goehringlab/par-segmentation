@@ -18,6 +18,6 @@ class DeCompletionTests(unittest.TestCase):
 
     def test1(self):
         # Testing that it runs to completion with default parameters
-        iq = Discco(img=self.imgs, roi=self.rois, method='DE', verbose=False, parallel=False)
+        iq = ImageQuant(img=self.imgs, roi=self.rois, method='DE', verbose=False, parallel=False)
         iq.run()
         res = iq.compile_res()

@@ -9,7 +9,7 @@ from .legacy import ImageQuantDifferentialEvolutionMulti
 from typing import Union, Optional
 
 
-class Discco:
+class ImageQuant:
     """
 
     Main class to perform image segmentation
