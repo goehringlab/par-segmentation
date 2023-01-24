@@ -1,7 +1,7 @@
 from setuptools import find_packages, setup
 
 setup(
-    name='discco',
+    name='par_segmentation',
     version='0.1.0',
     license="CC BY 4.0",
     author='Tom Bland',

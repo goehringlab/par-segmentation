@@ -1,5 +1,5 @@
 import unittest
-from discco import *
+from par_segmentation import *
 
 
 class GdCorrectTests(unittest.TestCase):

@@ -6,7 +6,6 @@ from typing import Union, Optional
 from .funcs import in_notebook
 
 
-# TODO: auto-detect if jupyter
 # TODO: plot_segmentation fails if only one image
 
 def view_stack_tk(frames: Union[list, np.ndarray], start_frame: int = 0, end_frame: Optional[int] = None,

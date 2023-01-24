@@ -1,4 +1,4 @@
-name: discco
+name: par_segmentation
 channels:
   - conda-forge
   - defaults
