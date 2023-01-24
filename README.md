@@ -2,6 +2,7 @@
 
 [![CC BY 4.0][cc-by-shield]][cc-by]
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=flat&logo=tensorflow&logoColor=white)
+[![PyPi version](https://badgen.net/pypi/v/par-segmentation/)](https://pypi.org/project/par-segmentation)
 
 Given an image of a cell and a rough preliminary ROI, it learns both the coordinates of the cell cortex and spatial measures of membrane and cytoplasmic concentrations.
 Designed primarily for use on images of PAR proteins in C. elegans zygotes.
