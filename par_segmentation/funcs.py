@@ -352,7 +352,7 @@ def rolling_ave_2d(array: np.ndarray, window: int, periodic: bool = True) -> np.
     if not periodic:
         array_padded = np.c_[array[:, :int(window / 2)][:, :-1], array, array[:, -int(window / 2):][:, :-1]]
     else:
-        array_padded = np.c_[array[:, -int(window / 2):], array, array[:, :int(window / 2)]]
+        array_padded = np.c_[array[:, -int(np.ceil(window / 2)):], array, array[:, :int(window / 2)]]
     cumsum = np.cumsum(array_padded, axis=1)
     return (cumsum[:, window:] - cumsum[:, :-window]) / window
 

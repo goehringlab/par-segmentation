@@ -4,7 +4,7 @@ import pandas as pd
 from .funcs import save_img, in_notebook
 from .interactive import view_stack, view_stack_jupyter, plot_fits, plot_fits_jupyter, plot_segmentation, \
     plot_segmentation_jupyter, plot_quantification, plot_quantification_jupyter
-from .model import DisccoModel
+from .model import ImageQuantGradientDescent
 from .legacy import ImageQuantDifferentialEvolutionMulti
 from typing import Union, Optional
 
@@ -100,12 +100,12 @@ class ImageQuant:
         # Set up quantifier
         self.method = method
         if self.method == 'GD':
-            self.iq = DisccoModel(img=img, roi=roi, sigma=sigma, periodic=periodic, thickness=thickness,
-                                  rol_ave=rol_ave, rotate=rotate, nfits=nfits, iterations=iterations,
-                                  lr=lr, descent_steps=descent_steps, adaptive_sigma=adaptive_sigma,
-                                  batch_norm=batch_norm, freedom=freedom, roi_knots=roi_knots,
-                                  fit_outer=fit_outer, save_training=save_training, save_sims=save_sims,
-                                  verbose=verbose)
+            self.iq = ImageQuantGradientDescent(img=img, roi=roi, sigma=sigma, periodic=periodic, thickness=thickness,
+                                                rol_ave=rol_ave, rotate=rotate, nfits=nfits, iterations=iterations,
+                                                lr=lr, descent_steps=descent_steps, adaptive_sigma=adaptive_sigma,
+                                                batch_norm=batch_norm, freedom=freedom, roi_knots=roi_knots,
+                                                fit_outer=fit_outer, save_training=save_training, save_sims=save_sims,
+                                                verbose=verbose)
 
         elif self.method == 'DE':
             self.iq = ImageQuantDifferentialEvolutionMulti(img=img, roi=roi, sigma=sigma, periodic=periodic,

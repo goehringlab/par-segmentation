@@ -7,6 +7,10 @@
 Given an image of a cell and a rough preliminary ROI, it learns both the coordinates of the cell cortex and spatial measures of membrane and cytoplasmic concentrations.
 Designed primarily for use on images of PAR proteins in C. elegans zygotes.
 
+<p align="center">
+    <img src="scripts/animation.gif" width="100%" height="100%"/>
+</p>
+
 ## Introduction
 
 Address the problem here. We have images of cells and want to quantify membrane signal
@@ -34,6 +38,8 @@ Schematic of model
 Based on a model found in Gross et al.
 
 More figures/animations showing the model in action
+
+i.e. can show initial wiggly cortex, simulated image and position of cortex, and equivalent straightened cortex in second iteration
 
 ## Installation
 

@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 from typing import Union, Tuple
 
 
-class DisccoModel:
+class ImageQuantGradientDescent:
 
     def __init__(self,
                  img: Union[np.ndarray, list],
@@ -190,54 +190,54 @@ class DisccoModel:
         if self.adaptive_sigma:
             self.vars['sigma'] = self.sigma_t
 
-    def create_offsets_spline(self) -> tf.Tensor:
-        nimages = self.mems_t.shape[0]
-        if self.nfits is None:
-            nfits = max([len(r[:, 0]) for r in self.roi])
-        else:
-            nfits = self.nfits
-
-        # Create offsets spline
-        if self.periodic:
-            x = np.tile(np.expand_dims(np.arange(-1., self.roi_knots + 2), 0), (nimages, 1))
-            y = tf.concat((self.offsets_t[:, -1:], self.offsets_t, self.offsets_t[:, :2]), axis=1)
-            knots = tf.stack((x, y))
-        else:
-            x = np.tile(np.expand_dims(np.arange(-1., self.roi_knots + 1), 0), (nimages, 1))
-            y = tf.concat((self.offsets_t[:, :1], self.offsets_t, self.offsets_t[:, -1:]), axis=1)
-            knots = tf.stack((x, y))
-
-        # Evaluate offset spline
-        if self.nfits is not None:
-            if self.periodic:
-                positions = tf.expand_dims(tf.cast(tf.linspace(start=0.0, stop=self.roi_knots,
-                                                               num=self.nfits + 1)[:-1], dtype=tf.float64), axis=-1)
-            else:
-                positions = tf.expand_dims(tf.cast(tf.linspace(start=0.0, stop=self.roi_knots - 1.000001,
-                                                               num=self.nfits), dtype=tf.float64), axis=-1)
-            spline = interpolate(knots, positions, degree=3, cyclical=False)
-            spline = tf.squeeze(spline, axis=1)
-            offsets_spline = tf.transpose(spline[:, 1, :])
-
-        else:
-            offsets_spline = []
-            for i in tf.range(nimages):
-                if self.periodic:
-                    positions = tf.expand_dims(
-                        tf.cast(tf.linspace(start=0.0, stop=self.roi_knots, num=self.roi[i].shape[0] + 1)[:-1],
-                                dtype=tf.float64), axis=-1)
-                else:
-                    positions = tf.expand_dims(tf.cast(
-                        tf.linspace(start=0.0, stop=self.roi_knots - 1.000001, num=self.roi[i].shape[0]),
-                        dtype=tf.float64), axis=-1)
-                spline = interpolate(knots[:, i:i + 1, :], positions, degree=3, cyclical=False)
-                spline = tf.squeeze(spline, axis=1)
-                spline = tf.transpose(spline[:, 1, :])[0]
-                pad = tf.zeros([nfits - self.roi[i].shape[0]], dtype=tf.float64)
-                offsets_spline.append(tf.concat([spline, pad], axis=0))
-            offsets_spline = tf.stack(offsets_spline, axis=0)
-
-        return offsets_spline
+    # def create_offsets_spline(self) -> tf.Tensor:
+    #     nimages = self.mems_t.shape[0]
+    #     if self.nfits is None:
+    #         nfits = max([len(r[:, 0]) for r in self.roi])
+    #     else:
+    #         nfits = self.nfits
+    #
+    #     # Create offsets spline
+    #     if self.periodic:
+    #         x = np.tile(np.expand_dims(np.arange(-1., self.roi_knots + 2), 0), (nimages, 1))
+    #         y = tf.concat((self.offsets_t[:, -1:], self.offsets_t, self.offsets_t[:, :2]), axis=1)
+    #         knots = tf.stack((x, y))
+    #     else:
+    #         x = np.tile(np.expand_dims(np.arange(-1., self.roi_knots + 1), 0), (nimages, 1))
+    #         y = tf.concat((self.offsets_t[:, :1], self.offsets_t, self.offsets_t[:, -1:]), axis=1)
+    #         knots = tf.stack((x, y))
+    #
+    #     # Evaluate offset spline
+    #     if self.nfits is not None:
+    #         if self.periodic:
+    #             positions = tf.expand_dims(tf.cast(tf.linspace(start=0.0, stop=self.roi_knots,
+    #                                                            num=self.nfits + 1)[:-1], dtype=tf.float64), axis=-1)
+    #         else:
+    #             positions = tf.expand_dims(tf.cast(tf.linspace(start=0.0, stop=self.roi_knots - 1.000001,
+    #                                                            num=self.nfits), dtype=tf.float64), axis=-1)
+    #         spline = interpolate(knots, positions, degree=3, cyclical=False)
+    #         spline = tf.squeeze(spline, axis=1)
+    #         offsets_spline = tf.transpose(spline[:, 1, :])
+    #
+    #     else:
+    #         offsets_spline = []
+    #         for i in tf.range(nimages):
+    #             if self.periodic:
+    #                 positions = tf.expand_dims(
+    #                     tf.cast(tf.linspace(start=0.0, stop=self.roi_knots, num=self.roi[i].shape[0] + 1)[:-1],
+    #                             dtype=tf.float64), axis=-1)
+    #             else:
+    #                 positions = tf.expand_dims(tf.cast(
+    #                     tf.linspace(start=0.0, stop=self.roi_knots - 1.000001, num=self.roi[i].shape[0]),
+    #                     dtype=tf.float64), axis=-1)
+    #             spline = interpolate(knots[:, i:i + 1, :], positions, degree=3, cyclical=False)
+    #             spline = tf.squeeze(spline, axis=1)
+    #             spline = tf.transpose(spline[:, 1, :])[0]
+    #             pad = tf.zeros([nfits - self.roi[i].shape[0]], dtype=tf.float64)
+    #             offsets_spline.append(tf.concat([spline, pad], axis=0))
+    #         offsets_spline = tf.stack(offsets_spline, axis=0)
+    #
+    #     return offsets_spline
 
     def sim_images(self) -> Tuple[tf.Tensor, tf.Tensor]:
         """
@@ -258,7 +258,8 @@ class DisccoModel:
         cyts = self.cyts_t
 
         # Create offsets spline
-        offsets_spline = self.create_offsets_spline()
+        offsets_spline = create_offsets_spline(self.offsets_t, self.roi_knots, self.periodic, self.n, self.nfits,
+                                               self.roi)
 
         # Constrain offsets
         offsets = self.freedom * tf.math.tanh(offsets_spline)
@@ -366,7 +367,8 @@ class DisccoModel:
         self.cyts = cyts.numpy() * self.norms[:, np.newaxis]
 
         # Create offsets spline
-        offsets_spline = self.create_offsets_spline()
+        offsets_spline = create_offsets_spline(self.offsets_t, self.roi_knots, self.periodic, self.n, self.nfits,
+                                               self.roi)
 
         # Constrain offsets
         self.offsets = self.freedom * tf.math.tanh(offsets_spline)
@@ -444,3 +446,50 @@ class DisccoModel:
             ax.set_xlabel('Descent step')
             ax.set_ylabel('log10(Mean square error)')
         return fig, ax
+
+
+def create_offsets_spline(offsets_t, roi_knots, periodic, nimages, nfits, roi) -> tf.Tensor:
+    if nfits is None:
+        nfits = max([len(r[:, 0]) for r in roi])
+
+    # Create offsets spline
+    if periodic:
+        x = np.tile(np.expand_dims(np.arange(-1., roi_knots + 2), 0), (nimages, 1))
+        y = tf.concat((offsets_t[:, -1:], offsets_t, offsets_t[:, :2]), axis=1)
+        knots = tf.stack((x, y))
+    else:
+        x = np.tile(np.expand_dims(np.arange(-1., roi_knots + 1), 0), (nimages, 1))
+        y = tf.concat((offsets_t[:, :1], offsets_t, offsets_t[:, -1:]), axis=1)
+        knots = tf.stack((x, y))
+
+    # Evaluate offset spline
+    if nfits is not None:
+        if periodic:
+            positions = tf.expand_dims(tf.cast(tf.linspace(start=0.0, stop=roi_knots,
+                                                           num=nfits + 1)[:-1], dtype=tf.float64), axis=-1)
+        else:
+            positions = tf.expand_dims(tf.cast(tf.linspace(start=0.0, stop=roi_knots - 1.000001,
+                                                           num=nfits), dtype=tf.float64), axis=-1)
+        spline = interpolate(knots, positions, degree=3, cyclical=False)
+        spline = tf.squeeze(spline, axis=1)
+        offsets_spline = tf.transpose(spline[:, 1, :])
+
+    else:
+        offsets_spline = []
+        for i in tf.range(nimages):
+            if periodic:
+                positions = tf.expand_dims(
+                    tf.cast(tf.linspace(start=0.0, stop=roi_knots, num=roi[i].shape[0] + 1)[:-1],
+                            dtype=tf.float64), axis=-1)
+            else:
+                positions = tf.expand_dims(tf.cast(
+                    tf.linspace(start=0.0, stop=roi_knots - 1.000001, num=roi[i].shape[0]),
+                    dtype=tf.float64), axis=-1)
+            spline = interpolate(knots[:, i:i + 1, :], positions, degree=3, cyclical=False)
+            spline = tf.squeeze(spline, axis=1)
+            spline = tf.transpose(spline[:, 1, :])[0]
+            pad = tf.zeros([nfits - roi[i].shape[0]], dtype=tf.float64)
+            offsets_spline.append(tf.concat([spline, pad], axis=0))
+        offsets_spline = tf.stack(offsets_spline, axis=0)
+
+    return offsets_spline
