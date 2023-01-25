@@ -4,7 +4,7 @@
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=flat&logo=tensorflow&logoColor=white)
 [![PyPi version](https://badgen.net/pypi/v/par-segmentation/)](https://pypi.org/project/par-segmentation)
 
-Given an image of a cell and a rough preliminary ROI, it learns both the coordinates of the cell cortex and spatial measures of membrane and cytoplasmic concentrations.
+Tools for segmenting and straightening the cortex of cells from midplane images using a gradient descent algorithm.
 Designed primarily for use on images of PAR proteins in C. elegans zygotes.
 
 <p align="center">
@@ -12,35 +12,18 @@ Designed primarily for use on images of PAR proteins in C. elegans zygotes.
     <img src="scripts/animation.gif" width="100%" height="100%"/>
 </p>
 
-## Introduction
-
-Address the problem here. We have images of cells and want to quantify membrane signal
-
-Can draw a sketch: image -> rough idea of what membrane profile should look like
-
-Requires a two-step process:
-- Segmentation to find the cell edge (sketch)
-- Fitting cross-sectional profiles to a model (sketch)
-
-Here I show that these steps can be combined in an end-to-end fashion to perform segmentation and quantification simulataneously
-
-Advantages:
-- less user workload
-- more accurate
 
 ## Methods
 
-Schematic of model
+Starting with an initial rough manual ROI of the cell edge, the cortex of the image is straightened.
+The program then attempts to mimic this straightened image by differentiable simulation.
+In doing so, it learns the position of the cortex, which enables the ROI to be iteratively adjusted and the cortex re-straightened:
 
 <p align="center">
     <img src="docs/model schematic.png" width="100%" height="100%"/>
 </p>
 
-Based on a model found in Gross et al.
-
-More figures/animations showing the model in action
-
-i.e. can show initial wiggly cortex, simulated image and position of cortex, and equivalent straightened cortex in second iteration
+The program additionally outputs parameters related to cytoplasmic and membrane concentrations, and so can serve as a quantification tool as well as a segmentation tool.
 
 ## Installation
 
@@ -48,14 +31,22 @@ i.e. can show initial wiggly cortex, simulated image and position of cortex, and
 
 ## Instructions
 
-Binder link
+Binder link (TO DO)
 
 ## Publications
 
-List of publications that used this code: KB micropub, Rukshala's paper, Filopodia paper?
-(Nelio's paper, KB P1 paper, my paper, Joana's paper)
+Utilised in the following publications: 
 
-(Some of these use an older variant of the code)
+Illukkumbura, R., Hirani, N., Borrego-Pinto, J., Bland, T., Ng, K., Hubatsch, L., McQuade, J., Endres, R.G., and Goehring, N.W. (2022). Design principles for selective polarization of PAR proteins by cortical flows. BioRxiv 2022.09.05.506621.
+
+Ng, K., Hirani, N., Bland, T., Borrego-pinto, J., and Goehring, N.W. (2022a). Cleavage furrow-directed cortical flows bias mechanochemical pathways for PAR polarization in the C . elegans germ lineage. BioRxiv 1–32.
+
+Ng, K., Bland, T., Hirani, N., and Goehring, N.W. (2022b). An analog sensitive allele permits rapid and reversible chemical inhibition of PKC-3 activity in C . elegans. MicroPublication Biol.
+
+Rodrigues, N.T.L., Bland, T., Borrego-Pinto, J., Ng, K., Hirani, N., Gu, Y., Foo, S., and Goehring, N.W. (2022). SAIBR : A simple, platform-independent method for spectral autofluorescence correction. Development.
+
+
+
 
 ## License
 
