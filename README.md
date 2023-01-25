@@ -8,7 +8,7 @@ Given an image of a cell and a rough preliminary ROI, it learns both the coordin
 Designed primarily for use on images of PAR proteins in C. elegans zygotes.
 
 <p align="center">
-    <img src="scripts/raw_for_animation.png" width="80%" height="80%"/>
+    <img src="scripts/raw_for_animation.png" width="70%" height="70%"/>
     <img src="scripts/animation.gif" width="100%" height="100%"/>
 </p>
 
