@@ -18,3 +18,4 @@ dependencies:
   - pip
   - pip:
       - opencv-python==4.2.0.34
+      - par-segmentation==0.1.1

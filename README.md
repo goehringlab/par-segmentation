@@ -8,10 +8,9 @@ Tools for segmenting and straightening the cortex of cells from midplane images 
 Designed primarily for use on images of PAR proteins in C. elegans zygotes.
 
 <p align="center">
-    <img src="scripts/raw_for_animation.png" width="70%" height="70%"/>
-    <img src="scripts/animation.gif" width="100%" height="100%"/>
+    <img src="https://raw.githubusercontent.com/tsmbland/par-segmentation/master/scripts/raw_for_animation.png" width="70%" height="70%"/>
+    <img src="https://raw.githubusercontent.com/tsmbland/par-segmentation/master/scripts/animation.gif" width="100%" height="100%"/>
 </p>
-
 
 ## Methods
 
@@ -20,10 +19,11 @@ The program then attempts to mimic this straightened image by differentiable sim
 In doing so, it learns the position of the cortex, which enables the ROI to be iteratively adjusted and the cortex re-straightened:
 
 <p align="center">
-    <img src="docs/model schematic.png" width="100%" height="100%"/>
+    <img src="https://raw.githubusercontent.com/tsmbland/par-segmentation/master/docs/model schematic.png" width="100%" height="100%"/>
 </p>
 
 The program additionally outputs parameters related to cytoplasmic and membrane concentrations, and so can serve as a quantification tool as well as a segmentation tool.
+See also [here](https://github.com/tsmbland/discco) for an extension of the method designed for more accurate quantification of cytoplasmic and membrane concentrations.
 
 ## Installation
 
