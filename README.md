@@ -14,15 +14,15 @@ Designed primarily for use on images of PAR proteins in C. elegans zygotes.
 
 ## Methods
 
-Starting with an initial rough manual ROI of the cell edge, the cortex of the image is straightened.
-The program then attempts to mimic this straightened image by differentiable simulation.
-In doing so, it learns the position of the cortex, which enables the ROI to be iteratively adjusted and the cortex re-straightened:
+Starting with an initial rough manual ROI of the cell edge, the cortex of the image is straightened (1).
+The program then attempts to mimic this straightened image by differentiable simulation (2).
+In doing so, it learns the position of the cortex, which enables the ROI to be iteratively adjusted (3) and the cortex re-straightened:
 
 <p align="center">
     <img src="https://raw.githubusercontent.com/tsmbland/par-segmentation/master/docs/model schematic.png" width="100%" height="100%"/>
 </p>
 
-The program additionally outputs parameters related to cytoplasmic and membrane concentrations, and so can serve as a quantification tool as well as a segmentation tool.
+The program additionally outputs parameters related to cytoplasmic and membrane concentrations, so can serve as a quantification tool as well as a segmentation tool.
 See also [here](https://github.com/tsmbland/discco) for an extension of the method designed for more accurate quantification of cytoplasmic and membrane concentrations.
 
 ## Installation
