@@ -27,7 +27,12 @@ The program additionally outputs parameters related to cytoplasmic and membrane 
     <img src="scripts/animation2.gif" width="100%" height="100%"/>
 </p>
 
-See also [here](https://github.com/tsmbland/discco) for an extension of the method designed for more accurate quantification of cytoplasmic and membrane concentrations.
+The differentiable simulation is built on the assumption that cross-cortex intensity profiles at each position around the cortex are the sum of distinct cytoplasmic and membrane signal components.
+Here, we model these two components as an error function and Gaussian function respectively, representing the expected shape of a step and a point convolved by a Gaussian point spread function (PSF) in one dimension.
+This is a slight simplification of reality, but a close enough approximation for many purposes. 
+
+Nevertheless, if higher quantification accuracy is required, we can relax these assumptions. 
+See [here](https://github.com/tsmbland/discco) for an extension of the method designed for more accurate quantification.
 
 ## Installation
 
