@@ -24,7 +24,7 @@ In doing so, it learns the position of the cortex, which enables the ROI to be i
 The program additionally outputs parameters related to cytoplasmic and membrane concentrations, so can serve as a quantification tool as well as a segmentation tool:
 
 <p align="center">
-    <img src="scripts/animation2.gif" width="100%" height="100%"/>
+    <img src="https://raw.githubusercontent.com/tsmbland/par-segmentation/master/scripts/animation2.gif" width="100%" height="100%"/>
 </p>
 
 The differentiable simulation is built on the assumption that cross-cortex intensity profiles at each position around the cortex are the sum of distinct cytoplasmic and membrane signal components.
