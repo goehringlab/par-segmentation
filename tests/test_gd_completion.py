@@ -54,3 +54,8 @@ class GdCompletionTests(unittest.TestCase):
         # Testing that it runs to completion with nfits None
         iq = ImageQuant(img=self.imgs, roi=self.rois, method='GD', descent_steps=10, verbose=False, nfits=None)
         iq.run()
+
+    def test8(self):
+        # Testing that it runs to completion with zerocap True
+        iq = ImageQuant(img=self.imgs, roi=self.rois, method='GD', descent_steps=10, verbose=False, zerocap=True)
+        iq.run()

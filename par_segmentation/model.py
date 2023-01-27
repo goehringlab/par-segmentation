@@ -29,6 +29,7 @@ class ImageQuantGradientDescent:
                  freedom: float = 10,
                  roi_knots: int = 20,
                  fit_outer: bool = True,
+                 zerocap: bool = False,
                  save_training: bool = False,
                  save_sims: bool = False,
                  verbose: bool = True):
@@ -75,6 +76,7 @@ class ImageQuantGradientDescent:
         self.fit_outer = fit_outer
         self.save_training = save_training
         self.save_sims = save_sims
+        self.zerocap = zerocap
         self.swish_factor = 10
         self.verbose = verbose
 
@@ -190,55 +192,6 @@ class ImageQuantGradientDescent:
         if self.adaptive_sigma:
             self.vars['sigma'] = self.sigma_t
 
-    # def create_offsets_spline(self) -> tf.Tensor:
-    #     nimages = self.mems_t.shape[0]
-    #     if self.nfits is None:
-    #         nfits = max([len(r[:, 0]) for r in self.roi])
-    #     else:
-    #         nfits = self.nfits
-    #
-    #     # Create offsets spline
-    #     if self.periodic:
-    #         x = np.tile(np.expand_dims(np.arange(-1., self.roi_knots + 2), 0), (nimages, 1))
-    #         y = tf.concat((self.offsets_t[:, -1:], self.offsets_t, self.offsets_t[:, :2]), axis=1)
-    #         knots = tf.stack((x, y))
-    #     else:
-    #         x = np.tile(np.expand_dims(np.arange(-1., self.roi_knots + 1), 0), (nimages, 1))
-    #         y = tf.concat((self.offsets_t[:, :1], self.offsets_t, self.offsets_t[:, -1:]), axis=1)
-    #         knots = tf.stack((x, y))
-    #
-    #     # Evaluate offset spline
-    #     if self.nfits is not None:
-    #         if self.periodic:
-    #             positions = tf.expand_dims(tf.cast(tf.linspace(start=0.0, stop=self.roi_knots,
-    #                                                            num=self.nfits + 1)[:-1], dtype=tf.float64), axis=-1)
-    #         else:
-    #             positions = tf.expand_dims(tf.cast(tf.linspace(start=0.0, stop=self.roi_knots - 1.000001,
-    #                                                            num=self.nfits), dtype=tf.float64), axis=-1)
-    #         spline = interpolate(knots, positions, degree=3, cyclical=False)
-    #         spline = tf.squeeze(spline, axis=1)
-    #         offsets_spline = tf.transpose(spline[:, 1, :])
-    #
-    #     else:
-    #         offsets_spline = []
-    #         for i in tf.range(nimages):
-    #             if self.periodic:
-    #                 positions = tf.expand_dims(
-    #                     tf.cast(tf.linspace(start=0.0, stop=self.roi_knots, num=self.roi[i].shape[0] + 1)[:-1],
-    #                             dtype=tf.float64), axis=-1)
-    #             else:
-    #                 positions = tf.expand_dims(tf.cast(
-    #                     tf.linspace(start=0.0, stop=self.roi_knots - 1.000001, num=self.roi[i].shape[0]),
-    #                     dtype=tf.float64), axis=-1)
-    #             spline = interpolate(knots[:, i:i + 1, :], positions, degree=3, cyclical=False)
-    #             spline = tf.squeeze(spline, axis=1)
-    #             spline = tf.transpose(spline[:, 1, :])[0]
-    #             pad = tf.zeros([nfits - self.roi[i].shape[0]], dtype=tf.float64)
-    #             offsets_spline.append(tf.concat([spline, pad], axis=0))
-    #         offsets_spline = tf.stack(offsets_spline, axis=0)
-    #
-    #     return offsets_spline
-
     def sim_images(self) -> Tuple[tf.Tensor, tf.Tensor]:
         """
         Simulates images according to current membrane and cytoplasm concentration estimates and offsets
@@ -256,6 +209,9 @@ class ImageQuantGradientDescent:
         # Constrain concentrations
         mems = self.mems_t
         cyts = self.cyts_t
+        if self.zerocap:
+            mems = mems * tf.math.sigmoid(self.swish_factor * mems)
+            cyts = cyts * tf.math.sigmoid(self.swish_factor * cyts)
 
         # Create offsets spline
         offsets_spline = create_offsets_spline(self.offsets_t, self.roi_knots, self.periodic, self.n, self.nfits,
@@ -363,6 +319,9 @@ class ImageQuantGradientDescent:
         # Save and rescale results
         mems = self.mems_t
         cyts = self.cyts_t
+        if self.zerocap:
+            mems = mems * tf.math.sigmoid(self.swish_factor * mems)
+            cyts = cyts * tf.math.sigmoid(self.swish_factor * cyts)
         self.mems = mems.numpy() * self.norms[:, np.newaxis]
         self.cyts = cyts.numpy() * self.norms[:, np.newaxis]
 
