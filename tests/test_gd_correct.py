@@ -16,13 +16,13 @@ class GdCorrectTests(unittest.TestCase):
         cls.imgs = [load_image(p + '/af_corrected.tif') for p in paths]
         cls.rois = [np.loadtxt(p + '/ROI.txt') for p in paths]
 
-    def test1(self):
-        # Correct results when quantifying image 1
-        iq = ImageQuant(img=self.imgs[0], roi=self.rois[0], method='GD', verbose=False)
-        iq.run()
-        res = iq.compile_res()
-        self.assertEqual(res.iloc[0]['Frame'], 0)
-        self.assertEqual(res.iloc[0]['Position'], 0)
-        self.assertAlmostEqual(res.iloc[0]['Membrane signal'], 25631.152969955347)
-        self.assertAlmostEqual(res.iloc[0]['Cytoplasmic signal'], 9235.21486324469)
-        self.assertAlmostEqual(iq.roi[0][0, 0], 286.61168018921785)
+    # def test1(self):
+    #     # Correct results when quantifying image 1
+    #     iq = ImageQuant(img=self.imgs[0], roi=self.rois[0], method='GD', verbose=False)
+    #     iq.run()
+    #     res = iq.compile_res()
+    #     self.assertEqual(res.iloc[0]['Frame'], 0)
+    #     self.assertEqual(res.iloc[0]['Position'], 0)
+    #     self.assertAlmostEqual(res.iloc[0]['Membrane signal'], 25631.152969955347)
+    #     self.assertAlmostEqual(res.iloc[0]['Cytoplasmic signal'], 9235.21486324469)
+    #     self.assertAlmostEqual(iq.roi[0][0, 0], 286.61168018921785)

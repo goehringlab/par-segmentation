@@ -46,8 +46,8 @@ class GdCompletionTests(unittest.TestCase):
         iq.run()
 
     def test6(self):
-        # Testing that it runs to completion with fit_outer True
-        iq = ImageQuant(img=self.imgs, roi=self.rois, method='GD', descent_steps=10, verbose=False, fit_outer=True)
+        # Testing that it runs to completion with fit_outer False
+        iq = ImageQuant(img=self.imgs, roi=self.rois, method='GD', descent_steps=10, verbose=False, fit_outer=False)
         iq.run()
 
     def test7(self):
