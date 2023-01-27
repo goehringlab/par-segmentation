@@ -8,8 +8,8 @@ Tools for segmenting and straightening the cortex of cells from midplane images 
 Designed primarily for use on images of PAR proteins in C. elegans zygotes.
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/tsmbland/par-segmentation/master/scripts/raw_for_animation.png" width="70%" height="70%"/>
-    <img src="https://raw.githubusercontent.com/tsmbland/par-segmentation/master/scripts/animation.gif" width="100%" height="100%"/>
+    <img src="scripts/animation2.gif" width="70%" height="70%"/>
+    <img src="scripts/animation.gif" width="100%" height="100%"/>
 </p>
 
 ## Methods
