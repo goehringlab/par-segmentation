@@ -21,7 +21,12 @@ In doing so, it learns the position of the cortex, which enables the ROI to be i
     <img src="https://raw.githubusercontent.com/tsmbland/par-segmentation/master/docs/model schematic.png" width="100%" height="100%"/>
 </p>
 
-The program additionally outputs parameters related to cytoplasmic and membrane concentrations, so can serve as a quantification tool as well as a segmentation tool.
+The program additionally outputs parameters related to cytoplasmic and membrane concentrations, so can serve as a quantification tool as well as a segmentation tool:
+
+<p align="center">
+    <img src="scripts/animation2.gif" width="100%" height="100%"/>
+</p>
+
 See also [here](https://github.com/tsmbland/discco) for an extension of the method designed for more accurate quantification of cytoplasmic and membrane concentrations.
 
 ## Installation
@@ -34,7 +39,7 @@ Binder link (TO DO)
 
 ## Publications
 
-Utilised in the following publications: 
+Code in this repository has been used in the following publications for PAR protein segmentation and/or quantification: 
 
 Illukkumbura, R., Hirani, N., Borrego-Pinto, J., Bland, T., Ng, K., Hubatsch, L., McQuade, J., Endres, R.G., and Goehring, N.W. (2022). Design principles for selective polarization of PAR proteins by cortical flows. BioRxiv 2022.09.05.506621.
 
