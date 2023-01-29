@@ -24,7 +24,7 @@ In doing so, it learns the position of the cortex, which enables the ROI to be a
 Cortex positions are modelled as a spline with a user specified number of knots which are optimised by gradient descent:
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/tsmbland/par-segmentation/master/scripts/spline.png" width="60%" height="80%"/>
+    <img src="https://raw.githubusercontent.com/tsmbland/par-segmentation/master/scripts/spline.png" width="80%" height="80%"/>
 </p>
 
 The program additionally outputs parameters related to cytoplasmic and membrane concentrations, so can serve as a quantification tool as well as a segmentation tool:
