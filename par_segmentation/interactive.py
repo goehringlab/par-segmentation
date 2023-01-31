@@ -273,6 +273,7 @@ def plot_quantification(mems: Union[list, np.ndarray]):
         ax.set_xlabel('Position')
         ax.set_ylabel('Membrane concentration')
         ax.set_ylim(bottom=min(0, np.min(mems_[0])))
+        ax.axhline(0, c='k', linestyle='--')
 
     # Stack
     else:
@@ -332,7 +333,8 @@ def plot_quantification_jupyter(mems: Union[list, np.ndarray]):
         ax.plot(mems_[0])
         ax.set_xlabel('Position')
         ax.set_ylabel('Membrane concentration')
-        ax.set_ylim(bottom=0)
+        ax.set_ylim(bottom=min(0, np.min(mems_[0])))
+        ax.axhline(0, c='k', linestyle='--')
 
     # Stack
     else:

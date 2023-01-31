@@ -3,12 +3,13 @@
 [![CC BY 4.0][cc-by-shield]][cc-by]
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=flat&logo=tensorflow&logoColor=white)
 [![PyPi version](https://badgen.net/pypi/v/par-segmentation/)](https://pypi.org/project/par-segmentation)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tsmbland/par-segmentation/HEAD?filepath=%2Fscripts/Tutorial.ipynb)
 
 Tools for segmenting and straightening the cortex of cells from midplane images using a gradient descent algorithm.
 Designed primarily for use on images of PAR proteins in C. elegans zygotes.
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/tsmbland/par-segmentation/master/scripts/animation.gif" width="100%" height="100%"/>
+    <img src="https://raw.githubusercontent.com/tsmbland/par-segmentation/master/scripts/Figs/animation.gif" width="100%" height="100%"/>
 </p>
 
 ## Methods
@@ -24,13 +25,13 @@ In doing so, it learns the position of the cortex, which enables the ROI to be a
 Cortex positions are modelled as a spline with a user specified number of knots which are optimised by gradient descent:
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/tsmbland/par-segmentation/master/scripts/spline.png" width="80%" height="80%"/>
+    <img src="https://raw.githubusercontent.com/tsmbland/par-segmentation/master/scripts/Figs/spline.png" width="80%" height="80%"/>
 </p>
 
 The program additionally outputs parameters related to cytoplasmic and membrane concentrations, so can serve as a quantification tool as well as a segmentation tool:
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/tsmbland/par-segmentation/master/scripts/animation2.gif" width="100%" height="100%"/>
+    <img src="https://raw.githubusercontent.com/tsmbland/par-segmentation/master/scripts/Figs/animation2.gif" width="100%" height="100%"/>
 </p>
 
 The differentiable simulation is built on the assumption that cross-cortex intensity profiles at each position around the cortex are the sum of distinct cytoplasmic and membrane signal components.
@@ -46,7 +47,9 @@ See [here](https://github.com/tsmbland/discco) for an extension of the method de
 
 ## Instructions
 
-Binder link (TO DO)
+See the tutorial notebook [here](scripts/Tutorial.ipynb)
+
+To run in the cloud click 'launch binder' at the top
 
 ## Publications
 

@@ -76,10 +76,10 @@ class ImageQuant:
                  nfits: Union[int, None] = 100,
                  iterations: int = 2,
                  lr: float = 0.01,
-                 descent_steps: int = 300,
+                 descent_steps: int = 400,
                  adaptive_sigma: bool = False,
                  batch_norm: bool = False,
-                 freedom: float = 10,
+                 freedom: float = 25,
                  roi_knots: int = 20,
                  fit_outer: bool = True,
                  save_training: bool = False,
@@ -92,10 +92,6 @@ class ImageQuant:
                  bg_subtract: bool = False,
                  interp: str = 'cubic',
                  verbose: bool = True):
-
-        # Input data
-        self.img = img
-        self.roi = roi
 
         # Set up quantifier
         self.method = method
@@ -117,6 +113,10 @@ class ImageQuant:
         else:
             raise Exception('Method must be "GD" (gradient descent) or "DE" (differential evolution)')
 
+        # Input data
+        self.img = self.iq.img
+        self.roi = self.iq.roi
+
         # Empty results containers
         self.mems = None
         self.cyts = None
@@ -127,6 +127,7 @@ class ImageQuant:
         self.target_full = None
         self.sim_full = None
         self.resids_full = None
+        self.sigma = None
 
     """
     Run
@@ -149,6 +150,8 @@ class ImageQuant:
         self.target_full = self.iq.target_full
         self.sim_full = self.iq.sim_full
         self.resids_full = self.iq.resids_full
+        if self.method == 'GD':
+            self.sigma = self.iq.sigma
 
     """
     Saving
