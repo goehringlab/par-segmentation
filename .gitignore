@@ -3,3 +3,4 @@ docs/setup
 docs/model schematic.ai
 dist/
 par_segmentation.egg-info/
+.ipynb_checkpoints
