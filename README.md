@@ -22,22 +22,26 @@ In doing so, it learns the position of the cortex, which enables the ROI to be a
     <img src="https://raw.githubusercontent.com/tsmbland/par-segmentation/master/docs/model schematic.png" width="100%" height="100%"/>
 </p>
 
-Cortex positions are modelled as a spline with a user specified number of knots which are optimised by gradient descent:
+Cortex positions are modelled as a spline with a user-specified number of evenly spaced knots which are optimised by gradient descent:
 
 <p align="center">
     <img src="https://raw.githubusercontent.com/tsmbland/par-segmentation/master/scripts/Figs/spline.png" width="80%" height="80%"/>
 </p>
 
-The program additionally outputs parameters related to cytoplasmic and membrane concentrations, so can serve as a quantification tool as well as a segmentation tool:
+Cross-cortex intensity profiles at each position around the cortex are modelled as the sum of distinct cytoplasmic and membrane signal components:
+an error function and Gaussian function respectively, representing the expected shape of a step and a point convolved by a Gaussian point spread function (PSF) in one dimension:
+
+<p align="center">
+    <img src="https://raw.githubusercontent.com/tsmbland/par-segmentation/master/scripts/Figs/profiles.png" width="100%" height="100%"/>
+</p>
+
+The program learns the amplitude of these two components at each position around the cortex, so can serve as a quantification tool as well as a segmentation tool:
 
 <p align="center">
     <img src="https://raw.githubusercontent.com/tsmbland/par-segmentation/master/scripts/Figs/animation2.gif" width="100%" height="100%"/>
 </p>
 
-The differentiable simulation is built on the assumption that cross-cortex intensity profiles at each position around the cortex are the sum of distinct cytoplasmic and membrane signal components.
-Here, we model these two components as an error function and Gaussian function respectively, representing the expected shape of a step and a point convolved by a Gaussian point spread function (PSF) in one dimension.
-This is a slight simplification of reality, and doesn't account for the possibility of a non-Gaussian PSF and complex light-scattering behaviours, but is a close enough approximation for many purposes. 
-
+The model is a slight simplification of reality, and doesn't account for the possibility of a non-Gaussian PSF and complex 3D light-scattering behaviours, but is a close enough approximation for many purposes. 
 Nevertheless, we can relax these assumptions if higher quantification accuracy is required. 
 See [here](https://github.com/tsmbland/discco) for an extension of the method designed for more accurate quantification.
 
