@@ -6,7 +6,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name='par_segmentation',
-    version='0.1.4',
+    version='0.1.5',
     license="CC BY 4.0",
     author='Tom Bland',
     author_email='tom_bland@hotmail.co.uk',
@@ -25,5 +25,8 @@ setup(
                       'absl-py'],
     description='Cell cortex segmentation in C. elegans PAR protein images',
     long_description=long_description,
-    long_description_content_type='text/markdown'
+    long_description_content_type='text/markdown',
+    project_urls={
+        "Source Code": "https://github.com/tsmbland/par-segmentation",
+    }
 )
