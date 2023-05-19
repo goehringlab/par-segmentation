@@ -42,7 +42,7 @@ The program learns the amplitude of these two components at each position around
 </p>
 
 The model is a slight simplification of reality, and doesn't account for the possibility of a non-Gaussian PSF and complex 3D light-scattering behaviours, but is a close enough approximation for many purposes. 
-Nevertheless, we can relax these assumptions if higher quantification accuracy is required. 
+Nevertheless, one can relax these assumptions if higher quantification accuracy is required. 
 See [here](https://github.com/tsmbland/discco) for an extension of the method designed for more accurate quantification.
 
 ## Installation
