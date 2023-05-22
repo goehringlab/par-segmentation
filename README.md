@@ -51,9 +51,29 @@ See [here](https://github.com/tsmbland/discco) for an extension of the method de
 
 ## Instructions
 
-See the tutorial notebook [here](scripts/Tutorial.ipynb)
+For usage instructions please see the [tutorial notebook](scripts/Tutorial.ipynb). To run the notebook interactively you have two options:
 
-To run in the cloud click 'launch binder' at the top
+#### Option 1: Cloud
+
+To run in the cloud, click the 'launch binder' button at the top. Please note that it may take several minutes to open the notebook
+
+#### Option 2: Local
+
+Step 1: Open [Docker](https://www.docker.com/products/docker-desktop/) and pull the docker image (copy and paste into the terminal)
+
+    docker pull tsmbland/par-segmentation
+
+Step 2: Run the docker container (copy and paste into the terminal)
+
+    docker run -p 8888:8888 tsmbland/par-segmentation
+
+This will print a URL for you to copy and paste into your web browser to open up Jupyter
+
+Step 3: When finished, delete the container and image
+    
+    docker container prune -f
+    docker image rm tsmbland/par-segmentation
+
 
 ## Publications
 
