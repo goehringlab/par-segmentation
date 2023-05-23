@@ -5,12 +5,47 @@
 [![PyPi version](https://badgen.net/pypi/v/par-segmentation/)](https://pypi.org/project/par-segmentation)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tsmbland/par-segmentation/HEAD?filepath=%2Fscripts/Tutorial.ipynb)
 
-Tools for segmenting and straightening the cortex of cells from midplane images using a gradient descent algorithm.
-Designed primarily for use on images of PAR proteins in C. elegans zygotes.
+Tools for segmenting, straightening and quantifying the cortex of cells.
+Works by combining spline-based segmentation with a custom quantification model, using a gradient descent optimisation procedure.
+Designed primarily for membrane-bound PAR proteins in C. elegans zygotes.
 
 <p align="center">
     <img src="https://raw.githubusercontent.com/tsmbland/par-segmentation/master/scripts/Figs/animation.gif" width="100%" height="100%"/>
 </p>
+
+
+## Instructions
+
+As a first step, I would recommend checking out the [tutorial notebook](scripts/Tutorial.ipynb). To run the notebook interactively you have two options:
+
+#### Option 1: Binder (in the cloud)
+
+To run in the cloud, click here: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tsmbland/par-segmentation/HEAD?filepath=%2Fscripts/Tutorial.ipynb)
+
+(Please note that it may take several minutes to open the notebook)
+
+#### Option 2: Docker
+
+Step 1: With [Docker](https://www.docker.com/products/docker-desktop/) open on your machine,  pull the image (copy and paste into the terminal)
+
+    docker pull tsmbland/par-segmentation
+
+Step 2: Run the docker container (copy and paste into the terminal)
+
+    docker run -p 8888:8888 tsmbland/par-segmentation
+
+This will print a URL at the bottom for you to copy and paste into your web browser to open up Jupyter
+
+Step 3: When finished, delete the container and image
+    
+    docker container prune -f
+    docker image rm tsmbland/par-segmentation
+
+## Installation
+
+To explore further and incorporate into your own analysis pipelines, you can install the package using pip:
+
+    pip install par-segmentation
 
 ## Methods
 
@@ -44,35 +79,6 @@ The program learns the amplitude of these two components at each position around
 The model is a slight simplification of reality, and doesn't account for the possibility of a non-Gaussian PSF and complex 3D light-scattering behaviours, but is a close enough approximation for many purposes. 
 Nevertheless, one can relax these assumptions if higher quantification accuracy is required. 
 See [here](https://github.com/tsmbland/discco) for an extension of the method designed for more accurate quantification.
-
-## Installation
-
-    pip install par-segmentation
-
-## Instructions
-
-For usage instructions please see the [tutorial notebook](scripts/Tutorial.ipynb). To run the notebook interactively you have two options:
-
-#### Option 1: Cloud
-
-To run in the cloud, click the 'launch binder' button at the top. Please note that it may take several minutes to open the notebook
-
-#### Option 2: Local
-
-Step 1: Open [Docker](https://www.docker.com/products/docker-desktop/) and pull the docker image (copy and paste into the terminal)
-
-    docker pull tsmbland/par-segmentation
-
-Step 2: Run the docker container (copy and paste into the terminal)
-
-    docker run -p 8888:8888 tsmbland/par-segmentation
-
-This will print a URL for you to copy and paste into your web browser to open up Jupyter
-
-Step 3: When finished, delete the container and image
-    
-    docker container prune -f
-    docker image rm tsmbland/par-segmentation
 
 
 ## Publications
