@@ -16,7 +16,7 @@ Designed primarily for membrane-bound PAR proteins in C. elegans zygotes.
 
 ## Instructions
 
-As a first step, I would recommend checking out the [tutorial notebook](scripts/Tutorial.ipynb). To run the notebook interactively you have two options:
+As a first step, I would recommend checking out the [tutorial notebook](scripts/Tutorial.ipynb). To run the notebook interactively you have a few options:
 
 #### Option 1: Binder
 
