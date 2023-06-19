@@ -1,4 +1,4 @@
-name: par_segmentation
+name: par-segmentation
 channels:
   - conda-forge
   - defaults
