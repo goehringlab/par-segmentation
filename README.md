@@ -18,9 +18,9 @@ Designed primarily for membrane-bound PAR proteins in C. elegans zygotes.
 
 As a first step, I would recommend checking out the [tutorial notebook](scripts/Tutorial.ipynb). To run the notebook interactively you have two options:
 
-#### Option 1: Binder (in the cloud)
+#### Option 1: Binder
 
-To run in the cloud, click here: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tsmbland/par-segmentation/HEAD?filepath=%2Fscripts/Tutorial.ipynb)
+To run in the cloud using Binder, click here: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tsmbland/par-segmentation/HEAD?filepath=%2Fscripts/Tutorial.ipynb)
 
 (Please note that it may take several minutes to open the notebook)
 
@@ -40,6 +40,15 @@ Step 3: When finished, delete the container and image
     
     docker container prune -f
     docker image rm tsmbland/par-segmentation
+
+#### Option 3: Conda
+
+You can use the environment.yml file to set up a [Conda](https://conda.io/projects/conda/en/latest/user-guide/getting-started.html) environment on your machine from which the notebook can be run
+
+    conda env create -f environment.yml
+    conda activate par-segmentation
+    jupyter notebook
+
 
 ## Installation
 
