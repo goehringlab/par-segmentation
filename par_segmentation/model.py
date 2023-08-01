@@ -9,6 +9,12 @@ from .tgf_interpolate import interpolate
 import matplotlib.pyplot as plt
 from typing import Union, Tuple
 
+"""
+To do:
+- use a spline based method for nfits
+
+"""
+
 
 class ImageQuantGradientDescent:
 
