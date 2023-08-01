@@ -4,6 +4,8 @@
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=flat&logo=tensorflow&logoColor=white)
 [![PyPi version](https://badgen.net/pypi/v/par-segmentation/)](https://pypi.org/project/par-segmentation)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tsmbland/par-segmentation/HEAD?filepath=%2Fscripts/Tutorial.ipynb)
+[![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?logo=docker)](https://www.docker.com/)
+[![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?logo=anaconda)](https://docs.conda.io/en/latest/)
 
 Tools for segmenting, straightening and quantifying the cortex of cells.
 Works by combining spline-based segmentation with a custom quantification model, using a gradient descent optimisation procedure.
@@ -16,11 +18,11 @@ Designed primarily for membrane-bound PAR proteins in C. elegans zygotes.
 
 ## Instructions
 
-As a first step, I would recommend checking out the [tutorial notebook](scripts/Tutorial.ipynb). To run the notebook interactively you have two options:
+As a first step, I would recommend checking out the [tutorial notebook](https://nbviewer.org/github/tsmbland/par-segmentation/blob/master/scripts/Tutorial.ipynb). To run the notebook interactively you have a few options:
 
-#### Option 1: Binder (in the cloud)
+#### Option 1: Binder
 
-To run in the cloud, click here: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tsmbland/par-segmentation/HEAD?filepath=%2Fscripts/Tutorial.ipynb)
+To run in the cloud using Binder, click here: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tsmbland/par-segmentation/HEAD?filepath=%2Fscripts/Tutorial.ipynb)
 
 (Please note that it may take several minutes to open the notebook)
 
@@ -40,6 +42,15 @@ Step 3: When finished, delete the container and image
     
     docker container prune -f
     docker image rm tsmbland/par-segmentation
+
+#### Option 3: Conda
+
+You can use the environment.yml file to set up a [Conda](https://conda.io/projects/conda/en/latest/user-guide/getting-started.html) environment on your machine from which the notebook can be run
+
+    conda env create -f environment.yml
+    conda activate par-segmentation
+    jupyter notebook
+
 
 ## Installation
 
