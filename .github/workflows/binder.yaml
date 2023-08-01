@@ -1,5 +1,9 @@
-name: Test
-on: push
+name: Binder
+
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   binder:
@@ -17,3 +21,5 @@ jobs:
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         BINDER_CACHE: true
         PUBLIC_REGISTRY_CHECK: true
+
+
