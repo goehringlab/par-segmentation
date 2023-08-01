@@ -1,4 +1,4 @@
-name: par-segmentation
+name: Test
 
 on:
   push:
