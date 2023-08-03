@@ -28,19 +28,18 @@ To run in the cloud using Binder, click here: [![Binder](https://mybinder.org/ba
 
 #### Option 2: Docker
 
-Step 1: With [Docker](https://www.docker.com/products/docker-desktop/) open on your machine,  pull the image (copy and paste into the terminal)
+Step 1: Make sure [Docker](https://www.docker.com/products/docker-desktop/) is installed and open on your machine 
 
-    docker pull tsmbland/par-segmentation
+Step 2: Download and run the Docker container: 
 
-Step 2: Run the docker container (copy and paste into the terminal)
+    docker run --rm -p 8888:8888 tsmbland/par-segmentation
 
-    docker run -p 8888:8888 tsmbland/par-segmentation
+Once the Docker image has finished downloading, this will print two URLs at the bottom for you to copy and paste into your web browser to open up Jupyter (please try both)
 
-This will print a URL at the bottom for you to copy and paste into your web browser to open up Jupyter
+Step 3: Navigate to _scripts/Tutorial.ipynb_ to run the notebook
 
-Step 3: When finished, delete the container and image
-    
-    docker container prune -f
+Step 4: When finished, delete the image:
+
     docker image rm tsmbland/par-segmentation
 
 #### Option 3: Conda
