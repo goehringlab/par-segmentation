@@ -56,6 +56,7 @@ You can use the environment.yml file to set up a [Conda](https://conda.io/projec
 To explore further and incorporate into your own analysis pipelines, you can install the package using pip:
 
     pip install par-segmentation
+    pip install tensorflow
 
 ## Methods
 
