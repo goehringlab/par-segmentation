@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>par_segmentation package &mdash; par_segmentation v0.1.8 documentation</title>
+  <title>par_segmentation package &mdash; par-segmentation 0.1.8 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,8 +18,7 @@
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="par_segmentation" href="modules.html" /> 
+    <link rel="search" title="Search" href="search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -31,7 +30,7 @@
           
           
           <a href="index.html" class="icon icon-home">
-            par_segmentation
+            par-segmentation
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -41,60 +40,70 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">API reference</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">par_segmentation package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-par_segmentation.funcs">par_segmentation.funcs module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#par_segmentation.funcs.asi"><code class="docutils literal notranslate"><span class="pre">asi()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#par_segmentation.funcs.bounded_mean_1d"><code class="docutils literal notranslate"><span class="pre">bounded_mean_1d()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#par_segmentation.funcs.bounded_mean_2d"><code class="docutils literal notranslate"><span class="pre">bounded_mean_2d()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#par_segmentation.funcs.direcslist"><code class="docutils literal notranslate"><span class="pre">direcslist()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#par_segmentation.funcs.dosage"><code class="docutils literal notranslate"><span class="pre">dosage()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#par_segmentation.funcs.in_notebook"><code class="docutils literal notranslate"><span class="pre">in_notebook()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#par_segmentation.funcs.interp_1d_array"><code class="docutils literal notranslate"><span class="pre">interp_1d_array()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#par_segmentation.funcs.interp_2d_array"><code class="docutils literal notranslate"><span class="pre">interp_2d_array()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#par_segmentation.funcs.load_image"><code class="docutils literal notranslate"><span class="pre">load_image()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#par_segmentation.funcs.make_mask"><code class="docutils literal notranslate"><span class="pre">make_mask()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#par_segmentation.funcs.norm_roi"><code class="docutils literal notranslate"><span class="pre">norm_roi()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#par_segmentation.funcs.organise_by_nd"><code class="docutils literal notranslate"><span class="pre">organise_by_nd()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#par_segmentation.funcs.readnd"><code class="docutils literal notranslate"><span class="pre">readnd()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#par_segmentation.funcs.rolling_ave_1d"><code class="docutils literal notranslate"><span class="pre">rolling_ave_1d()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#par_segmentation.funcs.rolling_ave_2d"><code class="docutils literal notranslate"><span class="pre">rolling_ave_2d()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#par_segmentation.funcs.rotate_roi"><code class="docutils literal notranslate"><span class="pre">rotate_roi()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#par_segmentation.funcs.rotated_embryo"><code class="docutils literal notranslate"><span class="pre">rotated_embryo()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#par_segmentation.funcs.save_img"><code class="docutils literal notranslate"><span class="pre">save_img()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#par_segmentation.funcs.save_img_jpeg"><code class="docutils literal notranslate"><span class="pre">save_img_jpeg()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#par_segmentation.funcs.straighten"><code class="docutils literal notranslate"><span class="pre">straighten()</span></code></a></li>
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">par_segmentation package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-par_segmentation.funcs">par_segmentation.funcs module</a><ul>
+<li><a class="reference internal" href="#par_segmentation.funcs.asi"><code class="docutils literal notranslate"><span class="pre">asi()</span></code></a></li>
+<li><a class="reference internal" href="#par_segmentation.funcs.bounded_mean_1d"><code class="docutils literal notranslate"><span class="pre">bounded_mean_1d()</span></code></a></li>
+<li><a class="reference internal" href="#par_segmentation.funcs.bounded_mean_2d"><code class="docutils literal notranslate"><span class="pre">bounded_mean_2d()</span></code></a></li>
+<li><a class="reference internal" href="#par_segmentation.funcs.direcslist"><code class="docutils literal notranslate"><span class="pre">direcslist()</span></code></a></li>
+<li><a class="reference internal" href="#par_segmentation.funcs.dosage"><code class="docutils literal notranslate"><span class="pre">dosage()</span></code></a></li>
+<li><a class="reference internal" href="#par_segmentation.funcs.in_notebook"><code class="docutils literal notranslate"><span class="pre">in_notebook()</span></code></a></li>
+<li><a class="reference internal" href="#par_segmentation.funcs.interp_1d_array"><code class="docutils literal notranslate"><span class="pre">interp_1d_array()</span></code></a></li>
+<li><a class="reference internal" href="#par_segmentation.funcs.interp_2d_array"><code class="docutils literal notranslate"><span class="pre">interp_2d_array()</span></code></a></li>
+<li><a class="reference internal" href="#par_segmentation.funcs.load_image"><code class="docutils literal notranslate"><span class="pre">load_image()</span></code></a></li>
+<li><a class="reference internal" href="#par_segmentation.funcs.make_mask"><code class="docutils literal notranslate"><span class="pre">make_mask()</span></code></a></li>
+<li><a class="reference internal" href="#par_segmentation.funcs.norm_roi"><code class="docutils literal notranslate"><span class="pre">norm_roi()</span></code></a></li>
+<li><a class="reference internal" href="#par_segmentation.funcs.organise_by_nd"><code class="docutils literal notranslate"><span class="pre">organise_by_nd()</span></code></a></li>
+<li><a class="reference internal" href="#par_segmentation.funcs.readnd"><code class="docutils literal notranslate"><span class="pre">readnd()</span></code></a></li>
+<li><a class="reference internal" href="#par_segmentation.funcs.rolling_ave_1d"><code class="docutils literal notranslate"><span class="pre">rolling_ave_1d()</span></code></a></li>
+<li><a class="reference internal" href="#par_segmentation.funcs.rolling_ave_2d"><code class="docutils literal notranslate"><span class="pre">rolling_ave_2d()</span></code></a></li>
+<li><a class="reference internal" href="#par_segmentation.funcs.rotate_roi"><code class="docutils literal notranslate"><span class="pre">rotate_roi()</span></code></a></li>
+<li><a class="reference internal" href="#par_segmentation.funcs.rotated_embryo"><code class="docutils literal notranslate"><span class="pre">rotated_embryo()</span></code></a></li>
+<li><a class="reference internal" href="#par_segmentation.funcs.save_img"><code class="docutils literal notranslate"><span class="pre">save_img()</span></code></a></li>
+<li><a class="reference internal" href="#par_segmentation.funcs.save_img_jpeg"><code class="docutils literal notranslate"><span class="pre">save_img_jpeg()</span></code></a></li>
+<li><a class="reference internal" href="#par_segmentation.funcs.straighten"><code class="docutils literal notranslate"><span class="pre">straighten()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#module-par_segmentation.quantifier">par_segmentation.quantifier module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#par_segmentation.quantifier.ImageQuant"><code class="docutils literal notranslate"><span class="pre">ImageQuant</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#module-par_segmentation.roi">par_segmentation.roi module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#par_segmentation.roi.ROI_jupyter"><code class="docutils literal notranslate"><span class="pre">ROI_jupyter</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#par_segmentation.roi.def_roi"><code class="docutils literal notranslate"><span class="pre">def_roi()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#par_segmentation.roi.interp_roi"><code class="docutils literal notranslate"><span class="pre">interp_roi()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#par_segmentation.roi.offset_coordinates"><code class="docutils literal notranslate"><span class="pre">offset_coordinates()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#par_segmentation.roi.spline_roi"><code class="docutils literal notranslate"><span class="pre">spline_roi()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#module-par_segmentation">Module contents</a></li>
+<li><a class="reference internal" href="#module-par_segmentation.quantifier">par_segmentation.quantifier module</a><ul>
+<li><a class="reference internal" href="#par_segmentation.quantifier.ImageQuant"><code class="docutils literal notranslate"><span class="pre">ImageQuant</span></code></a><ul>
+<li><a class="reference internal" href="#par_segmentation.quantifier.ImageQuant.compile_res"><code class="docutils literal notranslate"><span class="pre">ImageQuant.compile_res()</span></code></a></li>
+<li><a class="reference internal" href="#par_segmentation.quantifier.ImageQuant.plot_fits"><code class="docutils literal notranslate"><span class="pre">ImageQuant.plot_fits()</span></code></a></li>
+<li><a class="reference internal" href="#par_segmentation.quantifier.ImageQuant.plot_losses"><code class="docutils literal notranslate"><span class="pre">ImageQuant.plot_losses()</span></code></a></li>
+<li><a class="reference internal" href="#par_segmentation.quantifier.ImageQuant.plot_quantification"><code class="docutils literal notranslate"><span class="pre">ImageQuant.plot_quantification()</span></code></a></li>
+<li><a class="reference internal" href="#par_segmentation.quantifier.ImageQuant.plot_segmentation"><code class="docutils literal notranslate"><span class="pre">ImageQuant.plot_segmentation()</span></code></a></li>
+<li><a class="reference internal" href="#par_segmentation.quantifier.ImageQuant.run"><code class="docutils literal notranslate"><span class="pre">ImageQuant.run()</span></code></a></li>
+<li><a class="reference internal" href="#par_segmentation.quantifier.ImageQuant.save"><code class="docutils literal notranslate"><span class="pre">ImageQuant.save()</span></code></a></li>
+<li><a class="reference internal" href="#par_segmentation.quantifier.ImageQuant.view_frames"><code class="docutils literal notranslate"><span class="pre">ImageQuant.view_frames()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li><a class="reference internal" href="#module-par_segmentation.roi">par_segmentation.roi module</a><ul>
+<li><a class="reference internal" href="#par_segmentation.roi.ROI_jupyter"><code class="docutils literal notranslate"><span class="pre">ROI_jupyter</span></code></a><ul>
+<li><a class="reference internal" href="#par_segmentation.roi.ROI_jupyter.run"><code class="docutils literal notranslate"><span class="pre">ROI_jupyter.run()</span></code></a></li>
 </ul>
-
+</li>
+<li><a class="reference internal" href="#par_segmentation.roi.def_roi"><code class="docutils literal notranslate"><span class="pre">def_roi()</span></code></a></li>
+<li><a class="reference internal" href="#par_segmentation.roi.interp_roi"><code class="docutils literal notranslate"><span class="pre">interp_roi()</span></code></a></li>
+<li><a class="reference internal" href="#par_segmentation.roi.offset_coordinates"><code class="docutils literal notranslate"><span class="pre">offset_coordinates()</span></code></a></li>
+<li><a class="reference internal" href="#par_segmentation.roi.spline_roi"><code class="docutils literal notranslate"><span class="pre">spline_roi()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-par_segmentation">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
         </div>
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">par_segmentation</a>
+          <a href="index.html">par-segmentation</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -102,7 +111,6 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="modules.html">par_segmentation</a></li>
       <li class="breadcrumb-item active">par_segmentation package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/par_segmentation.rst.txt" rel="nofollow"> View page source</a>
@@ -719,9 +727,7 @@ np.savetxt(filename, newcoors, fmt=’%.4f’, delimiter=’ ‘)</p>
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="modules.html" class="btn btn-neutral float-left" title="par_segmentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-    </div>
+          <footer>
 
   <hr/>
 
