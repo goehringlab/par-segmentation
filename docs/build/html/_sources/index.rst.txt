@@ -10,6 +10,8 @@ Welcome to par-segmentation's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   API reference <modules>
+
 
 
 Indices and tables
