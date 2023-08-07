@@ -1,0 +1,314 @@
+:py:mod:`par_segmentation.funcs`
+================================
+
+.. py:module:: par_segmentation.funcs
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   par_segmentation.funcs.load_image
+   par_segmentation.funcs.save_img
+   par_segmentation.funcs.save_img_jpeg
+   par_segmentation.funcs.straighten
+   par_segmentation.funcs.rotated_embryo
+   par_segmentation.funcs.rotate_roi
+   par_segmentation.funcs.norm_roi
+   par_segmentation.funcs.interp_1d_array
+   par_segmentation.funcs.interp_2d_array
+   par_segmentation.funcs.rolling_ave_1d
+   par_segmentation.funcs.rolling_ave_2d
+   par_segmentation.funcs.bounded_mean_1d
+   par_segmentation.funcs.bounded_mean_2d
+   par_segmentation.funcs.asi
+   par_segmentation.funcs.dosage
+   par_segmentation.funcs.make_mask
+   par_segmentation.funcs.readnd
+   par_segmentation.funcs.organise_by_nd
+   par_segmentation.funcs.direcslist
+   par_segmentation.funcs.in_notebook
+
+
+
+.. py:function:: load_image(filename: str) -> numpy.ndarray
+
+   Given the filename of a TIFF, creates numpy array with pixel intensities
+
+   Args:
+       filename: full path to the file to import (including extension)
+
+   Returns:
+       A numpy array of the image
+
+
+
+.. py:function:: save_img(img: numpy.ndarray, direc: str)
+
+   Saves 2D array as .tif file
+
+   Args:
+       img: numpy array of the image to save
+       direc: file path to save to (including '.tif' extension)
+
+
+
+.. py:function:: save_img_jpeg(img: numpy.ndarray, direc: str, cmin: Optional[float] = None, cmax: Optional[float] = None, cmap: str = 'gray')
+
+   Saves 2D array as jpeg, according to min and max pixel intensities
+
+   Args:
+       img: numpy array of the image to save
+       direc: file path to save to (including '.jpeg' extension)
+       cmin: optional, sets intensity scaling (along with cmax)
+       cmax: optional, sets intensity scaling (along with cmin)
+       cmap: colour map (use string corresponding to matplotlib colormap)
+
+
+
+.. py:function:: straighten(img: numpy.ndarray, roi: numpy.ndarray, thickness: int, periodic: bool = True, interp: str = 'cubic', ninterp: Optional[int] = None) -> numpy.ndarray
+
+   Creates straightened image based on coordinates
+   Todo: Doesn't work properly for non-periodic rois
+
+   Args:
+       img: numpy array of image to straighten
+       roi: coordinates of roi (two column array with x and y coordinates), should be 1 pixel length apart in a loop
+       thickness: thickness (pixel units) of the region surrounding the ROI to straighten
+       periodic: set to True is the ROI is periodic (a full loop)
+       interp: interpolation type, 'cubic' or 'linear
+       ninterp: optional. If specified, interpolation along the y axis of the straight image will be at this many
+       evenly spaced points. If not specified, interpolation will be performed at pixel-width distances.
+
+   Returns:
+       Straightened image as 2D numpy array. Will have dimensions [thickness, roi.shape[0]] unless ninterp is
+       specified, in which case [ninterp, roi.shape[0]]
+
+
+
+.. py:function:: rotated_embryo(img: numpy.ndarray, roi: numpy.ndarray, l: int, h: int, order: int = 1, return_roi: bool = False) -> Union[numpy.ndarray, Tuple[numpy.array, numpy.array]]
+
+   Takes an image and rotates according to coordinates so that anterior is on left, posterior on right
+   Todo: some of the returned coordinates are anticlockwise
+
+   Args:
+       img: numpy array of image to rotate
+       roi: roi of cell boundary (two columns specifying x and y coordinates)
+       l: length of output image (pixel units)
+       h: height of output image (pixel units)
+       order: interpolation order. 1 or 3 for linear or cubic interpolation
+       return_roi: if True, will return roi corresponding to the cell edge in the new image
+
+   Returns:
+       numpy array of rotated image with dimensions [h, l]
+       if return_roi is True, will also return roi corresponding to the cell edge in the new image
+
+
+
+.. py:function:: rotate_roi(roi: numpy.ndarray) -> numpy.ndarray
+
+   Rotates coordinate array so that most posterior point is at the beginning
+
+   Args:
+       roi: two column numpy array of coordinates to rotate
+
+   Returns:
+       numpy array of same shape as roi with rotated coordinates
+
+
+
+.. py:function:: norm_roi(roi: numpy.ndarray)
+
+   Aligns coordinates to their long axis
+
+   Args:
+       roi: two column numpy array of coordinates to normalise
+
+   Returns:
+       numpy array of same shape as roi with normalised coordinates
+
+
+
+.. py:function:: interp_1d_array(array: numpy.ndarray, n: int, method: str = 'cubic') -> numpy.ndarray
+
+   Interpolates a one dimensional array into n points
+
+   Args:
+       array: one dimensional numpy array
+       n: number of points to evaluate. Will evaluate this many points at evenly space intervals along the length of
+       array
+       method: 'linear' or 'cubic'
+
+   Returns:
+       interpolated array (one dimensional array of length n)
+
+
+
+.. py:function:: interp_2d_array(array: numpy.ndarray, n: int, ax: int = 0, method: str = 'cubic') -> numpy.ndarray
+
+   Interpolates a two dimensional array along one axis into n points
+
+   Args:
+       array: two dimensional numpy array
+       n: number of points to evaluate along the specified axis
+       ax: 0 or 1, specifies the axis to interpolate along. 0 corresponds to the rows and 1 corresponds to the columns.
+       method: 'linear' or 'cubic'
+
+   Returns:
+       Interpolated array. 2D array of shape [array.shape[0], n] if ax==1, or [n, array.shape[1] if ax==0
+
+
+
+.. py:function:: rolling_ave_1d(array: numpy.ndarray, window: int, periodic: bool = True) -> numpy.ndarray
+
+   Performs a rolling window average along a one dimensional array
+
+   Args:
+       array: one dimensional array
+       window: rolling average window size. The function will compute the average of `window` consecutive elements at a
+           time.
+       periodic: specifies if array is periodic. If true, averaging rolls over at ends. If false, the function will not
+           average over the elements at the ends of the array.
+
+   Returns:
+       numpy array same size as input array, containing the rolling average of the input array.
+
+
+
+.. py:function:: rolling_ave_2d(array: numpy.ndarray, window: int, periodic: bool = True) -> numpy.ndarray
+
+   Returns rolling average across the x axis of a 2D array
+
+   Args:
+       array: two dimensional array
+       window: rolling average window size
+       periodic: specifies if array is periodic. If true, averaging rolls over at ends
+
+   Returns:
+       numpy array same size as input array
+
+
+
+.. py:function:: bounded_mean_1d(array: numpy.ndarray, bounds: tuple, weights: Optional[numpy.ndarray] = None) -> float
+
+   Averages 1D array over region specified by bounds
+   Array and weights should be same length
+   Todo: Should add interpolation step first?
+   Todo: combine with 2d function
+
+   Args:
+       array: one dimensional numpy array
+       bounds: specifies window to average over. (min, max) from 0 to 1 specifying start and end of the array
+       weights: if weights are specified a weighted average will be performed
+
+   Returns:
+       single number corresponding to mean value over the bounds specified
+
+
+
+.. py:function:: bounded_mean_2d(array: numpy.ndarray, bounds: tuple) -> numpy.ndarray
+
+   Averages 2D array in y dimension over region specified by bounds
+   Todo: Should add axis parameter
+   Todo: Should add interpolation step first
+
+   Args:
+       array: two dimensional numpy array
+       bounds: specifies window to average over. (min, max) from 0 to 1 specifying start and end of the array
+
+   Returns:
+       one dimensional numpy array of length array.shape[0], corresponding to mean value over the bounds specified
+
+
+
+.. py:function:: asi(mems: numpy.ndarray, size: float) -> float
+
+   Calculates asymmetry index based on membrane concentration profile
+
+   Args:
+       mems: numpy array of membrane concentration values. Periodic array starting from extreme posterior
+       size: size of region to average over when calculating anterior and posterior concentrations (from 0 to 1, where 1 indicates the whole embryo)
+
+   Returns:
+       asymmetry index
+
+
+
+.. py:function:: dosage(img: numpy.ndarray, roi: numpy.ndarray, expand: float) -> numpy.ndarray
+
+   One way of calculating protein dosage from an image
+
+   Args:
+       img: image 2D numpy array
+       roi: roi representing cell edge (two-column numpy array)
+       expand: expand the ROI by this many pixels before calculating the dosage
+
+   Returns:
+       dosage
+
+
+
+.. py:function:: make_mask(shape: tuple, roi: numpy.ndarray) -> numpy.ndarray
+
+   Create a mask for an image based on an ROI
+
+   Args:
+       shape: shape of the binary mask
+       roi: roi of the mask region
+
+   Returns:
+       binary mask 
+
+
+
+.. py:function:: readnd(path: str) -> dict
+
+   Read an nd file
+
+   Args:
+       path: directory to embryo folder containing nd file
+
+   Returns:
+       dictionary containing data from nd file
+
+
+
+.. py:function:: organise_by_nd(path: str)
+
+   Organises images in a folder using the nd files
+
+   Args:
+       path: path to folder containing nd files
+
+
+
+.. py:function:: direcslist(dest: str, levels: int = 0, exclude: Optional[tuple] = ('!', ), exclusive: Optional[tuple] = None) -> list
+
+   Gives a list of directories within a given directory (full path)
+   Todo: os.walk
+
+   Args:
+       dest: path of parent directory
+       levels: number of levels to go down. E.g. if 0, only return folders within the parent folder; if 1, return
+       folders within folders within the parent folder
+       exclude: exclude directories containing any strings within this tuple
+       exclusive: exclude directories that don't contain all the strings within this tuple
+
+   Returns:
+       list of directories
+
+
+
+.. py:function:: in_notebook()
+
+   Tests whether python is being run within a notebook
+
+   https://stackoverflow.com/questions/15411967/how-can-i-check-if-code-is-executed-in-the-ipython-notebook
+
+
+

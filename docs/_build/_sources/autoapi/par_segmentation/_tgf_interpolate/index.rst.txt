@@ -1,0 +1,210 @@
+:orphan:
+
+:py:mod:`par_segmentation._tgf_interpolate`
+===========================================
+
+.. py:module:: par_segmentation._tgf_interpolate
+
+.. autoapi-nested-parse::
+
+   tfg.math.interpolation.bspline.interpolate
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   par_segmentation._tgf_interpolate.Degree
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   par_segmentation._tgf_interpolate.interpolate
+   par_segmentation._tgf_interpolate.interpolate_with_weights
+   par_segmentation._tgf_interpolate.compare_dimensions
+   par_segmentation._tgf_interpolate.knot_weights
+   par_segmentation._tgf_interpolate.assert_all_in_range
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   par_segmentation._tgf_interpolate.FLAGS
+   par_segmentation._tgf_interpolate.Integer
+   par_segmentation._tgf_interpolate.Float
+   par_segmentation._tgf_interpolate.TensorLike
+   par_segmentation._tgf_interpolate.TFG_ADD_ASSERTS_TO_GRAPH
+
+
+.. py:data:: FLAGS
+
+   
+
+.. py:data:: Integer
+
+   
+
+.. py:data:: Float
+
+   
+
+.. py:data:: TensorLike
+
+   
+
+.. py:function:: interpolate(knots: TensorLike, positions: TensorLike, degree: int, cyclical: bool, name: str = 'bspline_interpolate') -> tensorflow.Tensor
+
+   Applies B-spline interpolation to input control points (knots).
+   Note:
+     In the following, A1 to An, and B1 to Bk are optional batch dimensions.
+   Args:
+     knots: A tensor with shape `[B1, ..., Bk, C]` containing knot values, where
+       `C` is the number of knots.
+     positions: Tensor with shape `[A1, .. An]`. Positions must be between
+       `[0, C - D)` for non-cyclical and `[0, C)` for cyclical splines, where `C`
+       is the number of knots and `D` is the spline degree.
+     degree: An `int` between 0 and 4, or an enumerated constant from the Degree
+       class, which is the degree of the splines.
+     cyclical: A `bool`, whether the splines are cyclical.
+     name: A name for this op. Defaults to "bspline_interpolate".
+   Returns:
+     A tensor of shape `[A1, ... An, B1, ..., Bk]`, which is the result of spline
+     interpolation.
+
+
+.. py:function:: interpolate_with_weights(knots: TensorLike, weights: TensorLike, name: str = 'bspline_interpolate_with_weights') -> tensorflow.Tensor
+
+   Interpolates knots using knot weights.
+   Note:
+     In the following, A1 to An, and B1 to Bk are optional batch dimensions.
+   Args:
+     knots: A tensor with shape `[B1, ..., Bk, C]` containing knot values, where
+       `C` is the number of knots.
+     weights: A tensor with shape `[A1, ..., An, C]` containing dense weights for
+       the knots, where `C` is the number of knots.
+     name: A name for this op. Defaults to "bspline_interpolate_with_weights".
+   Returns:
+     A tensor with shape `[A1, ..., An, B1, ..., Bk]`, which is the result of
+     spline interpolation.
+   Raises:
+     ValueError: If the last dimension of knots and weights is not equal.
+
+
+.. py:function:: compare_dimensions(tensors, axes, tensor_names=None)
+
+   Compares dimensions of tensors with static or dynamic shapes.
+   Args:
+     tensors: A list or tuple of tensors to compare.
+     axes: An `int` or a list or tuple of `int`s with the same length as
+       `tensors`. If an `int`, it is assumed to be the same for all the tensors.
+       Each entry should correspond to the axis of the tensor being compared.
+     tensor_names: Names of `tensors` to be used in the error message if one is
+       thrown. If left as `None`, their `Tensor.name` fields are used instead.
+   Raises:
+     ValueError: If inputs have unexpected types, or if given axes are out of
+       bounds, or if the check fails.
+
+
+.. py:class:: Degree
+
+
+   Bases: :py:obj:`enum.IntEnum`
+
+   Defines valid degrees for B-spline interpolation.
+
+   .. py:attribute:: CONSTANT
+      :value: 0
+
+      
+
+   .. py:attribute:: LINEAR
+      :value: 1
+
+      
+
+   .. py:attribute:: QUADRATIC
+      :value: 2
+
+      
+
+   .. py:attribute:: CUBIC
+      :value: 3
+
+      
+
+   .. py:attribute:: QUARTIC
+      :value: 4
+
+      
+
+
+.. py:function:: knot_weights(positions: TensorLike, num_knots: TensorLike, degree: int, cyclical: bool, sparse_mode: bool = False, name: str = 'bspline_knot_weights') -> Union[tensorflow.Tensor, Tuple[tensorflow.Tensor, tensorflow.Tensor]]
+
+   Function that converts cardinal B-spline positions to knot weights.
+   Note:
+     In the following, A1 to An are optional batch dimensions.
+   Args:
+     positions: A tensor with shape `[A1, .. An]`. Positions must be between
+       `[0, C - D)` for non-cyclical and `[0, C)` for cyclical splines, where `C`
+       is the number of knots and `D` is the spline degree.
+     num_knots: A strictly positive `int` describing the number of knots in the
+       spline.
+     degree: An `int` describing the degree of the spline, which must be smaller
+       than `num_knots`.
+     cyclical: A `bool` describing whether the spline is cyclical.
+     sparse_mode: A `bool` describing whether to return a result only for the
+       knots with nonzero weights. If set to True, the function returns the
+       weights of only the `degree` + 1 knots that are non-zero, as well as the
+       indices of the knots.
+     name: A name for this op. Defaults to "bspline_knot_weights".
+   Returns:
+     A tensor with dense weights for each control point, with the shape
+     `[A1, ... An, C]` if `sparse_mode` is False.
+     Otherwise, returns a tensor of shape `[A1, ... An, D + 1]` that contains the
+     non-zero weights, and a tensor with the indices of the knots, with the type
+     tf.int32.
+   Raises:
+     ValueError: If degree is greater than 4 or num_knots - 1, or less than 0.
+     InvalidArgumentError: If positions are not in the right range.
+
+
+.. py:data:: TFG_ADD_ASSERTS_TO_GRAPH
+   :value: 'tfg_add_asserts_to_graph'
+
+   
+
+.. py:function:: assert_all_in_range(vector, minval, maxval, open_bounds=False, name='assert_all_in_range')
+
+   Checks whether all values of vector are between minval and maxval.
+   This function checks if all the values in the given vector are in an interval
+   `[minval, maxval]` if `open_bounds` is `False`, or in `]minval, maxval[` if it
+   is set to `True`.
+   Note:
+     In the following, A1 to An are optional batch dimensions.
+   Args:
+     vector: A tensor of shape `[A1, ..., An]` containing the values we want to
+       check.
+     minval: A `float` or a tensor of shape `[A1, ..., An]` representing the
+       desired lower bound for the values in `vector`.
+     maxval: A `float` or a tensor of shape `[A1, ..., An]` representing the
+       desired upper bound for the values in `vector`.
+     open_bounds: A `bool` indicating whether the range is open or closed.
+     name: A name for this op. Defaults to 'assert_all_in_range'.
+   Raises:
+     tf.errors.InvalidArgumentError: If `vector` is not in the expected range.
+   Returns:
+     The input vector, with dependence on the assertion operator in the graph.
+
+
