@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>par_segmentation._legacy &mdash; par-segmentation 0.1.8 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="par_segmentation._model" href="../_model/index.html" />
+    <link rel="prev" title="par_segmentation._interactive" href="../_interactive/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            par-segmentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">API reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">par_segmentation</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../_interactive/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">par_segmentation._interactive</span></code></a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">par_segmentation._legacy</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">par_segmentation._model</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_tgf_interpolate/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">par_segmentation._tgf_interpolate</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../funcs/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">par_segmentation.funcs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../quantifier/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">par_segmentation.quantifier</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../roi/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">par_segmentation.roi</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">par-segmentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">par_segmentation</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">par_segmentation._legacy</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/autoapi/par_segmentation/_legacy/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="module-par_segmentation._legacy">
+<span id="par-segmentation-legacy"></span><h1><a class="reference internal" href="#module-par_segmentation._legacy" title="par_segmentation._legacy"><code class="xref py py-mod docutils literal notranslate"><span class="pre">par_segmentation._legacy</span></code></a><a class="headerlink" href="#module-par_segmentation._legacy" title="Permalink to this heading"></a></h1>
+<div class="section" id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<div class="section" id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#par_segmentation._legacy.ImageQuantDifferentialEvolutionSingle" title="par_segmentation._legacy.ImageQuantDifferentialEvolutionSingle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ImageQuantDifferentialEvolutionSingle</span></code></a></p></td>
+<td><p>Quantification works by taking cross-sections across the membrane, and fitting the resulting profile as the sum of</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#par_segmentation._legacy.ImageQuantDifferentialEvolutionMulti" title="par_segmentation._legacy.ImageQuantDifferentialEvolutionMulti"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ImageQuantDifferentialEvolutionMulti</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#par_segmentation._legacy.gaus" title="par_segmentation._legacy.gaus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gaus</span></code></a>(→ numpy.ndarray)</p></td>
+<td><p>Create Gaussian curve with centre and width specified</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#par_segmentation._legacy.error_func" title="par_segmentation._legacy.error_func"><code class="xref py py-obj docutils literal notranslate"><span class="pre">error_func</span></code></a>(→ numpy.ndarray)</p></td>
+<td><p>Create error function with centre and width specified</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#par_segmentation._legacy.polycrop" title="par_segmentation._legacy.polycrop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">polycrop</span></code></a>(→ numpy.ndarray)</p></td>
+<td><p>Crops image according to polyline coordinates by setting values not contained within the coordinates to zero</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#par_segmentation._legacy.bg_subtraction" title="par_segmentation._legacy.bg_subtraction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bg_subtraction</span></code></a>() → numpy.ndarray)</p></td>
+<td><p>Subtracts background intensity from an image of a cell. Background intensity calculated as the mean intensity within</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#par_segmentation._legacy.calc_vol" title="par_segmentation._legacy.calc_vol"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_vol</span></code></a>(→ float)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#par_segmentation._legacy.calc_sa" title="par_segmentation._legacy.calc_sa"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_sa</span></code></a>(→ float)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="par_segmentation._legacy.ImageQuantDifferentialEvolutionSingle">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">par_segmentation._legacy.</span></span><span class="sig-name descname"><span class="pre">ImageQuantDifferentialEvolutionSingle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freedom</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">periodic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thickness</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">itp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rol_ave</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zerocap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nfits</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cubic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bg_subtract</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#par_segmentation._legacy.ImageQuantDifferentialEvolutionSingle" title="Permalink to this definition"></a></dt>
+<dd><p>Quantification works by taking cross-sections across the membrane, and fitting the resulting profile as the sum of
+a cytoplasmic signal component and a membrane signal component. Differential evolution algorithm</p>
+<p>Input data:
+img                image</p>
+<p>Background curves:
+sigma              if either of above are not specified, assume gaussian/error function with width set by sigma</p>
+<p>ROI:
+roi                coordinates defining cortex. Can use output from def_roi function</p>
+<p>Fitting parameters:
+freedom            amount of freedom allowed in ROI (pixel units)
+periodic           True if coordinates form a closed loop
+thickness          thickness of cross-section over which to perform quantification
+itp                amount to interpolate image prior to segmentation (this many points per pixel in original image)
+rol_ave            width of rolling average
+rotate             if True, will automatically rotate ROI so that the first/last points are at the end of the long</p>
+<blockquote>
+<div><p>axis</p>
+</div></blockquote>
+<p>zerocap            if True, prevents negative membane and cytoplasm values
+nfits              performs this many fits at regular intervals around ROI
+iterations         if &gt;1, adjusts ROI and re-fits
+interp             interpolation type (linear or cubic)
+bg_subtract        if True, will estimate and subtract background signal prior to quantification</p>
+<p>Computation:
+parallel           TRUE = perform fitting in parallel
+cores              number of cores to use if parallel is True (if none will use all available)</p>
+<p>Saving:
+save_path          destination to save results, will create if it doesn’t already exist</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="par_segmentation._legacy.ImageQuantDifferentialEvolutionSingle.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#par_segmentation._legacy.ImageQuantDifferentialEvolutionSingle.run" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="par_segmentation._legacy.ImageQuantDifferentialEvolutionSingle.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#par_segmentation._legacy.ImageQuantDifferentialEvolutionSingle.fit" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="par_segmentation._legacy.ImageQuantDifferentialEvolutionSingle._fit_profile">
+<span class="sig-name descname"><span class="pre">_fit_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">profile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#par_segmentation._legacy.ImageQuantDifferentialEvolutionSingle._fit_profile" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="par_segmentation._legacy.ImageQuantDifferentialEvolutionSingle._mse">
+<span class="sig-name descname"><span class="pre">_mse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">l_c_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">profile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#par_segmentation._legacy.ImageQuantDifferentialEvolutionSingle._mse" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="par_segmentation._legacy.ImageQuantDifferentialEvolutionSingle.sim_images">
+<span class="sig-name descname"><span class="pre">sim_images</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#par_segmentation._legacy.ImageQuantDifferentialEvolutionSingle.sim_images" title="Permalink to this definition"></a></dt>
+<dd><p>Creates simulated images based on fit results</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="par_segmentation._legacy.ImageQuantDifferentialEvolutionSingle.adjust_roi">
+<span class="sig-name descname"><span class="pre">adjust_roi</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#par_segmentation._legacy.ImageQuantDifferentialEvolutionSingle.adjust_roi" title="Permalink to this definition"></a></dt>
+<dd><p>Can do after a preliminary fit to refine coordinates
+Must refit after doing this</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="par_segmentation._legacy.ImageQuantDifferentialEvolutionSingle.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#par_segmentation._legacy.ImageQuantDifferentialEvolutionSingle.reset" title="Permalink to this definition"></a></dt>
+<dd><p>Resets entire class to its initial state</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="par_segmentation._legacy.ImageQuantDifferentialEvolutionSingle.reset_res">
+<span class="sig-name descname"><span class="pre">reset_res</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#par_segmentation._legacy.ImageQuantDifferentialEvolutionSingle.reset_res" title="Permalink to this definition"></a></dt>
+<dd><p>Clears results</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="par_segmentation._legacy.ImageQuantDifferentialEvolutionMulti">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">par_segmentation._legacy.</span></span><span class="sig-name descname"><span class="pre">ImageQuantDifferentialEvolutionMulti</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">periodic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thickness</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freedom</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">itp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rol_ave</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zerocap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nfits</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cubic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bg_subtract</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#par_segmentation._legacy.ImageQuantDifferentialEvolutionMulti" title="Permalink to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="par_segmentation._legacy.ImageQuantDifferentialEvolutionMulti.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#par_segmentation._legacy.ImageQuantDifferentialEvolutionMulti.run" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="par_segmentation._legacy.gaus">
+<span class="sig-prename descclassname"><span class="pre">par_segmentation._legacy.</span></span><span class="sig-name descname"><span class="pre">gaus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">centre</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#par_segmentation._legacy.gaus" title="Permalink to this definition"></a></dt>
+<dd><p>Create Gaussian curve with centre and width specified</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>x: array of input x values
+centre: centre of the Gaussian curve (in x units)
+width: width of the gaussian curve (in x units)</p>
+</dd>
+<dt>Returns:</dt><dd><p>Gaussian curve</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="par_segmentation._legacy.error_func">
+<span class="sig-prename descclassname"><span class="pre">par_segmentation._legacy.</span></span><span class="sig-name descname"><span class="pre">error_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">centre</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#par_segmentation._legacy.error_func" title="Permalink to this definition"></a></dt>
+<dd><p>Create error function with centre and width specified</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>x: array of input x values
+centre: centre of the error function curve (in x units)
+width: width of the error function curve (in x units)</p>
+</dd>
+<dt>Returns:</dt><dd><p>error function curve</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="par_segmentation._legacy.polycrop">
+<span class="sig-prename descclassname"><span class="pre">par_segmentation._legacy.</span></span><span class="sig-name descname"><span class="pre">polycrop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polyline</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enlarge</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#par_segmentation._legacy.polycrop" title="Permalink to this definition"></a></dt>
+<dd><p>Crops image according to polyline coordinates by setting values not contained within the coordinates to zero</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>img: numpy array of image
+polyline: roi specifying the bounding region (two columns specifying x and y coordinates)
+enlarge: amount by which to expand or contract the ROI (pixel units)</p>
+</dd>
+<dt>Returns:</dt><dd><p>numpy array of same shape img, with regions outside of polyline set to zero</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="par_segmentation._legacy.bg_subtraction">
+<span class="sig-prename descclassname"><span class="pre">par_segmentation._legacy.</span></span><span class="sig-name descname"><span class="pre">bg_subtraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">band</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(25,</span> <span class="pre">75)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#par_segmentation._legacy.bg_subtraction" title="Permalink to this definition"></a></dt>
+<dd><p>Subtracts background intensity from an image of a cell. Background intensity calculated as the mean intensity within
+a band surronding the cell (specified by ROI)</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>img: numpy array of image to subtract background from
+roi: two column numpy array specifying coordinates of the cell boundary
+band: inner and outer distance of the band from the roi</p>
+</dd>
+<dt>Returns:</dt><dd><p>numpy array of image with background subtracted</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="par_segmentation._legacy.calc_vol">
+<span class="sig-prename descclassname"><span class="pre">par_segmentation._legacy.</span></span><span class="sig-name descname"><span class="pre">calc_vol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normcoors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#par_segmentation._legacy.calc_vol" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="par_segmentation._legacy.calc_sa">
+<span class="sig-prename descclassname"><span class="pre">par_segmentation._legacy.</span></span><span class="sig-name descname"><span class="pre">calc_sa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normcoors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#par_segmentation._legacy.calc_sa" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../_interactive/index.html" class="btn btn-neutral float-left" title="par_segmentation._interactive" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../_model/index.html" class="btn btn-neutral float-right" title="par_segmentation._model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Tom Bland.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

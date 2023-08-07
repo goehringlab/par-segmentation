@@ -11,3 +11,4 @@ tqdm
 pandas
 absl-py
 pytest
+sphinx_rtd_theme==1.0.0

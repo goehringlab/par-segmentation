@@ -1,0 +1,179 @@
+:py:mod:`par_segmentation._legacy`
+==================================
+
+.. py:module:: par_segmentation._legacy
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   par_segmentation._legacy.ImageQuantDifferentialEvolutionSingle
+   par_segmentation._legacy.ImageQuantDifferentialEvolutionMulti
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   par_segmentation._legacy.gaus
+   par_segmentation._legacy.error_func
+   par_segmentation._legacy.polycrop
+   par_segmentation._legacy.bg_subtraction
+   par_segmentation._legacy.calc_vol
+   par_segmentation._legacy.calc_sa
+
+
+
+.. py:class:: ImageQuantDifferentialEvolutionSingle(img: Union[numpy.ndarray, list], sigma: float = 2.0, roi: Union[numpy.ndarray, list] = None, freedom: float = 0.5, periodic: bool = True, thickness: int = 50, itp: int = 10, rol_ave: int = 10, parallel: bool = False, cores: Optional[int] = None, rotate: bool = False, zerocap: bool = True, nfits: Optional[int] = None, iterations: int = 2, interp: str = 'cubic', bg_subtract: bool = False)
+
+
+   Quantification works by taking cross-sections across the membrane, and fitting the resulting profile as the sum of
+   a cytoplasmic signal component and a membrane signal component. Differential evolution algorithm
+
+   Input data:
+   img                image
+
+   Background curves:
+   sigma              if either of above are not specified, assume gaussian/error function with width set by sigma
+
+   ROI:
+   roi                coordinates defining cortex. Can use output from def_roi function
+
+   Fitting parameters:
+   freedom            amount of freedom allowed in ROI (pixel units)
+   periodic           True if coordinates form a closed loop
+   thickness          thickness of cross-section over which to perform quantification
+   itp                amount to interpolate image prior to segmentation (this many points per pixel in original image)
+   rol_ave            width of rolling average
+   rotate             if True, will automatically rotate ROI so that the first/last points are at the end of the long
+                      axis
+   zerocap            if True, prevents negative membane and cytoplasm values
+   nfits              performs this many fits at regular intervals around ROI
+   iterations         if >1, adjusts ROI and re-fits
+   interp             interpolation type (linear or cubic)
+   bg_subtract        if True, will estimate and subtract background signal prior to quantification
+
+   Computation:
+   parallel           TRUE = perform fitting in parallel
+   cores              number of cores to use if parallel is True (if none will use all available)
+
+   Saving:
+   save_path          destination to save results, will create if it doesn't already exist
+
+
+
+   .. py:method:: run()
+
+
+   .. py:method:: fit()
+
+
+   .. py:method:: _fit_profile(profile: numpy.ndarray) -> Tuple[float, float, float]
+
+
+   .. py:method:: _mse(l_c_m: list, profile: numpy.ndarray) -> numpy.ndarray
+
+
+   .. py:method:: sim_images()
+
+      Creates simulated images based on fit results
+
+
+
+   .. py:method:: adjust_roi()
+
+      Can do after a preliminary fit to refine coordinates
+      Must refit after doing this
+
+
+
+   .. py:method:: reset()
+
+      Resets entire class to its initial state
+
+
+
+   .. py:method:: reset_res()
+
+      Clears results
+
+
+
+
+.. py:class:: ImageQuantDifferentialEvolutionMulti(img: Union[numpy.ndarray, list], roi: Union[numpy.ndarray, list] = None, sigma: float = 2.0, periodic: bool = True, thickness: int = 50, freedom: float = 0.5, itp: int = 10, rol_ave: int = 10, parallel: bool = False, cores: Optional[int] = None, rotate: bool = False, zerocap: bool = True, nfits: Optional[int] = None, iterations: int = 1, interp: str = 'cubic', bg_subtract: bool = False, verbose: bool = True)
+
+
+   .. py:method:: run()
+
+
+
+.. py:function:: gaus(x: numpy.ndarray, centre: float, width: float) -> numpy.ndarray
+
+   Create Gaussian curve with centre and width specified
+
+   Args:
+       x: array of input x values
+       centre: centre of the Gaussian curve (in x units)
+       width: width of the gaussian curve (in x units)
+
+   Returns:
+       Gaussian curve
+
+
+
+.. py:function:: error_func(x: numpy.ndarray, centre: float, width: float) -> numpy.ndarray
+
+   Create error function with centre and width specified
+
+   Args:
+       x: array of input x values
+       centre: centre of the error function curve (in x units)
+       width: width of the error function curve (in x units)
+
+   Returns:
+       error function curve
+
+
+
+.. py:function:: polycrop(img: numpy.ndarray, polyline: numpy.ndarray, enlarge: float) -> numpy.ndarray
+
+   Crops image according to polyline coordinates by setting values not contained within the coordinates to zero
+
+   Args:
+       img: numpy array of image
+       polyline: roi specifying the bounding region (two columns specifying x and y coordinates)
+       enlarge: amount by which to expand or contract the ROI (pixel units)
+
+   Returns:
+       numpy array of same shape img, with regions outside of polyline set to zero
+
+
+
+.. py:function:: bg_subtraction(img: numpy.ndarray, roi: numpy.ndarray, band: tuple = (25, 75)) -> numpy.ndarray
+
+   Subtracts background intensity from an image of a cell. Background intensity calculated as the mean intensity within
+   a band surronding the cell (specified by ROI)
+
+   Args:
+       img: numpy array of image to subtract background from
+       roi: two column numpy array specifying coordinates of the cell boundary
+       band: inner and outer distance of the band from the roi
+
+   Returns:
+       numpy array of image with background subtracted
+
+
+
+.. py:function:: calc_vol(normcoors: numpy.ndarray) -> float
+
+
+.. py:function:: calc_sa(normcoors: numpy.ndarray) -> float
+
+

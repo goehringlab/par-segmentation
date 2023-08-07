@@ -1,0 +1,208 @@
+:py:mod:`par_segmentation.roi`
+==============================
+
+.. py:module:: par_segmentation.roi
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   par_segmentation.roi._ROI
+   par_segmentation.roi.ROI_jupyter
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   par_segmentation.roi.def_roi
+   par_segmentation.roi.spline_roi
+   par_segmentation.roi.interp_roi
+   par_segmentation.roi.offset_coordinates
+
+
+
+.. py:function:: def_roi(stack: Union[numpy.ndarray, list], spline: bool = True, start_frame: int = 0, end_frame: Optional[int] = None, periodic: bool = True, show_fit: bool = True, k: int = 3)
+
+   There are two different methods for drawing ROIs depending on if you're using normal python scripts or Jupyter notebooks.
+   This is the one to use if you're using python scripts.
+
+   Instructions:
+
+   - click to lay down points
+
+   - backspace at any time to remove last point
+
+   - press enter to select area (if spline=True will fit spline to points, otherwise will fit straight lines)
+
+   - at this point can press backspace to go back to laying points
+
+   - press enter again to close and return ROI
+
+
+   Args:
+       stack: image (2D or 3D numpy array)
+       spline: if True, will fit a spline to the user-defined points
+       start_frame: if img is a time series, this is the index of the first frame to show
+       end_frame: if img is a time series, this is the index of the last frame to show
+       periodic: set to True if drawing a periodic ROI
+       show_fit: if True, will show the spline fit (if spline=True)
+       k: degree of the spline (e.g. 3 = cubic)
+
+   Returns:
+       ROI as a numpy array
+
+       To save this in a fiji readable format:
+       np.savetxt(filename, roi, fmt='%.4f', delimiter='       ')
+
+
+
+.. py:class:: _ROI(img: Union[numpy.ndarray, list], spline: bool = True, start_frame: int = 0, end_frame: Optional[int] = None, periodic: bool = True, show_fit: bool = True, k: int = 3)
+
+
+   Instructions:
+
+   - click to lay down points
+
+   - backspace at any time to remove last point
+
+   - press enter to select area (if spline=True will fit spline to points, otherwise will fit straight lines)
+
+   - at this point can press backspace to go back to laying points
+
+   - press enter again to close and return ROI
+
+
+   :param img: input image
+   :param spline: if true, fits spline to inputted coordinates
+   :return: cell boundary coordinates
+
+   .. py:method:: run()
+
+
+   .. py:method:: _draw_frame(i: int)
+
+
+   .. py:method:: _button_press_callback(event: matplotlib.backend_bases.MouseEvent)
+
+
+   .. py:method:: _key_press_callback(event: matplotlib.backend_bases.KeyEvent)
+
+
+   .. py:method:: _display_points()
+
+
+
+.. py:class:: ROI_jupyter(img: Union[numpy.ndarray, list], spline: bool = True, start_frame: int = 0, end_frame: Optional[int] = None, periodic: bool = True, show_fit: bool = True, k: int = 3)
+
+
+   There are two different methods for drawing ROIs depending on if you're using normal python scripts or Jupyter notebooks.
+   This is the one to use if you're using Jupyter notebooks.
+
+   Example workflow:
+
+   ### Cell 1:
+
+   r = RoiJupyter(img, periodic=True, spline=True)
+
+   r.run()
+
+   # A window will appear - draw the ROI and click save
+
+
+   ### Cell 2:
+
+   roi = r.roi
+
+   print(roi.shape)
+
+   # Confirm that the shape is not (0, 0)
+
+
+   To save this in a fiji readable format:
+   np.savetxt(filename, roi, fmt='%.4f', delimiter='   ')
+
+   Args:
+       img: image (2D or 3D numpy array)
+       spline: if True, will fit a spline to the user-defined points
+       start_frame: if img is a time series, this is the index of the first frame to show
+       end_frame: if img is a time series, this is the index of the last frame to show
+       periodic: set to True if drawing a periodic ROI
+       show_fit: if True, will show the spline fit (if spline=True)
+       k: degree of the spline (e.g. 3 = cubic)
+
+
+
+   .. py:method:: run()
+
+
+   .. py:method:: _button_press_callback(event: matplotlib.backend_bases.MouseEvent)
+
+
+   .. py:method:: _undo(_)
+
+
+   .. py:method:: _save(_)
+
+
+   .. py:method:: _display_points()
+
+
+   .. py:method:: _draw_frame(i: int)
+
+
+
+.. py:function:: spline_roi(roi: numpy.ndarray, periodic: bool = True, s: float = 0.0, k: int = 3) -> numpy.ndarray
+
+   Fits a spline to points specifying the coordinates of the cortex, then interpolates to pixel distances
+
+   Args:
+       roi: two column array containing x and y coordinates. e.g. roi = np.loadtxt(filename)
+       periodic: set to True if the ROI is periodic
+       s: splprep s parameter
+       k: splprep k parameter (spline order)
+
+   Returns:
+       spline ROI (numpy array)
+
+
+
+.. py:function:: interp_roi(roi: numpy.ndarray, periodic: bool = True, npoints: Optional[int] = None, gap: int = 1) -> numpy.ndarray
+
+   Interpolates coordinates to one pixel distances (or as close as possible to one pixel). Linear interpolation
+
+   Args:
+       roi: two column array containing x and y coordinates. e.g. roi = np.loadtxt(filename)
+       periodic: set to True if the ROI is periodic
+       npoints: number of points to interpolate to
+       gap: alternatively, specify the desired gap between succesive coordinates in pixel units
+
+   Returns:
+       interpolated ROI (numpy array)
+
+
+
+.. py:function:: offset_coordinates(roi: numpy.ndarray, offsets: Union[numpy.ndarray, float], periodic: bool = True) -> numpy.ndarray
+
+   Reads in coordinates, adjusts according to offsets
+
+   Args:
+       roi:  two column array containing x and y coordinates. e.g. roi = np.loadtxt(filename)
+       offsets: array the same length as coors. Direction?
+       periodic: set to True if the ROI is periodic
+
+   Returns:
+        array in same format as coors containing new coordinates.
+
+        To save this in a fiji readable format:
+        np.savetxt(filename, newcoors, fmt='%.4f', delimiter=' ')
+
+
+
