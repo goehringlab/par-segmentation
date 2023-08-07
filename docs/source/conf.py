@@ -19,7 +19,8 @@ release = '0.1.8'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-   'autoapi.extension'
+   'sphinx.ext.autodoc',
+   'sphinx.ext.napoleon'
 ]
 autoapi_dirs = ['../../par_segmentation']
 

@@ -6,7 +6,6 @@
   <title>par_segmentation package &mdash; par-segmentation 0.1.8 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -20,7 +19,6 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="API Reference" href="autoapi/index.html" />
     <link rel="prev" title="par_segmentation" href="modules.html" /> 
 </head>
 
@@ -88,7 +86,6 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="autoapi/index.html">API Reference</a></li>
 </ul>
 
         </div>
@@ -127,11 +124,15 @@
 <dt class="sig sig-object py" id="par_segmentation.funcs.asi">
 <span class="sig-prename descclassname"><span class="pre">par_segmentation.funcs.</span></span><span class="sig-name descname"><span class="pre">asi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mems</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#par_segmentation.funcs.asi" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates asymmetry index based on membrane concentration profile</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>mems: numpy array of membrane concentration values. Periodic array starting from extreme posterior
-size: size of region to average over when calculating anterior and posterior concentrations (from 0 to 1, where 1 indicates the whole embryo)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mems</strong> – numpy array of membrane concentration values. Periodic array starting from extreme posterior</p></li>
+<li><p><strong>size</strong> – size of region to average over when calculating anterior and posterior concentrations (from 0 to 1, where 1 indicates the whole embryo)</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>asymmetry index</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>asymmetry index</p>
 </dd>
 </dl>
 </dd></dl>
@@ -143,12 +144,16 @@ size: size of region to average over when calculating anterior and posterior con
 Array and weights should be same length
 Todo: Should add interpolation step first?
 Todo: combine with 2d function</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>array: one dimensional numpy array
-bounds: specifies window to average over. (min, max) from 0 to 1 specifying start and end of the array
-weights: if weights are specified a weighted average will be performed</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>array</strong> – one dimensional numpy array</p></li>
+<li><p><strong>bounds</strong> – specifies window to average over. (min, max) from 0 to 1 specifying start and end of the array</p></li>
+<li><p><strong>weights</strong> – if weights are specified a weighted average will be performed</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>single number corresponding to mean value over the bounds specified</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>single number corresponding to mean value over the bounds specified</p>
 </dd>
 </dl>
 </dd></dl>
@@ -159,11 +164,15 @@ weights: if weights are specified a weighted average will be performed</p>
 <dd><p>Averages 2D array in y dimension over region specified by bounds
 Todo: Should add axis parameter
 Todo: Should add interpolation step first</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>array: two dimensional numpy array
-bounds: specifies window to average over. (min, max) from 0 to 1 specifying start and end of the array</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>array</strong> – two dimensional numpy array</p></li>
+<li><p><strong>bounds</strong> – specifies window to average over. (min, max) from 0 to 1 specifying start and end of the array</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>one dimensional numpy array of length array.shape[0], corresponding to mean value over the bounds specified</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>one dimensional numpy array of length array.shape[0], corresponding to mean value over the bounds specified</p>
 </dd>
 </dl>
 </dd></dl>
@@ -173,14 +182,18 @@ bounds: specifies window to average over. (min, max) from 0 to 1 specifying star
 <span class="sig-prename descclassname"><span class="pre">par_segmentation.funcs.</span></span><span class="sig-name descname"><span class="pre">direcslist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dest</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">('!',)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclusive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#par_segmentation.funcs.direcslist" title="Permalink to this definition"></a></dt>
 <dd><p>Gives a list of directories within a given directory (full path)
 Todo: os.walk</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>dest: path of parent directory
-levels: number of levels to go down. E.g. if 0, only return folders within the parent folder; if 1, return
-folders within folders within the parent folder
-exclude: exclude directories containing any strings within this tuple
-exclusive: exclude directories that don’t contain all the strings within this tuple</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dest</strong> – path of parent directory</p></li>
+<li><p><strong>levels</strong> – number of levels to go down. E.g. if 0, only return folders within the parent folder; if 1, return</p></li>
+<li><p><strong>folder</strong> (<em>folders within folders within the parent</em>) – </p></li>
+<li><p><strong>exclude</strong> – exclude directories containing any strings within this tuple</p></li>
+<li><p><strong>exclusive</strong> – exclude directories that don’t contain all the strings within this tuple</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>list of directories</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of directories</p>
 </dd>
 </dl>
 </dd></dl>
@@ -189,12 +202,16 @@ exclusive: exclude directories that don’t contain all the strings within this 
 <dt class="sig sig-object py" id="par_segmentation.funcs.dosage">
 <span class="sig-prename descclassname"><span class="pre">par_segmentation.funcs.</span></span><span class="sig-name descname"><span class="pre">dosage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expand</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#par_segmentation.funcs.dosage" title="Permalink to this definition"></a></dt>
 <dd><p>One way of calculating protein dosage from an image</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>img: image 2D numpy array
-roi: roi representing cell edge (two-column numpy array)
-expand: expand the ROI by this many pixels before calculating the dosage</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> – image 2D numpy array</p></li>
+<li><p><strong>roi</strong> – roi representing cell edge (two-column numpy array)</p></li>
+<li><p><strong>expand</strong> – expand the ROI by this many pixels before calculating the dosage</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>dosage</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dosage</p>
 </dd>
 </dl>
 </dd></dl>
@@ -210,13 +227,17 @@ expand: expand the ROI by this many pixels before calculating the dosage</p>
 <dt class="sig sig-object py" id="par_segmentation.funcs.interp_1d_array">
 <span class="sig-prename descclassname"><span class="pre">par_segmentation.funcs.</span></span><span class="sig-name descname"><span class="pre">interp_1d_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cubic'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#par_segmentation.funcs.interp_1d_array" title="Permalink to this definition"></a></dt>
 <dd><p>Interpolates a one dimensional array into n points</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>array: one dimensional numpy array
-n: number of points to evaluate. Will evaluate this many points at evenly space intervals along the length of
-array
-method: ‘linear’ or ‘cubic’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>array</strong> – one dimensional numpy array</p></li>
+<li><p><strong>n</strong> – number of points to evaluate. Will evaluate this many points at evenly space intervals along the length of</p></li>
+<li><p><strong>array</strong> – </p></li>
+<li><p><strong>method</strong> – ‘linear’ or ‘cubic’</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>interpolated array (one dimensional array of length n)</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>interpolated array (one dimensional array of length n)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -225,13 +246,17 @@ method: ‘linear’ or ‘cubic’</p>
 <dt class="sig sig-object py" id="par_segmentation.funcs.interp_2d_array">
 <span class="sig-prename descclassname"><span class="pre">par_segmentation.funcs.</span></span><span class="sig-name descname"><span class="pre">interp_2d_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cubic'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#par_segmentation.funcs.interp_2d_array" title="Permalink to this definition"></a></dt>
 <dd><p>Interpolates a two dimensional array along one axis into n points</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>array: two dimensional numpy array
-n: number of points to evaluate along the specified axis
-ax: 0 or 1, specifies the axis to interpolate along. 0 corresponds to the rows and 1 corresponds to the columns.
-method: ‘linear’ or ‘cubic’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>array</strong> – two dimensional numpy array</p></li>
+<li><p><strong>n</strong> – number of points to evaluate along the specified axis</p></li>
+<li><p><strong>ax</strong> – 0 or 1, specifies the axis to interpolate along. 0 corresponds to the rows and 1 corresponds to the columns.</p></li>
+<li><p><strong>method</strong> – ‘linear’ or ‘cubic’</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>Interpolated array. 2D array of shape [array.shape[0], n] if ax==1, or [n, array.shape[1] if ax==0</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Interpolated array. 2D array of shape [array.shape[0], n] if ax==1, or [n, array.shape[1] if ax==0</p>
 </dd>
 </dl>
 </dd></dl>
@@ -240,10 +265,12 @@ method: ‘linear’ or ‘cubic’</p>
 <dt class="sig sig-object py" id="par_segmentation.funcs.load_image">
 <span class="sig-prename descclassname"><span class="pre">par_segmentation.funcs.</span></span><span class="sig-name descname"><span class="pre">load_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#par_segmentation.funcs.load_image" title="Permalink to this definition"></a></dt>
 <dd><p>Given the filename of a TIFF, creates numpy array with pixel intensities</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>filename: full path to the file to import (including extension)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> – full path to the file to import (including extension)</p>
 </dd>
-<dt>Returns:</dt><dd><p>A numpy array of the image</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A numpy array of the image</p>
 </dd>
 </dl>
 </dd></dl>
@@ -252,11 +279,15 @@ method: ‘linear’ or ‘cubic’</p>
 <dt class="sig sig-object py" id="par_segmentation.funcs.make_mask">
 <span class="sig-prename descclassname"><span class="pre">par_segmentation.funcs.</span></span><span class="sig-name descname"><span class="pre">make_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#par_segmentation.funcs.make_mask" title="Permalink to this definition"></a></dt>
 <dd><p>Create a mask for an image based on an ROI</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>shape: shape of the binary mask
-roi: roi of the mask region</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>shape</strong> – shape of the binary mask</p></li>
+<li><p><strong>roi</strong> – roi of the mask region</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>binary mask</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>binary mask</p>
 </dd>
 </dl>
 </dd></dl>
@@ -265,10 +296,12 @@ roi: roi of the mask region</p>
 <dt class="sig sig-object py" id="par_segmentation.funcs.norm_roi">
 <span class="sig-prename descclassname"><span class="pre">par_segmentation.funcs.</span></span><span class="sig-name descname"><span class="pre">norm_roi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">roi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#par_segmentation.funcs.norm_roi" title="Permalink to this definition"></a></dt>
 <dd><p>Aligns coordinates to their long axis</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>roi: two column numpy array of coordinates to normalise</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>roi</strong> – two column numpy array of coordinates to normalise</p>
 </dd>
-<dt>Returns:</dt><dd><p>numpy array of same shape as roi with normalised coordinates</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>numpy array of same shape as roi with normalised coordinates</p>
 </dd>
 </dl>
 </dd></dl>
@@ -277,8 +310,9 @@ roi: roi of the mask region</p>
 <dt class="sig sig-object py" id="par_segmentation.funcs.organise_by_nd">
 <span class="sig-prename descclassname"><span class="pre">par_segmentation.funcs.</span></span><span class="sig-name descname"><span class="pre">organise_by_nd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#par_segmentation.funcs.organise_by_nd" title="Permalink to this definition"></a></dt>
 <dd><p>Organises images in a folder using the nd files</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>path: path to folder containing nd files</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> – path to folder containing nd files</p>
 </dd>
 </dl>
 </dd></dl>
@@ -287,10 +321,12 @@ roi: roi of the mask region</p>
 <dt class="sig sig-object py" id="par_segmentation.funcs.readnd">
 <span class="sig-prename descclassname"><span class="pre">par_segmentation.funcs.</span></span><span class="sig-name descname"><span class="pre">readnd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#par_segmentation.funcs.readnd" title="Permalink to this definition"></a></dt>
 <dd><p>Read an nd file</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>path: directory to embryo folder containing nd file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> – directory to embryo folder containing nd file</p>
 </dd>
-<dt>Returns:</dt><dd><p>dictionary containing data from nd file</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dictionary containing data from nd file</p>
 </dd>
 </dl>
 </dd></dl>
@@ -299,18 +335,18 @@ roi: roi of the mask region</p>
 <dt class="sig sig-object py" id="par_segmentation.funcs.rolling_ave_1d">
 <span class="sig-prename descclassname"><span class="pre">par_segmentation.funcs.</span></span><span class="sig-name descname"><span class="pre">rolling_ave_1d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">periodic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#par_segmentation.funcs.rolling_ave_1d" title="Permalink to this definition"></a></dt>
 <dd><p>Performs a rolling window average along a one dimensional array</p>
-<dl>
-<dt>Args:</dt><dd><p>array: one dimensional array
-window: rolling average window size. The function will compute the average of <cite>window</cite> consecutive elements at a</p>
-<blockquote>
-<div><p>time.</p>
-</div></blockquote>
-<dl class="simple">
-<dt>periodic: specifies if array is periodic. If true, averaging rolls over at ends. If false, the function will not</dt><dd><p>average over the elements at the ends of the array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>array</strong> – one dimensional array</p></li>
+<li><p><strong>window</strong> – rolling average window size. The function will compute the average of <cite>window</cite> consecutive elements at a
+time.</p></li>
+<li><p><strong>periodic</strong> – specifies if array is periodic. If true, averaging rolls over at ends. If false, the function will not
+average over the elements at the ends of the array.</p></li>
+</ul>
 </dd>
-</dl>
-</dd>
-<dt>Returns:</dt><dd><p>numpy array same size as input array, containing the rolling average of the input array.</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>numpy array same size as input array, containing the rolling average of the input array.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -319,12 +355,16 @@ window: rolling average window size. The function will compute the average of <c
 <dt class="sig sig-object py" id="par_segmentation.funcs.rolling_ave_2d">
 <span class="sig-prename descclassname"><span class="pre">par_segmentation.funcs.</span></span><span class="sig-name descname"><span class="pre">rolling_ave_2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">periodic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#par_segmentation.funcs.rolling_ave_2d" title="Permalink to this definition"></a></dt>
 <dd><p>Returns rolling average across the x axis of a 2D array</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>array: two dimensional array
-window: rolling average window size
-periodic: specifies if array is periodic. If true, averaging rolls over at ends</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>array</strong> – two dimensional array</p></li>
+<li><p><strong>window</strong> – rolling average window size</p></li>
+<li><p><strong>periodic</strong> – specifies if array is periodic. If true, averaging rolls over at ends</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>numpy array same size as input array</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>numpy array same size as input array</p>
 </dd>
 </dl>
 </dd></dl>
@@ -333,10 +373,12 @@ periodic: specifies if array is periodic. If true, averaging rolls over at ends<
 <dt class="sig sig-object py" id="par_segmentation.funcs.rotate_roi">
 <span class="sig-prename descclassname"><span class="pre">par_segmentation.funcs.</span></span><span class="sig-name descname"><span class="pre">rotate_roi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">roi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#par_segmentation.funcs.rotate_roi" title="Permalink to this definition"></a></dt>
 <dd><p>Rotates coordinate array so that most posterior point is at the beginning</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>roi: two column numpy array of coordinates to rotate</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>roi</strong> – two column numpy array of coordinates to rotate</p>
 </dd>
-<dt>Returns:</dt><dd><p>numpy array of same shape as roi with rotated coordinates</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>numpy array of same shape as roi with rotated coordinates</p>
 </dd>
 </dl>
 </dd></dl>
@@ -346,15 +388,19 @@ periodic: specifies if array is periodic. If true, averaging rolls over at ends<
 <span class="sig-prename descclassname"><span class="pre">par_segmentation.funcs.</span></span><span class="sig-name descname"><span class="pre">rotated_embryo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_roi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">array</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">array</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#par_segmentation.funcs.rotated_embryo" title="Permalink to this definition"></a></dt>
 <dd><p>Takes an image and rotates according to coordinates so that anterior is on left, posterior on right
 Todo: some of the returned coordinates are anticlockwise</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>img: numpy array of image to rotate
-roi: roi of cell boundary (two columns specifying x and y coordinates)
-l: length of output image (pixel units)
-h: height of output image (pixel units)
-order: interpolation order. 1 or 3 for linear or cubic interpolation
-return_roi: if True, will return roi corresponding to the cell edge in the new image</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> – numpy array of image to rotate</p></li>
+<li><p><strong>roi</strong> – roi of cell boundary (two columns specifying x and y coordinates)</p></li>
+<li><p><strong>l</strong> – length of output image (pixel units)</p></li>
+<li><p><strong>h</strong> – height of output image (pixel units)</p></li>
+<li><p><strong>order</strong> – interpolation order. 1 or 3 for linear or cubic interpolation</p></li>
+<li><p><strong>return_roi</strong> – if True, will return roi corresponding to the cell edge in the new image</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>numpy array of rotated image with dimensions [h, l]
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>numpy array of rotated image with dimensions [h, l]
 if return_roi is True, will also return roi corresponding to the cell edge in the new image</p>
 </dd>
 </dl>
@@ -364,9 +410,12 @@ if return_roi is True, will also return roi corresponding to the cell edge in th
 <dt class="sig sig-object py" id="par_segmentation.funcs.save_img">
 <span class="sig-prename descclassname"><span class="pre">par_segmentation.funcs.</span></span><span class="sig-name descname"><span class="pre">save_img</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#par_segmentation.funcs.save_img" title="Permalink to this definition"></a></dt>
 <dd><p>Saves 2D array as .tif file</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>img: numpy array of the image to save
-direc: file path to save to (including ‘.tif’ extension)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> – numpy array of the image to save</p></li>
+<li><p><strong>direc</strong> – file path to save to (including ‘.tif’ extension)</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -375,12 +424,15 @@ direc: file path to save to (including ‘.tif’ extension)</p>
 <dt class="sig sig-object py" id="par_segmentation.funcs.save_img_jpeg">
 <span class="sig-prename descclassname"><span class="pre">par_segmentation.funcs.</span></span><span class="sig-name descname"><span class="pre">save_img_jpeg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'gray'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#par_segmentation.funcs.save_img_jpeg" title="Permalink to this definition"></a></dt>
 <dd><p>Saves 2D array as jpeg, according to min and max pixel intensities</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>img: numpy array of the image to save
-direc: file path to save to (including ‘.jpeg’ extension)
-cmin: optional, sets intensity scaling (along with cmax)
-cmax: optional, sets intensity scaling (along with cmin)
-cmap: colour map (use string corresponding to matplotlib colormap)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> – numpy array of the image to save</p></li>
+<li><p><strong>direc</strong> – file path to save to (including ‘.jpeg’ extension)</p></li>
+<li><p><strong>cmin</strong> – optional, sets intensity scaling (along with cmax)</p></li>
+<li><p><strong>cmax</strong> – optional, sets intensity scaling (along with cmin)</p></li>
+<li><p><strong>cmap</strong> – colour map (use string corresponding to matplotlib colormap)</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -390,16 +442,21 @@ cmap: colour map (use string corresponding to matplotlib colormap)</p>
 <span class="sig-prename descclassname"><span class="pre">par_segmentation.funcs.</span></span><span class="sig-name descname"><span class="pre">straighten</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thickness</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">periodic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cubic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ninterp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#par_segmentation.funcs.straighten" title="Permalink to this definition"></a></dt>
 <dd><p>Creates straightened image based on coordinates
 Todo: Doesn’t work properly for non-periodic rois</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>img: numpy array of image to straighten
-roi: coordinates of roi (two column array with x and y coordinates), should be 1 pixel length apart in a loop
-thickness: thickness (pixel units) of the region surrounding the ROI to straighten
-periodic: set to True is the ROI is periodic (a full loop)
-interp: interpolation type, ‘cubic’ or ‘linear
-ninterp: optional. If specified, interpolation along the y axis of the straight image will be at this many
-evenly spaced points. If not specified, interpolation will be performed at pixel-width distances.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> – numpy array of image to straighten</p></li>
+<li><p><strong>roi</strong> – coordinates of roi (two column array with x and y coordinates), should be 1 pixel length apart in a loop</p></li>
+<li><p><strong>thickness</strong> – thickness (pixel units) of the region surrounding the ROI to straighten</p></li>
+<li><p><strong>periodic</strong> – set to True is the ROI is periodic (a full loop)</p></li>
+<li><p><strong>interp</strong> – interpolation type, ‘cubic’ or ‘linear</p></li>
+<li><p><strong>ninterp</strong> – optional. If specified, interpolation along the y axis of the straight image will be at this many</p></li>
+<li><p><strong>specified</strong> (<em>evenly spaced points. If not</em>) – </p></li>
+<li><p><strong>distances.</strong> (<em>interpolation will be performed at pixel-width</em>) – </p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>Straightened image as 2D numpy array. Will have dimensions [thickness, roi.shape[0]] unless ninterp is
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Straightened image as 2D numpy array. Will have dimensions [thickness, roi.shape[0]] unless ninterp is
 specified, in which case [ninterp, roi.shape[0]]</p>
 </dd>
 </dl>
@@ -422,38 +479,42 @@ specified, in which case [ninterp, roi.shape[0]]</p>
 <li><p>New ROI coordinates will be found at self.roi</p></li>
 <li><p>Save quantification results using compile_res() - returns a pandas dataframe</p></li>
 </ol>
-<dl class="simple">
-<dt>Args:</dt><dd><p>img: numpy array of image or list of numpy arrays
-roi: coordinates defining the cortex (two column numpy array of x and y coordinates at 1-pixel width intervals), or a list of arrays
-roi_knots: number of knots in cubic-spline fit ROI
-freedom: amount by which the roi can move (pixel units)
-sigma: gaussian/error function width (pixels units)
-periodic: True if coordinates form a closed loop
-thickness: thickness of cross section over which to perform quantification (pixel units)
-rol_ave: width of rolling average to apply to images prior to fitting (pixel units)
-rotate: if True, will automatically rotate ROI so that the first/last points are at the end of the long axis
-nfits: performs this many fits at regular intervals around ROI. If none, will fit at pixel-width intervals
-iterations: if &gt;1, adjusts ROI and re-fits
-batch_norm: if True, images will be globally, rather than internally, normalised. Shouldn’t affect quantification but is recommended during model optimisation
-fit_outer: if True, will fit the outer portion of each profile to a nonzero value
-method: ‘GD’ for gradient descent or ‘DE’ for differential evolution. The former is highly recommended, the latter works but is much slower and no longer maintained
-zerocap: if True, limits output concentrations to positive (or very weakly negative) values
-interp: interpolation type, ‘cubic’ or ‘linear’
-lr: learning rate
-descent_steps: number of gradient descent steps
-adaptive_sigma: if True, sigma will be trained by gradient descent
-verbose: False suppresses onscreen output while model is running (e.g. progress bar)
-parallel: LEGACY (for DE method). If True will run in parallel on number of cores specified. NB Very buggy
-cores:  LEGACY (for DE method). Number of cores to use if parallel is True
-itp: LEGACY (for DE method). Amount of interpolation - allows for subpixel alignment</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> – numpy array of image or list of numpy arrays</p></li>
+<li><p><strong>roi</strong> – coordinates defining the cortex (two column numpy array of x and y coordinates at 1-pixel width intervals), or a list of arrays</p></li>
+<li><p><strong>roi_knots</strong> – number of knots in cubic-spline fit ROI</p></li>
+<li><p><strong>freedom</strong> – amount by which the roi can move (pixel units)</p></li>
+<li><p><strong>sigma</strong> – gaussian/error function width (pixels units)</p></li>
+<li><p><strong>periodic</strong> – True if coordinates form a closed loop</p></li>
+<li><p><strong>thickness</strong> – thickness of cross section over which to perform quantification (pixel units)</p></li>
+<li><p><strong>rol_ave</strong> – width of rolling average to apply to images prior to fitting (pixel units)</p></li>
+<li><p><strong>rotate</strong> – if True, will automatically rotate ROI so that the first/last points are at the end of the long axis</p></li>
+<li><p><strong>nfits</strong> – performs this many fits at regular intervals around ROI. If none, will fit at pixel-width intervals</p></li>
+<li><p><strong>iterations</strong> – if &gt;1, adjusts ROI and re-fits</p></li>
+<li><p><strong>batch_norm</strong> – if True, images will be globally, rather than internally, normalised. Shouldn’t affect quantification but is recommended during model optimisation</p></li>
+<li><p><strong>fit_outer</strong> – if True, will fit the outer portion of each profile to a nonzero value</p></li>
+<li><p><strong>method</strong> – ‘GD’ for gradient descent or ‘DE’ for differential evolution. The former is highly recommended, the latter works but is much slower and no longer maintained</p></li>
+<li><p><strong>zerocap</strong> – if True, limits output concentrations to positive (or very weakly negative) values</p></li>
+<li><p><strong>interp</strong> – interpolation type, ‘cubic’ or ‘linear’</p></li>
+<li><p><strong>lr</strong> – learning rate</p></li>
+<li><p><strong>descent_steps</strong> – number of gradient descent steps</p></li>
+<li><p><strong>adaptive_sigma</strong> – if True, sigma will be trained by gradient descent</p></li>
+<li><p><strong>verbose</strong> – False suppresses onscreen output while model is running (e.g. progress bar)</p></li>
+<li><p><strong>parallel</strong> – LEGACY (for DE method). If True will run in parallel on number of cores specified. NB Very buggy</p></li>
+<li><p><strong>cores</strong> – LEGACY (for DE method). Number of cores to use if parallel is True</p></li>
+<li><p><strong>itp</strong> – LEGACY (for DE method). Amount of interpolation - allows for subpixel alignment</p></li>
+</ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="par_segmentation.quantifier.ImageQuant.compile_res">
 <span class="sig-name descname"><span class="pre">compile_res</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#par_segmentation.quantifier.ImageQuant.compile_res" title="Permalink to this definition"></a></dt>
 <dd><p>Compile results to a pandas dataframe</p>
-<dl class="simple">
-<dt>Returns:</dt><dd><p>A pandas dataframe containing quantification results</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A pandas dataframe containing quantification results</p>
 </dd>
 </dl>
 </dd></dl>
@@ -468,8 +529,9 @@ itp: LEGACY (for DE method). Amount of interpolation - allows for subpixel align
 <dt class="sig sig-object py" id="par_segmentation.quantifier.ImageQuant.plot_losses">
 <span class="sig-name descname"><span class="pre">plot_losses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#par_segmentation.quantifier.ImageQuant.plot_losses" title="Permalink to this definition"></a></dt>
 <dd><p>Plot loss curves (one line for each image)</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>log: if True, plot the logarithm of losses</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>log</strong> – if True, plot the logarithm of losses</p>
 </dd>
 </dl>
 </dd></dl>
@@ -497,9 +559,12 @@ itp: LEGACY (for DE method). Amount of interpolation - allows for subpixel align
 <span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#par_segmentation.quantifier.ImageQuant.save" title="Permalink to this definition"></a></dt>
 <dd><p>Save results for a single image to save_path as a series of txt files and tifs
 I’d recommend using compile_res() instead as this will create a single pandas dataframe with all the results</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>save_path: path to save full results
-i: index of the image to save (if quantifying multiple images in batch)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>save_path</strong> – path to save full results</p></li>
+<li><p><strong>i</strong> – index of the image to save (if quantifying multiple images in batch)</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -532,14 +597,17 @@ This is the one to use if you’re using Jupyter notebooks.</p>
 <p># Confirm that the shape is not (0, 0)</p>
 <p>To save this in a fiji readable format:
 np.savetxt(filename, roi, fmt=’%.4f’, delimiter=’   ‘)</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>img: image (2D or 3D numpy array)
-spline: if True, will fit a spline to the user-defined points
-start_frame: if img is a time series, this is the index of the first frame to show
-end_frame: if img is a time series, this is the index of the last frame to show
-periodic: set to True if drawing a periodic ROI
-show_fit: if True, will show the spline fit (if spline=True)
-k: degree of the spline (e.g. 3 = cubic)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> – image (2D or 3D numpy array)</p></li>
+<li><p><strong>spline</strong> – if True, will fit a spline to the user-defined points</p></li>
+<li><p><strong>start_frame</strong> – if img is a time series, this is the index of the first frame to show</p></li>
+<li><p><strong>end_frame</strong> – if img is a time series, this is the index of the last frame to show</p></li>
+<li><p><strong>periodic</strong> – set to True if drawing a periodic ROI</p></li>
+<li><p><strong>show_fit</strong> – if True, will show the spline fit (if spline=True)</p></li>
+<li><p><strong>k</strong> – degree of the spline (e.g. 3 = cubic)</p></li>
+</ul>
 </dd>
 </dl>
 <dl class="py method">
@@ -562,18 +630,23 @@ This is the one to use if you’re using python scripts.</p>
 <li><p>at this point can press backspace to go back to laying points</p></li>
 <li><p>press enter again to close and return ROI</p></li>
 </ul>
-<dl>
-<dt>Args:</dt><dd><p>stack: image (2D or 3D numpy array)
-spline: if True, will fit a spline to the user-defined points
-start_frame: if img is a time series, this is the index of the first frame to show
-end_frame: if img is a time series, this is the index of the last frame to show
-periodic: set to True if drawing a periodic ROI
-show_fit: if True, will show the spline fit (if spline=True)
-k: degree of the spline (e.g. 3 = cubic)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stack</strong> – image (2D or 3D numpy array)</p></li>
+<li><p><strong>spline</strong> – if True, will fit a spline to the user-defined points</p></li>
+<li><p><strong>start_frame</strong> – if img is a time series, this is the index of the first frame to show</p></li>
+<li><p><strong>end_frame</strong> – if img is a time series, this is the index of the last frame to show</p></li>
+<li><p><strong>periodic</strong> – set to True if drawing a periodic ROI</p></li>
+<li><p><strong>show_fit</strong> – if True, will show the spline fit (if spline=True)</p></li>
+<li><p><strong>k</strong> – degree of the spline (e.g. 3 = cubic)</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>ROI as a numpy array</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>ROI as a numpy array</p>
 <p>To save this in a fiji readable format:
 np.savetxt(filename, roi, fmt=’%.4f’, delimiter=’       ‘)</p>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -582,13 +655,17 @@ np.savetxt(filename, roi, fmt=’%.4f’, delimiter=’       ‘)</p>
 <dt class="sig sig-object py" id="par_segmentation.roi.interp_roi">
 <span class="sig-prename descclassname"><span class="pre">par_segmentation.roi.</span></span><span class="sig-name descname"><span class="pre">interp_roi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">roi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">periodic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">npoints</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#par_segmentation.roi.interp_roi" title="Permalink to this definition"></a></dt>
 <dd><p>Interpolates coordinates to one pixel distances (or as close as possible to one pixel). Linear interpolation</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>roi: two column array containing x and y coordinates. e.g. roi = np.loadtxt(filename)
-periodic: set to True if the ROI is periodic
-npoints: number of points to interpolate to
-gap: alternatively, specify the desired gap between succesive coordinates in pixel units</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>roi</strong> – two column array containing x and y coordinates. e.g. roi = np.loadtxt(filename)</p></li>
+<li><p><strong>periodic</strong> – set to True if the ROI is periodic</p></li>
+<li><p><strong>npoints</strong> – number of points to interpolate to</p></li>
+<li><p><strong>gap</strong> – alternatively, specify the desired gap between succesive coordinates in pixel units</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>interpolated ROI (numpy array)</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>interpolated ROI (numpy array)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -597,14 +674,19 @@ gap: alternatively, specify the desired gap between succesive coordinates in pix
 <dt class="sig sig-object py" id="par_segmentation.roi.offset_coordinates">
 <span class="sig-prename descclassname"><span class="pre">par_segmentation.roi.</span></span><span class="sig-name descname"><span class="pre">offset_coordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">roi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offsets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">periodic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#par_segmentation.roi.offset_coordinates" title="Permalink to this definition"></a></dt>
 <dd><p>Reads in coordinates, adjusts according to offsets</p>
-<dl>
-<dt>Args:</dt><dd><p>roi:  two column array containing x and y coordinates. e.g. roi = np.loadtxt(filename)
-offsets: array the same length as coors. Direction?
-periodic: set to True if the ROI is periodic</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>roi</strong> – two column array containing x and y coordinates. e.g. roi = np.loadtxt(filename)</p></li>
+<li><p><strong>offsets</strong> – array the same length as coors. Direction?</p></li>
+<li><p><strong>periodic</strong> – set to True if the ROI is periodic</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>array in same format as coors containing new coordinates.</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>array in same format as coors containing new coordinates.</p>
 <p>To save this in a fiji readable format:
 np.savetxt(filename, newcoors, fmt=’%.4f’, delimiter=’ ‘)</p>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -613,13 +695,17 @@ np.savetxt(filename, newcoors, fmt=’%.4f’, delimiter=’ ‘)</p>
 <dt class="sig sig-object py" id="par_segmentation.roi.spline_roi">
 <span class="sig-prename descclassname"><span class="pre">par_segmentation.roi.</span></span><span class="sig-name descname"><span class="pre">spline_roi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">roi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">periodic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#par_segmentation.roi.spline_roi" title="Permalink to this definition"></a></dt>
 <dd><p>Fits a spline to points specifying the coordinates of the cortex, then interpolates to pixel distances</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>roi: two column array containing x and y coordinates. e.g. roi = np.loadtxt(filename)
-periodic: set to True if the ROI is periodic
-s: splprep s parameter
-k: splprep k parameter (spline order)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>roi</strong> – two column array containing x and y coordinates. e.g. roi = np.loadtxt(filename)</p></li>
+<li><p><strong>periodic</strong> – set to True if the ROI is periodic</p></li>
+<li><p><strong>s</strong> – splprep s parameter</p></li>
+<li><p><strong>k</strong> – splprep k parameter (spline order)</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>spline ROI (numpy array)</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>spline ROI (numpy array)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -635,7 +721,6 @@ k: splprep k parameter (spline order)</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="modules.html" class="btn btn-neutral float-left" title="par_segmentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="autoapi/index.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
