@@ -358,7 +358,7 @@ def plot_quantification_jupyter(mems: Union[list, np.ndarray]):
     return fig, ax
 
 
-class FitPlotter:
+class _FitPlotter:
     def __init__(self,
                  target: Union[list, np.ndarray],
                  fit: Union[list, np.ndarray]):
@@ -446,7 +446,7 @@ class FitPlotter:
 
 
 def plot_fits(target: Union[list, np.ndarray], fit_total: Union[list, np.ndarray]):
-    fp = FitPlotter(target, fit_total)
+    fp = _FitPlotter(target, fit_total)
     return fp.fig, (fp.ax1, fp.ax2)
 
 

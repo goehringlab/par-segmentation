@@ -5,7 +5,7 @@ from .roi import offset_coordinates, interp_roi
 from scipy.interpolate import interp1d
 from tqdm import tqdm
 import time
-from .tgf_interpolate import interpolate
+from ._tgf_interpolate import interpolate
 import matplotlib.pyplot as plt
 from typing import Union, Tuple
 

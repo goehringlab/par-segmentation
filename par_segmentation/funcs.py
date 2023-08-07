@@ -418,8 +418,7 @@ def asi(mems: np.ndarray, size: float) -> float:
 
     Args:
         mems: numpy array of membrane concentration values. Periodic array starting from extreme posterior
-        size: size of region to average over when calculating anterior and posterior concentrations (ffrom 0 to 1, where
-        1 indicates the whole embryo)
+        size: size of region to average over when calculating anterior and posterior concentrations (from 0 to 1, where 1 indicates the whole embryo)
 
     Returns:
         asymmetry index
@@ -432,10 +431,35 @@ def asi(mems: np.ndarray, size: float) -> float:
 
 
 def dosage(img: np.ndarray, roi: np.ndarray, expand: float) -> np.ndarray:
+    """
+    One way of calculating protein dosage from an image
+
+    Args:
+        img: image 2D numpy array
+        roi: roi representing cell edge (two-column numpy array)
+        expand: expand the ROI by this many pixels before calculating the dosage
+
+    Returns:
+        dosage
+    
+    """
+
     return np.nanmean(img * make_mask((512, 512), offset_coordinates(roi, expand)))
 
 
 def make_mask(shape: tuple, roi: np.ndarray) -> np.ndarray:
+    """
+    Create a mask for an image based on an ROI
+
+    Args:
+        shape: shape of the binary mask
+        roi: roi of the mask region
+
+    Returns:
+        binary mask 
+    
+    """
+
     return cv2.fillPoly(np.zeros(shape) * np.nan, [np.int32(roi)], 1)
 
 

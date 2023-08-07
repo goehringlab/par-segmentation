@@ -2,10 +2,10 @@ import numpy as np
 import os
 import pandas as pd
 from .funcs import save_img, in_notebook
-from .interactive import view_stack, view_stack_jupyter, plot_fits, plot_fits_jupyter, plot_segmentation, \
+from ._interactive import view_stack, view_stack_jupyter, plot_fits, plot_fits_jupyter, plot_segmentation, \
     plot_segmentation_jupyter, plot_quantification, plot_quantification_jupyter
-from .model import ImageQuantGradientDescent
-from .legacy import ImageQuantDifferentialEvolutionMulti
+from ._model import ImageQuantGradientDescent
+from ._legacy import ImageQuantDifferentialEvolutionMulti
 from typing import Union, Optional
 
 
@@ -14,54 +14,38 @@ class ImageQuant:
 
     Main class to perform image segmentation
 
-    Instructions:
-    1. (Optional) Perform SAIBR on image
-    2. Specify rough manual ROI
-    3. Initialise class
-    4. run()
-    5. New ROI coordinates will be found at self.roi
+    Instructions:\n
+    1. (Optional) Perform SAIBR on image\n
+    2. Specify rough manual ROI\n
+    3. Initialise class\n
+    4. run()\n
+    5. New ROI coordinates will be found at self.roi\n
+    6. Save quantification results using compile_res() - returns a pandas dataframe
 
-    Input data:
-    img                numpy array of image or list of numpy arrays
-    roi                coordinates defining the cortex (two column numpy array of x and y coordinates at 1-pixel width
-                       intervals), or a list of arrays
-
-    ROI:
-    roi_knots          number of knots in cubic-spline fit ROI
-    freedom            amount by which the roi can move (pixel units)
-
-    Fitting parameters:
-    sigma              gaussian/error function width (pixels units)
-    periodic           True if coordinates form a closed loop
-    thickness          thickness of cross section over which to perform quantification (pixel units)
-    rol_ave            width of rolling average to apply to images prior to fitting (pixel units)
-    rotate             if True, will automatically rotate ROI so that the first/last points are at the end of the long
-                       axis
-    nfits              performs this many fits at regular intervals around ROI. If none, will fit at pixel-width
-                       intervals
-    iterations         if >1, adjusts ROI and re-fits
-    batch_norm         if True, images will be globally, rather than internally, normalised. Shouldn't affect
-                       quantification but is recommended during model optimisation
-    fit_outer          if True, will fit the outer portion of each profile to a nonzero value
-    method             'GD' for gradient descent or 'DE' for differential evolution. The former is highly recommended,
-                       the latter works but is much slower and no longer maintained
-    zerocap            if True, limits output concentrations to positive (or very weakly negative) values
-    interp             interpolation type, 'cubic' or 'linear'
-
-    Gradient descent:
-    lr                 learning rate
-    descent_steps      number of gradient descent steps
-
-    Model optimisation:
-    adaptive_sigma     if True, sigma will be trained by gradient descent
-
-    Miscellaneous:
-    verbose            False suppresses onscreen output while model is running (e.g. progress bar)
-
-    Legacy parameters (for 'DE' method):
-    parallel           if True will run in parallel on number of cores specified. NB Very buggy
-    cores              number of cores to use if parallel is True
-    itp                amount of interpolation - allows for subpixel alignment
+    Args:
+        img: numpy array of image or list of numpy arrays
+        roi: coordinates defining the cortex (two column numpy array of x and y coordinates at 1-pixel width intervals), or a list of arrays
+        roi_knots: number of knots in cubic-spline fit ROI
+        freedom: amount by which the roi can move (pixel units)
+        sigma: gaussian/error function width (pixels units)
+        periodic: True if coordinates form a closed loop
+        thickness: thickness of cross section over which to perform quantification (pixel units)
+        rol_ave: width of rolling average to apply to images prior to fitting (pixel units)
+        rotate: if True, will automatically rotate ROI so that the first/last points are at the end of the long axis
+        nfits: performs this many fits at regular intervals around ROI. If none, will fit at pixel-width intervals
+        iterations: if >1, adjusts ROI and re-fits
+        batch_norm: if True, images will be globally, rather than internally, normalised. Shouldn't affect quantification but is recommended during model optimisation
+        fit_outer: if True, will fit the outer portion of each profile to a nonzero value
+        method: 'GD' for gradient descent or 'DE' for differential evolution. The former is highly recommended, the latter works but is much slower and no longer maintained
+        zerocap: if True, limits output concentrations to positive (or very weakly negative) values
+        interp: interpolation type, 'cubic' or 'linear'
+        lr: learning rate
+        descent_steps: number of gradient descent steps
+        adaptive_sigma: if True, sigma will be trained by gradient descent
+        verbose: False suppresses onscreen output while model is running (e.g. progress bar)
+        parallel: LEGACY (for DE method). If True will run in parallel on number of cores specified. NB Very buggy
+        cores:  LEGACY (for DE method). Number of cores to use if parallel is True
+        itp: LEGACY (for DE method). Amount of interpolation - allows for subpixel alignment
 
     """
 
@@ -135,6 +119,10 @@ class ImageQuant:
     """
 
     def run(self):
+        """
+        Performs segmentation/quantification and saves results
+
+        """
         self.iq.run()
 
         # Save new ROI
@@ -160,13 +148,12 @@ class ImageQuant:
 
     def save(self, save_path: str, i: Optional[int] = None):
         """
-        Save all results to save_path
+        Save results for a single image to save_path as a series of txt files and tifs
+        I'd recommend using compile_res() instead as this will create a single pandas dataframe with all the results
 
         Args:
-            save_path:
-            i:
-
-        Returns:
+            save_path: path to save full results
+            i: index of the image to save (if quantifying multiple images in batch)
 
         """
 
@@ -184,6 +171,14 @@ class ImageQuant:
         save_img(self.resids_full[i], save_path + '/residuals.tif')
 
     def compile_res(self):
+        """
+        Compile results to a pandas dataframe
+
+        Returns:
+            A pandas dataframe containing quantification results
+
+        """
+
         # Create empty dataframe
         df = pd.DataFrame({'Frame': [],
                            'Position': [],
@@ -207,6 +202,11 @@ class ImageQuant:
     """
 
     def view_frames(self):
+        """
+        Opens an interactive widget to view image(s)
+
+        """
+
         jupyter = in_notebook()
         if not jupyter:
             if self.iq.stack:
@@ -221,6 +221,11 @@ class ImageQuant:
         return fig, ax
 
     def plot_quantification(self):
+        """
+        Opens an interactive widget to plot membrane quantification results
+
+        """
+
         jupyter = in_notebook()
         if not jupyter:
             if self.iq.stack:
@@ -235,6 +240,11 @@ class ImageQuant:
         return fig, ax
 
     def plot_fits(self):
+        """
+        Opens an interactive widget to plot actual vs fit profiles
+
+        """
+
         jupyter = in_notebook()
         if not jupyter:
             if self.iq.stack:
@@ -249,6 +259,11 @@ class ImageQuant:
         return fig, ax
 
     def plot_segmentation(self):
+        """
+        Opens an interactive widget to plot segmentation results
+
+        """
+
         jupyter = in_notebook()
         if not jupyter:
             if self.iq.stack:
@@ -263,6 +278,14 @@ class ImageQuant:
         return fig, ax
 
     def plot_losses(self, log: bool = False):
+        """
+        Plot loss curves (one line for each image)
+
+        Args:
+            log: if True, plot the logarithm of losses
+        
+        """
+
         if self.method == 'GD':
             self.iq.plot_losses(log=log)
         else:

@@ -16,20 +16,48 @@ Todo: Ability to specify a directory and open all channels. Or an nd file
 
 def def_roi(stack: Union[np.ndarray, list], spline: bool = True, start_frame: int = 0, end_frame: Optional[int] = None,
             periodic: bool = True, show_fit: bool = True, k: int = 3):
-    r = ROI(stack, spline=spline, start_frame=start_frame, end_frame=end_frame, periodic=periodic, show_fit=show_fit,
+    
+    """
+    There are two different methods for drawing ROIs depending on if you're using normal python scripts or Jupyter notebooks.
+    This is the one to use if you're using python scripts.
+
+    Instructions:\n
+    - click to lay down points\n
+    - backspace at any time to remove last point\n
+    - press enter to select area (if spline=True will fit spline to points, otherwise will fit straight lines)\n
+    - at this point can press backspace to go back to laying points\n
+    - press enter again to close and return ROI\n
+
+    Args:
+        stack: image (2D or 3D numpy array)
+        spline: if True, will fit a spline to the user-defined points
+        start_frame: if img is a time series, this is the index of the first frame to show
+        end_frame: if img is a time series, this is the index of the last frame to show
+        periodic: set to True if drawing a periodic ROI
+        show_fit: if True, will show the spline fit (if spline=True)
+        k: degree of the spline (e.g. 3 = cubic)
+
+    Returns:
+        ROI as a numpy array\n
+        To save this in a fiji readable format:
+        np.savetxt(filename, roi, fmt='%.4f', delimiter='\t')
+    
+    """
+
+    r = _ROI(stack, spline=spline, start_frame=start_frame, end_frame=end_frame, periodic=periodic, show_fit=show_fit,
             k=k)
     r.run()
     return r.roi
 
 
-class ROI:
+class _ROI:
     """
-    Instructions:
-    - click to lay down points
-    - backspace at any time to remove last point
-    - press enter to select area (if spline=True will fit spline to points, otherwise will fit straight lines)
-    - at this point can press backspace to go back to laying points
-    - press enter again to close and return ROI
+    Instructions:\n
+    - click to lay down points\n
+    - backspace at any time to remove last point\n
+    - press enter to select area (if spline=True will fit spline to points, otherwise will fit straight lines)\n
+    - at this point can press backspace to go back to laying points\n
+    - press enter again to close and return ROI\n
 
     :param img: input image
     :param spline: if true, fits spline to inputted coordinates
@@ -92,8 +120,8 @@ class ROI:
         self.fig = plt.figure()
         self.ax = self.fig.add_subplot(111)
 
-        self.fig.canvas.mpl_connect('button_press_event', self.button_press_callback)
-        self.fig.canvas.mpl_connect('key_press_event', self.key_press_callback)
+        self.fig.canvas.mpl_connect('button_press_event', self._button_press_callback)
+        self.fig.canvas.mpl_connect('key_press_event', self._key_press_callback)
 
         # Stack
         if self.img_type == 'stack' or self.img_type == 'list':
@@ -103,16 +131,16 @@ class ROI:
                 self.end_frame = len(self.images)
             self.sframe = Slider(self.axframe, 'Frame', self.start_frame, self.end_frame, valinit=self.start_frame,
                                  valfmt='%d')
-            self.sframe.on_changed(self.draw_frame)
+            self.sframe.on_changed(self._draw_frame)
 
-        self.draw_frame(self.start_frame)
+        self._draw_frame(self.start_frame)
 
         # Show figure
         self.fig.canvas.set_window_title('Specify ROI')
         self.fig.canvas.mpl_connect('close_event', lambda event: self.fig.canvas.stop_event_loop())
         self.fig.canvas.start_event_loop(timeout=-1)
 
-    def draw_frame(self, i: int):
+    def _draw_frame(self, i: int):
         self._current_frame = i
         self.ax.clear()
 
@@ -132,10 +160,10 @@ class ROI:
                      '\nENTER: Save and continue',
                      color='white',
                      transform=self.ax.transAxes, fontsize=8, va='top', ha='left')
-        self.display_points()
+        self._display_points()
         self.fig.canvas.draw()
 
-    def button_press_callback(self, event: MouseEvent):
+    def _button_press_callback(self, event: MouseEvent):
         if not self._fitted:
             if isinstance(event.inaxes, type(self.ax)):
                 # Add points to list
@@ -143,17 +171,17 @@ class ROI:
                 self.ypoints.extend([event.ydata])
 
                 # Display points
-                self.display_points()
+                self._display_points()
                 self.fig.canvas.draw()
 
-    def key_press_callback(self, event: KeyEvent):
+    def _key_press_callback(self, event: KeyEvent):
         if event.key == 'backspace':
             if not self._fitted:
                 # Remove last drawn point
                 if len(self.xpoints) != 0:
                     self.xpoints = self.xpoints[:-1]
                     self.ypoints = self.ypoints[:-1]
-                self.display_points()
+                self._display_points()
                 self.fig.canvas.draw()
             else:
                 # Remove line
@@ -187,7 +215,7 @@ class ROI:
                 self.roi = []
                 plt.close(self.fig)
 
-    def display_points(self):
+    def _display_points(self):
         # Remove existing points
         try:
             self._point0.remove()
@@ -202,6 +230,37 @@ class ROI:
 
 
 class ROI_jupyter:
+    """
+    There are two different methods for drawing ROIs depending on if you're using normal python scripts or Jupyter notebooks.
+    This is the one to use if you're using Jupyter notebooks.
+
+    Example workflow:
+    
+    ### Cell 1:\n
+    r = RoiJupyter(img, periodic=True, spline=True)\n
+    r.run()\n
+    # A window will appear - draw the ROI and click save\n
+    
+    ### Cell 2:\n
+    roi = r.roi\n
+    print(roi.shape)\n
+    # Confirm that the shape is not (0, 0)\n
+
+    To save this in a fiji readable format:
+    np.savetxt(filename, roi, fmt='%.4f', delimiter='\t')
+
+    Args:
+        img: image (2D or 3D numpy array)
+        spline: if True, will fit a spline to the user-defined points
+        start_frame: if img is a time series, this is the index of the first frame to show
+        end_frame: if img is a time series, this is the index of the last frame to show
+        periodic: set to True if drawing a periodic ROI
+        show_fit: if True, will show the spline fit (if spline=True)
+        k: degree of the spline (e.g. 3 = cubic)
+
+    
+    """
+
 
     def __init__(self,
                  img: Union[np.ndarray, list],
@@ -246,7 +305,7 @@ class ROI_jupyter:
 
     def run(self):
         self.fig, self.ax = plt.subplots()
-        self.fig.canvas.mpl_connect('button_press_event', self.button_press_callback)
+        self.fig.canvas.mpl_connect('button_press_event', self._button_press_callback)
 
         # Buttons
         self.ax_undo = plt.axes([0.7, 0.05, 0.1, 0.075])
@@ -260,20 +319,20 @@ class ROI_jupyter:
         if self.img_type == 'stack' or self.img_type == 'list':
             @widgets.interact(Frame=(0, len(self.images) - 1, 1))
             def update(Frame=0):
-                self.draw_frame(Frame)
+                self._draw_frame(Frame)
         else:
-            self.draw_frame(0)
+            self._draw_frame(0)
 
         self.fig.set_size_inches(4, 4)
 
-    def button_press_callback(self, event: MouseEvent):
+    def _button_press_callback(self, event: MouseEvent):
         if isinstance(event.inaxes, type(self.ax)):
             # Add points to list
             self.xpoints.extend([event.xdata])
             self.ypoints.extend([event.ydata])
 
             # Display points
-            self.display_points()
+            self._display_points()
             self.fig.canvas.draw()
 
     def _undo(self, _):
@@ -281,7 +340,7 @@ class ROI_jupyter:
         if len(self.xpoints) != 0:
             self.xpoints = self.xpoints[:-1]
             self.ypoints = self.ypoints[:-1]
-        self.display_points()
+        self._display_points()
         self.fig.canvas.draw()
 
     def _save(self, _):
@@ -300,7 +359,7 @@ class ROI_jupyter:
 
         plt.close()
 
-    def display_points(self):
+    def _display_points(self):
         # Remove existing points
         try:
             self._point0.remove()
@@ -313,7 +372,7 @@ class ROI_jupyter:
             self._points = self.ax.scatter(self.xpoints, self.ypoints, c='lime', s=10)
             self._point0 = self.ax.scatter(self.xpoints[0], self.ypoints[0], c='r', s=10)
 
-    def draw_frame(self, i: int):
+    def _draw_frame(self, i: int):
         self.ax.clear()
 
         # Plot image
@@ -327,7 +386,7 @@ class ROI_jupyter:
                      '\nClick to lay points',
                      color='white',
                      transform=self.ax.transAxes, fontsize=8, va='top', ha='left')
-        self.display_points()
+        self._display_points()
         self.fig.canvas.draw()
 
 
@@ -336,12 +395,13 @@ def spline_roi(roi: np.ndarray, periodic: bool = True, s: float = 0.0, k: int = 
     Fits a spline to points specifying the coordinates of the cortex, then interpolates to pixel distances
 
     Args:
-        roi:
-        periodic:
-        s:
-        k:
+        roi: two column array containing x and y coordinates. e.g. roi = np.loadtxt(filename)
+        periodic: set to True if the ROI is periodic
+        s: splprep s parameter
+        k: splprep k parameter (spline order)
 
     Returns:
+        spline ROI (numpy array)
 
     """
 
@@ -365,16 +425,16 @@ def spline_roi(roi: np.ndarray, periodic: bool = True, s: float = 0.0, k: int = 
 
 def interp_roi(roi: np.ndarray, periodic: bool = True, npoints: Optional[int] = None, gap: int = 1) -> np.ndarray:
     """
-    Interpolates coordinates to one pixel distances (or as close as possible to one pixel)
-    Linear interpolation
+    Interpolates coordinates to one pixel distances (or as close as possible to one pixel). Linear interpolation
 
     Args:
-        roi:
-        periodic:
-        npoints:
-        gap:
+        roi: two column array containing x and y coordinates. e.g. roi = np.loadtxt(filename)
+        periodic: set to True if the ROI is periodic
+        npoints: number of points to interpolate to
+        gap: alternatively, specify the desired gap between succesive coordinates in pixel units
 
     Returns:
+        interpolated ROI (numpy array)
 
     """
 
@@ -404,12 +464,12 @@ def offset_coordinates(roi: np.ndarray, offsets: Union[np.ndarray, float], perio
     Reads in coordinates, adjusts according to offsets
 
     Args:
-        roi:  two column array containing x and y coordinates. e.g. coors = np.loadtxt(filename)
+        roi:  two column array containing x and y coordinates. e.g. roi = np.loadtxt(filename)
         offsets: array the same length as coors. Direction?
-        periodic:
+        periodic: set to True if the ROI is periodic
 
     Returns:
-         array in same format as coors containing new coordinates.
+         array in same format as coors containing new coordinates.\n
          To save this in a fiji readable format:
          np.savetxt(filename, newcoors, fmt='%.4f', delimiter='\t')
 
