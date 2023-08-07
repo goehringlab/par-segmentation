@@ -2,8 +2,16 @@ import numpy as np
 import os
 import pandas as pd
 from .funcs import save_img, in_notebook
-from ._interactive import view_stack, view_stack_jupyter, plot_fits, plot_fits_jupyter, plot_segmentation, \
-    plot_segmentation_jupyter, plot_quantification, plot_quantification_jupyter
+from ._interactive import (
+    view_stack,
+    view_stack_jupyter,
+    plot_fits,
+    plot_fits_jupyter,
+    plot_segmentation,
+    plot_segmentation_jupyter,
+    plot_quantification,
+    plot_quantification_jupyter,
+)
 from ._model import ImageQuantGradientDescent
 from ._legacy import ImageQuantDifferentialEvolutionMulti
 from typing import Union, Optional
@@ -49,53 +57,85 @@ class ImageQuant:
 
     """
 
-    def __init__(self,
-                 img: Union[np.ndarray, list],
-                 roi: Union[np.ndarray, list],
-                 sigma: float = 3.5,
-                 periodic: bool = True,
-                 thickness: int = 50,
-                 rol_ave: int = 5,
-                 rotate: bool = False,
-                 nfits: Union[int, None] = 100,
-                 iterations: int = 2,
-                 lr: float = 0.01,
-                 descent_steps: int = 400,
-                 adaptive_sigma: bool = False,
-                 batch_norm: bool = False,
-                 freedom: float = 25,
-                 roi_knots: int = 20,
-                 fit_outer: bool = True,
-                 save_training: bool = False,
-                 save_sims: bool = False,
-                 method: str = 'GD',
-                 itp: int = 10,
-                 parallel: bool = False,
-                 zerocap: bool = False,
-                 cores: Optional[float] = None,
-                 bg_subtract: bool = False,
-                 interp: str = 'cubic',
-                 verbose: bool = True):
-
+    def __init__(
+        self,
+        img: Union[np.ndarray, list],
+        roi: Union[np.ndarray, list],
+        sigma: float = 3.5,
+        periodic: bool = True,
+        thickness: int = 50,
+        rol_ave: int = 5,
+        rotate: bool = False,
+        nfits: Union[int, None] = 100,
+        iterations: int = 2,
+        lr: float = 0.01,
+        descent_steps: int = 400,
+        adaptive_sigma: bool = False,
+        batch_norm: bool = False,
+        freedom: float = 25,
+        roi_knots: int = 20,
+        fit_outer: bool = True,
+        save_training: bool = False,
+        save_sims: bool = False,
+        method: str = "GD",
+        itp: int = 10,
+        parallel: bool = False,
+        zerocap: bool = False,
+        cores: Optional[float] = None,
+        bg_subtract: bool = False,
+        interp: str = "cubic",
+        verbose: bool = True,
+    ):
         # Set up quantifier
         self.method = method
-        if self.method == 'GD':
-            self.iq = ImageQuantGradientDescent(img=img, roi=roi, sigma=sigma, periodic=periodic, thickness=thickness,
-                                                rol_ave=rol_ave, rotate=rotate, nfits=nfits, iterations=iterations,
-                                                lr=lr, descent_steps=descent_steps, adaptive_sigma=adaptive_sigma,
-                                                batch_norm=batch_norm, freedom=freedom, roi_knots=roi_knots,
-                                                fit_outer=fit_outer, zerocap=zerocap, save_training=save_training,
-                                                save_sims=save_sims, verbose=verbose)
+        if self.method == "GD":
+            self.iq = ImageQuantGradientDescent(
+                img=img,
+                roi=roi,
+                sigma=sigma,
+                periodic=periodic,
+                thickness=thickness,
+                rol_ave=rol_ave,
+                rotate=rotate,
+                nfits=nfits,
+                iterations=iterations,
+                lr=lr,
+                descent_steps=descent_steps,
+                adaptive_sigma=adaptive_sigma,
+                batch_norm=batch_norm,
+                freedom=freedom,
+                roi_knots=roi_knots,
+                fit_outer=fit_outer,
+                zerocap=zerocap,
+                save_training=save_training,
+                save_sims=save_sims,
+                verbose=verbose,
+            )
 
-        elif self.method == 'DE':
-            self.iq = ImageQuantDifferentialEvolutionMulti(img=img, roi=roi, sigma=sigma, periodic=periodic,
-                                                           thickness=thickness, freedom=freedom, itp=itp,
-                                                           rol_ave=rol_ave, parallel=parallel, cores=cores,
-                                                           rotate=rotate, zerocap=zerocap, nfits=nfits,
-                                                           iterations=iterations, interp=interp,
-                                                           bg_subtract=bg_subtract, verbose=verbose)
+        elif self.method == "DE":
+            self.iq = ImageQuantDifferentialEvolutionMulti(
+                img=img,
+                roi=roi,
+                sigma=sigma,
+                periodic=periodic,
+                thickness=thickness,
+                freedom=freedom,
+                itp=itp,
+                rol_ave=rol_ave,
+                parallel=parallel,
+                cores=cores,
+                rotate=rotate,
+                zerocap=zerocap,
+                nfits=nfits,
+                iterations=iterations,
+                interp=interp,
+                bg_subtract=bg_subtract,
+                verbose=verbose,
+            )
         else:
-            raise Exception('Method must be "GD" (gradient descent) or "DE" (differential evolution)')
+            raise Exception(
+                'Method must be "GD" (gradient descent) or "DE" (differential evolution)'
+            )
 
         # Input data
         self.img = self.iq.img
@@ -138,7 +178,7 @@ class ImageQuant:
         self.target_full = self.iq.target_full
         self.sim_full = self.iq.sim_full
         self.resids_full = self.iq.resids_full
-        if self.method == 'GD':
+        if self.method == "GD":
             self.sigma = self.iq.sigma
 
     """
@@ -162,13 +202,25 @@ class ImageQuant:
 
         if not os.path.isdir(save_path):
             os.mkdir(save_path)
-        np.savetxt(save_path + '/offsets.txt', self.offsets[i], fmt='%.4f', delimiter='\t')
-        np.savetxt(save_path + '/cytoplasmic_concentrations.txt', self.cyts[i], fmt='%.4f', delimiter='\t')
-        np.savetxt(save_path + '/membrane_concentrations.txt', self.mems[i], fmt='%.4f', delimiter='\t')
-        np.savetxt(save_path + '/roi.txt', self.roi[i], fmt='%.4f', delimiter='\t')
-        save_img(self.target_full[i], save_path + '/target.tif')
-        save_img(self.sim_full[i], save_path + '/fit.tif')
-        save_img(self.resids_full[i], save_path + '/residuals.tif')
+        np.savetxt(
+            save_path + "/offsets.txt", self.offsets[i], fmt="%.4f", delimiter="\t"
+        )
+        np.savetxt(
+            save_path + "/cytoplasmic_concentrations.txt",
+            self.cyts[i],
+            fmt="%.4f",
+            delimiter="\t",
+        )
+        np.savetxt(
+            save_path + "/membrane_concentrations.txt",
+            self.mems[i],
+            fmt="%.4f",
+            delimiter="\t",
+        )
+        np.savetxt(save_path + "/roi.txt", self.roi[i], fmt="%.4f", delimiter="\t")
+        save_img(self.target_full[i], save_path + "/target.tif")
+        save_img(self.sim_full[i], save_path + "/fit.tif")
+        save_img(self.resids_full[i], save_path + "/residuals.tif")
 
     def compile_res(self):
         """
@@ -180,20 +232,32 @@ class ImageQuant:
         """
 
         # Create empty dataframe
-        df = pd.DataFrame({'Frame': [],
-                           'Position': [],
-                           'Membrane signal': [],
-                           'Cytoplasmic signal': []})
+        df = pd.DataFrame(
+            {
+                "Frame": [],
+                "Position": [],
+                "Membrane signal": [],
+                "Cytoplasmic signal": [],
+            }
+        )
 
         # Fill with data
         for i, (m, c) in enumerate(zip(self.mems, self.cyts)):
-            df = df.append(pd.DataFrame({'Frame': i,
-                                         'Position': range(len(m)),
-                                         'Membrane signal': m,
-                                         'Cytoplasmic signal': c}))
+            df = df.append(
+                pd.DataFrame(
+                    {
+                        "Frame": i,
+                        "Position": range(len(m)),
+                        "Membrane signal": m,
+                        "Cytoplasmic signal": c,
+                    }
+                )
+            )
 
-        df = df.reindex(columns=['Frame', 'Position', 'Membrane signal', 'Cytoplasmic signal'])
-        df = df.astype({'Frame': int, 'Position': int})
+        df = df.reindex(
+            columns=["Frame", "Position", "Membrane signal", "Cytoplasmic signal"]
+        )
+        df = df.astype({"Frame": int, "Position": int})
         return df
 
     """
@@ -283,10 +347,10 @@ class ImageQuant:
 
         Args:
             log: if True, plot the logarithm of losses
-        
+
         """
 
-        if self.method == 'GD':
+        if self.method == "GD":
             self.iq.plot_losses(log=log)
         else:
             pass

@@ -3,7 +3,13 @@ import numpy as np
 from scipy.optimize import differential_evolution
 from joblib import Parallel, delayed
 import multiprocessing
-from .funcs import straighten, rolling_ave_2d, interp_1d_array, interp_2d_array, rotate_roi
+from .funcs import (
+    straighten,
+    rolling_ave_2d,
+    interp_1d_array,
+    interp_2d_array,
+    rotate_roi,
+)
 from scipy.special import erf
 from .roi import interp_roi, offset_coordinates, spline_roi
 from typing import Union, Optional, Tuple
@@ -53,24 +59,25 @@ class ImageQuantDifferentialEvolutionSingle:
 
     """
 
-    def __init__(self,
-                 img: Union[np.ndarray, list],
-                 sigma: float = 2.0,
-                 roi: Union[np.ndarray, list] = None,
-                 freedom: float = 0.5,
-                 periodic: bool = True,
-                 thickness: int = 50,
-                 itp: int = 10,
-                 rol_ave: int = 10,
-                 parallel: bool = False,
-                 cores: Optional[int] = None,
-                 rotate: bool = False,
-                 zerocap: bool = True,
-                 nfits: Optional[int] = None,
-                 iterations: int = 2,
-                 interp: str = 'cubic',
-                 bg_subtract: bool = False):
-
+    def __init__(
+        self,
+        img: Union[np.ndarray, list],
+        sigma: float = 2.0,
+        roi: Union[np.ndarray, list] = None,
+        freedom: float = 0.5,
+        periodic: bool = True,
+        thickness: int = 50,
+        itp: int = 10,
+        rol_ave: int = 10,
+        parallel: bool = False,
+        cores: Optional[int] = None,
+        rotate: bool = False,
+        zerocap: bool = True,
+        nfits: Optional[int] = None,
+        iterations: int = 2,
+        interp: str = "cubic",
+        bg_subtract: bool = False,
+    ):
         # Image / stack
         self.img = img
 
@@ -96,11 +103,22 @@ class ImageQuantDifferentialEvolutionSingle:
         self.interp = interp
 
         # Background curves
-        self.cytbg = (1 + error_func(np.arange(thickness * 2), thickness, (self.sigma * np.sqrt(2)))) / 2
-        self.cytbg_itp = (1 + error_func(np.arange(2 * self.thickness_itp), self.thickness_itp,
-                                         (self.sigma * np.sqrt(2)) * self.itp)) / 2
+        self.cytbg = (
+            1
+            + error_func(np.arange(thickness * 2), thickness, (self.sigma * np.sqrt(2)))
+        ) / 2
+        self.cytbg_itp = (
+            1
+            + error_func(
+                np.arange(2 * self.thickness_itp),
+                self.thickness_itp,
+                (self.sigma * np.sqrt(2)) * self.itp,
+            )
+        ) / 2
         self.membg = gaus(np.arange(thickness * 2), thickness, self.sigma)
-        self.membg_itp = gaus(np.arange(2 * self.thickness_itp), self.thickness_itp, self.sigma * self.itp)
+        self.membg_itp = gaus(
+            np.arange(2 * self.thickness_itp), self.thickness_itp, self.sigma * self.itp
+        )
 
         # Computation
         self.parallel = parallel
@@ -131,7 +149,6 @@ class ImageQuantDifferentialEvolutionSingle:
     """
 
     def run(self):
-
         # Fitting
         for i in range(self.iterations):
             if i > 0:
@@ -143,7 +160,6 @@ class ImageQuantDifferentialEvolutionSingle:
         self.sim_images()
 
     def fit(self):
-
         # Specify number of fits
         if self.nfits is None:
             self.nfits = len(self.roi[:, 0])
@@ -159,47 +175,74 @@ class ImageQuantDifferentialEvolutionSingle:
 
         # Smoothen
         if self.rol_ave != 0:
-            self.straight_filtered = rolling_ave_2d(self.straight, self.rol_ave, self.periodic)
+            self.straight_filtered = rolling_ave_2d(
+                self.straight, self.rol_ave, self.periodic
+            )
         else:
             self.straight_filtered = self.straight
 
         # Interpolate
-        straight = interp_2d_array(self.straight_filtered, self.thickness_itp, method=self.interp)
+        straight = interp_2d_array(
+            self.straight_filtered, self.thickness_itp, method=self.interp
+        )
         straight = interp_2d_array(straight, self.nfits, ax=1, method=self.interp)
 
         # Fit
         if self.parallel:
-            results = np.array(Parallel(n_jobs=self.cores)(
-                delayed(self._fit_profile)(straight[:, x]) for x in range(len(straight[0, :]))))
+            results = np.array(
+                Parallel(n_jobs=self.cores)(
+                    delayed(self._fit_profile)(straight[:, x])
+                    for x in range(len(straight[0, :]))
+                )
+            )
             self.offsets = results[:, 0]
             self.cyts = results[:, 1]
             self.mems = results[:, 2]
         else:
             for x in range(len(straight[0, :])):
-                self.offsets[x], self.cyts[x], self.mems[x] = self._fit_profile(straight[:, x])
+                self.offsets[x], self.cyts[x], self.mems[x] = self._fit_profile(
+                    straight[:, x]
+                )
 
         # Interpolate
-        self.offsets_full = interp_1d_array(self.offsets, len(self.roi[:, 0]), method='linear')
-        self.cyts_full = interp_1d_array(self.cyts, len(self.roi[:, 0]), method='linear')
-        self.mems_full = interp_1d_array(self.mems, len(self.roi[:, 0]), method='linear')
+        self.offsets_full = interp_1d_array(
+            self.offsets, len(self.roi[:, 0]), method="linear"
+        )
+        self.cyts_full = interp_1d_array(
+            self.cyts, len(self.roi[:, 0]), method="linear"
+        )
+        self.mems_full = interp_1d_array(
+            self.mems, len(self.roi[:, 0]), method="linear"
+        )
 
     def _fit_profile(self, profile: np.ndarray) -> Tuple[float, float, float]:
         if self.zerocap:
             bounds = (
-                ((self.thickness_itp / 2) * (1 - self.freedom), (self.thickness_itp / 2) * (1 + self.freedom)),
-                (0, max(2 * max(profile), 0)), (0, max(2 * max(profile), 0)))
+                (
+                    (self.thickness_itp / 2) * (1 - self.freedom),
+                    (self.thickness_itp / 2) * (1 + self.freedom),
+                ),
+                (0, max(2 * max(profile), 0)),
+                (0, max(2 * max(profile), 0)),
+            )
         else:
             bounds = (
-                ((self.thickness_itp / 2) * (1 - self.freedom), (self.thickness_itp / 2) * (1 + self.freedom)),
-                (-0.2 * max(profile), 2 * max(profile)), (-0.2 * max(profile), 2 * max(profile)))
+                (
+                    (self.thickness_itp / 2) * (1 - self.freedom),
+                    (self.thickness_itp / 2) * (1 + self.freedom),
+                ),
+                (-0.2 * max(profile), 2 * max(profile)),
+                (-0.2 * max(profile), 2 * max(profile)),
+            )
         res = differential_evolution(self._mse, bounds=bounds, args=(profile,), tol=0.2)
         o = (res.x[0] - self.thickness_itp / 2) / self.itp
         return o, res.x[1], res.x[2]
 
     def _mse(self, l_c_m: list, profile: np.ndarray) -> np.ndarray:
         l, c, m = l_c_m
-        y = (c * self.cytbg_itp[int(l):int(l) + self.thickness_itp]) + (
-                m * self.membg_itp[int(l):int(l) + self.thickness_itp])
+        y = (c * self.cytbg_itp[int(l) : int(l) + self.thickness_itp]) + (
+            m * self.membg_itp[int(l) : int(l) + self.thickness_itp]
+        )
         return np.mean((profile - y) ** 2)
 
     """
@@ -217,8 +260,11 @@ class ImageQuantDifferentialEvolutionSingle:
             m = self.mems_full[x]
             l = int(self.offsets_full[x] * self.itp + (self.thickness_itp / 2))
             self.straight_fit[:, x] = interp_1d_array(
-                (c * self.cytbg_itp[l:l + self.thickness_itp]) + (m * self.membg_itp[l:l + self.thickness_itp]),
-                self.thickness, method=self.interp)
+                (c * self.cytbg_itp[l : l + self.thickness_itp])
+                + (m * self.membg_itp[l : l + self.thickness_itp]),
+                self.thickness,
+                method=self.interp,
+            )
             self.straight_resids[:, x] = self.straight[:, x] - self.straight_fit[:, x]
 
     def adjust_roi(self):
@@ -278,25 +324,26 @@ class ImageQuantDifferentialEvolutionSingle:
 
 
 class ImageQuantDifferentialEvolutionMulti:
-    def __init__(self,
-                 img: Union[np.ndarray, list],
-                 roi: Union[np.ndarray, list] = None,
-                 sigma: float = 2.0,
-                 periodic: bool = True,
-                 thickness: int = 50,
-                 freedom: float = 0.5,
-                 itp: int = 10,
-                 rol_ave: int = 10,
-                 parallel: bool = False,
-                 cores: Optional[int] = None,
-                 rotate: bool = False,
-                 zerocap: bool = True,
-                 nfits: Optional[int] = None,
-                 iterations: int = 1,
-                 interp: str = 'cubic',
-                 bg_subtract: bool = False,
-                 verbose: bool = True):
-
+    def __init__(
+        self,
+        img: Union[np.ndarray, list],
+        roi: Union[np.ndarray, list] = None,
+        sigma: float = 2.0,
+        periodic: bool = True,
+        thickness: int = 50,
+        freedom: float = 0.5,
+        itp: int = 10,
+        rol_ave: int = 10,
+        parallel: bool = False,
+        cores: Optional[int] = None,
+        rotate: bool = False,
+        zerocap: bool = True,
+        nfits: Optional[int] = None,
+        iterations: int = 1,
+        interp: str = "cubic",
+        bg_subtract: bool = False,
+        verbose: bool = True,
+    ):
         # Detect if single frame or stack
         if type(img) is list:
             self.stack = True
@@ -306,12 +353,16 @@ class ImageQuantDifferentialEvolutionMulti:
             self.img = list(img)
         else:
             self.stack = False
-            self.img = [img, ]
+            self.img = [
+                img,
+            ]
         self.n = len(self.img)
 
         # ROI
         if not self.stack:
-            self.roi = [roi, ]
+            self.roi = [
+                roi,
+            ]
         elif type(roi) is list:
             if len(roi) > 1:
                 self.roi = roi
@@ -322,12 +373,26 @@ class ImageQuantDifferentialEvolutionMulti:
 
         # Set up list of classes
         self.iq = [
-            ImageQuantDifferentialEvolutionSingle(img=i, roi=r, sigma=sigma, periodic=periodic, thickness=thickness,
-                                                  freedom=freedom, itp=itp, rol_ave=rol_ave, parallel=parallel,
-                                                  cores=cores, rotate=rotate, zerocap=zerocap, nfits=nfits,
-                                                  iterations=iterations, interp=interp,
-                                                  bg_subtract=bg_subtract) for i, r in
-            zip(self.img, self.roi)]
+            ImageQuantDifferentialEvolutionSingle(
+                img=i,
+                roi=r,
+                sigma=sigma,
+                periodic=periodic,
+                thickness=thickness,
+                freedom=freedom,
+                itp=itp,
+                rol_ave=rol_ave,
+                parallel=parallel,
+                cores=cores,
+                rotate=rotate,
+                zerocap=zerocap,
+                nfits=nfits,
+                iterations=iterations,
+                interp=interp,
+                bg_subtract=bg_subtract,
+            )
+            for i, r in zip(self.img, self.roi)
+        ]
 
         # Initial results containers
         self.mems = [None] * self.n
@@ -349,7 +414,7 @@ class ImageQuantDifferentialEvolutionMulti:
         # Run
         for i, iq in enumerate(self.iq):
             if self.verbose:
-                print(f'Quantifying image {i + 1} of {self.n}')
+                print(f"Quantifying image {i + 1} of {self.n}")
             iq.run()
 
         # Save membrane/cytoplasmic quantification, offsets
@@ -369,7 +434,7 @@ class ImageQuantDifferentialEvolutionMulti:
         self.resids_full[:] = [iq.straight_resids for iq in self.iq]
 
         if self.verbose:
-            print('Time elapsed: %.2f seconds ' % (time.time() - t))
+            print("Time elapsed: %.2f seconds " % (time.time() - t))
 
 
 def gaus(x: np.ndarray, centre: float, width: float) -> np.ndarray:
@@ -386,7 +451,7 @@ def gaus(x: np.ndarray, centre: float, width: float) -> np.ndarray:
 
     """
 
-    return np.exp(-((x - centre) ** 2) / (2 * width ** 2))
+    return np.exp(-((x - centre) ** 2) / (2 * width**2))
 
 
 def error_func(x: np.ndarray, centre: float, width: float) -> np.ndarray:
@@ -420,14 +485,18 @@ def polycrop(img: np.ndarray, polyline: np.ndarray, enlarge: float) -> np.ndarra
 
     """
 
-    newcoors = np.int32(offset_coordinates(polyline, enlarge * np.ones([len(polyline[:, 0])])))
+    newcoors = np.int32(
+        offset_coordinates(polyline, enlarge * np.ones([len(polyline[:, 0])]))
+    )
     mask = np.zeros(img.shape)
     mask = cv2.fillPoly(mask, [newcoors], 1)
     newimg = img * mask
     return newimg
 
 
-def bg_subtraction(img: np.ndarray, roi: np.ndarray, band: tuple = (25, 75)) -> np.ndarray:
+def bg_subtraction(
+    img: np.ndarray, roi: np.ndarray, band: tuple = (25, 75)
+) -> np.ndarray:
     """
 
     Subtracts background intensity from an image of a cell. Background intensity calculated as the mean intensity within
@@ -456,5 +525,5 @@ def calc_vol(normcoors: np.ndarray) -> float:
 def calc_sa(normcoors: np.ndarray) -> float:
     r1 = (max(normcoors[:, 0]) - min(normcoors[:, 0])) / 2
     r2 = (max(normcoors[:, 1]) - min(normcoors[:, 1])) / 2
-    e = (1 - (r2 ** 2) / (r1 ** 2)) ** 0.5
+    e = (1 - (r2**2) / (r1**2)) ** 0.5
     return 2 * np.pi * r2 * r2 * (1 + (r1 / (r2 * e)) * np.arcsin(e))

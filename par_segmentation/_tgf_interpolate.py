@@ -11,17 +11,28 @@ import enum
 
 FLAGS = flags.FLAGS
 
-Integer = Union[int, np.int8, np.int16, np.int32, np.int64, np.uint8, np.uint16,
-                np.uint32, np.uint64]
+Integer = Union[
+    int,
+    np.int8,
+    np.int16,
+    np.int32,
+    np.int64,
+    np.uint8,
+    np.uint16,
+    np.uint32,
+    np.uint64,
+]
 Float = Union[float, np.float16, np.float32, np.float64]
 TensorLike = Union[Integer, Float, Sequence, np.ndarray, tf.Tensor, tf.Variable]
 
 
-def interpolate(knots: TensorLike,
-                positions: TensorLike,
-                degree: int,
-                cyclical: bool,
-                name: str = "bspline_interpolate") -> tf.Tensor:
+def interpolate(
+    knots: TensorLike,
+    positions: TensorLike,
+    degree: int,
+    cyclical: bool,
+    name: str = "bspline_interpolate",
+) -> tf.Tensor:
     """Applies B-spline interpolation to input control points (knots).
     Note:
       In the following, A1 to An, and B1 to Bk are optional batch dimensions.
@@ -49,9 +60,10 @@ def interpolate(knots: TensorLike,
 
 
 def interpolate_with_weights(
-        knots: TensorLike,
-        weights: TensorLike,
-        name: str = "bspline_interpolate_with_weights") -> tf.Tensor:
+    knots: TensorLike,
+    weights: TensorLike,
+    name: str = "bspline_interpolate_with_weights",
+) -> tf.Tensor:
     """Interpolates knots using knot weights.
     Note:
       In the following, A1 to An, and B1 to Bk are optional batch dimensions.
@@ -72,7 +84,8 @@ def interpolate_with_weights(
         weights = tf.convert_to_tensor(value=weights)
 
         compare_dimensions(
-            tensors=(knots, weights), axes=-1, tensor_names=("knots", "weights"))
+            tensors=(knots, weights), axes=-1, tensor_names=("knots", "weights")
+        )
 
     return tf.tensordot(weights, knots, (-1, -1))
 
@@ -90,18 +103,21 @@ def compare_dimensions(tensors, axes, tensor_names=None):
       ValueError: If inputs have unexpected types, or if given axes are out of
         bounds, or if the check fails.
     """
-    _check_tensors(tensors, 'tensors')
+    _check_tensors(tensors, "tensors")
     if isinstance(axes, int):
         axes = [axes] * len(tensors)
-    _check_tensor_axis_lists(tensors, 'tensors', axes, 'axes')
+    _check_tensor_axis_lists(tensors, "tensors", axes, "axes")
     axes = _fix_axes(tensors, axes, allow_negative=False)
     if tensor_names is None:
-        tensor_names = _give_default_names(tensors, 'tensor')
+        tensor_names = _give_default_names(tensors, "tensor")
     dimensions = [_get_dim(tensor, axis) for tensor, axis in zip(tensors, axes)]
     if not _all_are_equal(dimensions):
-        raise ValueError('Tensors {} must have the same number of dimensions in '
-                         'axes {}, but they are {}.'.format(
-            list(tensor_names), list(axes), list(dimensions)))
+        raise ValueError(
+            "Tensors {} must have the same number of dimensions in "
+            "axes {}, but they are {}.".format(
+                list(tensor_names), list(axes), list(dimensions)
+            )
+        )
 
 
 def _all_are_equal(list_of_objects):
@@ -122,19 +138,21 @@ def _check_tensors(tensors, tensors_name):
     """Helper function to check the type and length of tensors."""
     _check_type(tensors, tensors_name, (list, tuple))
     if len(tensors) < 2:
-        raise ValueError('At least 2 tensors are required.')
+        raise ValueError("At least 2 tensors are required.")
 
 
 def _check_type(variable, variable_name, expected_type):
     """Helper function for checking that inputs are of expected types."""
     if isinstance(expected_type, (list, tuple)):
-        expected_type_name = 'list or tuple'
+        expected_type_name = "list or tuple"
     else:
         expected_type_name = expected_type.__name__
     if not isinstance(variable, expected_type):
-        raise ValueError('{} must be of type {}, but it is {}'.format(
-            variable_name, expected_type_name,
-            type(variable).__name__))
+        raise ValueError(
+            "{} must be of type {}, but it is {}".format(
+                variable_name, expected_type_name, type(variable).__name__
+            )
+        )
 
 
 def _check_tensor_axis_lists(tensors, tensors_name, axes, axes_name):
@@ -142,8 +160,10 @@ def _check_tensor_axis_lists(tensors, tensors_name, axes, axes_name):
     _check_type(axes, axes_name, (list, tuple))
     if len(tensors) != len(axes):
         raise ValueError(
-            '{} and {} must have the same length, but are {} and {}.'.format(
-                tensors_name, axes_name, len(tensors), len(axes)))
+            "{} and {} must have the same length, but are {} and {}.".format(
+                tensors_name, axes_name, len(tensors), len(axes)
+            )
+        )
 
 
 def _fix_axes(tensors, axes, allow_negative):
@@ -153,24 +173,29 @@ def _fix_axes(tensors, axes, allow_negative):
         for tensor, axis in zip(tensors, axes)
     ]
     if not all(
-            ((allow_negative or
-              (not allow_negative and axis >= 0)) and axis < tensor.shape.ndims)
-            for tensor, axis in zip(tensors, axes)):
-        rank_axis_pairs = list(
-            zip([tensor.shape.ndims for tensor in tensors], axes))
+        (
+            (allow_negative or (not allow_negative and axis >= 0))
+            and axis < tensor.shape.ndims
+        )
+        for tensor, axis in zip(tensors, axes)
+    ):
+        rank_axis_pairs = list(zip([tensor.shape.ndims for tensor in tensors], axes))
         raise ValueError(
-            'Some axes are out of bounds. Given rank-axes pairs: {}'.format(
-                [pair for pair in rank_axis_pairs]))
+            "Some axes are out of bounds. Given rank-axes pairs: {}".format(
+                [pair for pair in rank_axis_pairs]
+            )
+        )
     return axes
 
 
 def _give_default_names(list_of_objects, name):
     """Helper function to give default names to objects for error messages."""
-    return [name + '_' + str(index) for index in range(len(list_of_objects))]
+    return [name + "_" + str(index) for index in range(len(list_of_objects))]
 
 
 class Degree(enum.IntEnum):
     """Defines valid degrees for B-spline interpolation."""
+
     CONSTANT = 0
     LINEAR = 1
     QUADRATIC = 2
@@ -196,9 +221,10 @@ def _quadratic(position: tf.Tensor) -> tf.Tensor:
     pos_sq = tf.pow(position, 2.0)
 
     # Piecewise quadratic splines are C1 smooth.
-    return tf.stack((tf.pow(1.0 - position, 2.0) / 2.0, -pos_sq + position + 0.5,
-                     pos_sq / 2.0),
-                    axis=-1)
+    return tf.stack(
+        (tf.pow(1.0 - position, 2.0) / 2.0, -pos_sq + position + 0.5, pos_sq / 2.0),
+        axis=-1,
+    )
 
 
 def _cubic(position: tf.Tensor) -> tf.Tensor:
@@ -210,10 +236,14 @@ def _cubic(position: tf.Tensor) -> tf.Tensor:
 
     # Piecewise cubic splines are C2 smooth.
     return tf.stack(
-        (tf.pow(neg_pos, 3.0) / 6.0, (3.0 * pos_cb - 6.0 * pos_sq + 4.0) / 6.0,
-         (-3.0 * pos_cb + 3.0 * pos_sq + 3.0 * position + 1.0) / 6.0,
-         pos_cb / 6.0),
-        axis=-1)
+        (
+            tf.pow(neg_pos, 3.0) / 6.0,
+            (3.0 * pos_cb - 6.0 * pos_sq + 4.0) / 6.0,
+            (-3.0 * pos_cb + 3.0 * pos_sq + 3.0 * position + 1.0) / 6.0,
+            pos_cb / 6.0,
+        ),
+        axis=-1,
+    )
 
 
 def _quartic(position: tf.Tensor) -> tf.Tensor:
@@ -226,22 +256,32 @@ def _quartic(position: tf.Tensor) -> tf.Tensor:
 
     # Piecewise quartic splines are C3 smooth.
     return tf.stack(
-        (tf.pow(neg_pos, 4.0) / 24.0,
-         (-4.0 * tf.pow(neg_pos, 4.0) + 4.0 * tf.pow(neg_pos, 3.0) +
-          6.0 * tf.pow(neg_pos, 2.0) + 4.0 * neg_pos + 1.0) / 24.0,
-         (pos_qt - 2.0 * pos_cb - pos_sq + 2.0 * position) / 4.0 + 11.0 / 24.0,
-         (-4.0 * pos_qt + 4.0 * pos_cb + 6.0 * pos_sq + 4.0 * position + 1.0) /
-         24.0, pos_qt / 24.0),
-        axis=-1)
+        (
+            tf.pow(neg_pos, 4.0) / 24.0,
+            (
+                -4.0 * tf.pow(neg_pos, 4.0)
+                + 4.0 * tf.pow(neg_pos, 3.0)
+                + 6.0 * tf.pow(neg_pos, 2.0)
+                + 4.0 * neg_pos
+                + 1.0
+            )
+            / 24.0,
+            (pos_qt - 2.0 * pos_cb - pos_sq + 2.0 * position) / 4.0 + 11.0 / 24.0,
+            (-4.0 * pos_qt + 4.0 * pos_cb + 6.0 * pos_sq + 4.0 * position + 1.0) / 24.0,
+            pos_qt / 24.0,
+        ),
+        axis=-1,
+    )
 
 
 def knot_weights(
-        positions: TensorLike,
-        num_knots: TensorLike,
-        degree: int,
-        cyclical: bool,
-        sparse_mode: bool = False,
-        name: str = "bspline_knot_weights") -> Union[tf.Tensor, Tuple[tf.Tensor, tf.Tensor]]:
+    positions: TensorLike,
+    num_knots: TensorLike,
+    degree: int,
+    cyclical: bool,
+    sparse_mode: bool = False,
+    name: str = "bspline_knot_weights",
+) -> Union[tf.Tensor, Tuple[tf.Tensor, tf.Tensor]]:
     """Function that converts cardinal B-spline positions to knot weights.
     Note:
       In the following, A1 to An are optional batch dimensions.
@@ -279,8 +319,7 @@ def knot_weights(
         if cyclical:
             positions = assert_all_in_range(positions, 0.0, float(num_knots))
         else:
-            positions = assert_all_in_range(positions, 0.0,
-                                            float(num_knots - degree))
+            positions = assert_all_in_range(positions, 0.0, float(num_knots - degree))
 
         all_basis_functions = {
             # Maps valid degrees to functions.
@@ -288,7 +327,7 @@ def knot_weights(
             Degree.LINEAR: _linear,
             Degree.QUADRATIC: _quadratic,
             Degree.CUBIC: _cubic,
-            Degree.QUARTIC: _quartic
+            Degree.QUARTIC: _quartic,
         }
         basis_functions = all_basis_functions[degree]
 
@@ -313,7 +352,8 @@ def knot_weights(
             # Returns just the weights and the shift amounts, so that tf.gather_nd on
             # the knots can be used to sparsely activate knots if needed.
             shape_weights = tf.concat(
-                (shape_batch, tf.constant((degree + 1,), dtype=tf.int32)), axis=0)
+                (shape_batch, tf.constant((degree + 1,), dtype=tf.int32)), axis=0
+            )
             sparse_weights = tf.reshape(sparse_weights, shape=shape_weights)
             shift = tf.reshape(shift, shape=shape_batch)
             return sparse_weights, shift
@@ -322,37 +362,45 @@ def knot_weights(
         ind_row, ind_col = tf.meshgrid(
             tf.range(num_positions, dtype=tf.int32),
             tf.range(degree + 1, dtype=tf.int32),
-            indexing="ij")
+            indexing="ij",
+        )
 
         tiled_shifts = tf.reshape(
             tf.tile(tf.expand_dims(shift, axis=-1), multiples=(1, degree + 1)),
-            shape=(-1,))
+            shape=(-1,),
+        )
         ind_col = tf.reshape(ind_col, shape=(-1,)) + tiled_shifts
         if cyclical:
             ind_col = tf.math.mod(ind_col, num_knots)
         indices = tf.stack((tf.reshape(ind_row, shape=(-1,)), ind_col), axis=-1)
-        shape_indices = tf.concat((tf.reshape(
-            num_positions, shape=(1,)), tf.constant(
-            (degree + 1, 2), dtype=tf.int32)),
-            axis=0)
+        shape_indices = tf.concat(
+            (
+                tf.reshape(num_positions, shape=(1,)),
+                tf.constant((degree + 1, 2), dtype=tf.int32),
+            ),
+            axis=0,
+        )
         indices = tf.reshape(indices, shape=shape_indices)
-        shape_scatter = tf.concat((tf.reshape(
-            num_positions, shape=(1,)), tf.constant((num_knots,), dtype=tf.int32)),
-            axis=0)
+        shape_scatter = tf.concat(
+            (
+                tf.reshape(num_positions, shape=(1,)),
+                tf.constant((num_knots,), dtype=tf.int32),
+            ),
+            axis=0,
+        )
         weights = tf.scatter_nd(indices, sparse_weights, shape_scatter)
         shape_weights = tf.concat(
-            (shape_batch, tf.constant((num_knots,), dtype=tf.int32)), axis=0)
+            (shape_batch, tf.constant((num_knots,), dtype=tf.int32)), axis=0
+        )
         return tf.reshape(weights, shape=shape_weights)
 
 
-TFG_ADD_ASSERTS_TO_GRAPH = 'tfg_add_asserts_to_graph'
+TFG_ADD_ASSERTS_TO_GRAPH = "tfg_add_asserts_to_graph"
 
 
-def assert_all_in_range(vector,
-                        minval,
-                        maxval,
-                        open_bounds=False,
-                        name='assert_all_in_range'):
+def assert_all_in_range(
+    vector, minval, maxval, open_bounds=False, name="assert_all_in_range"
+):
     """Checks whether all values of vector are between minval and maxval.
     This function checks if all the values in the given vector are in an interval
     `[minval, maxval]` if `open_bounds` is `False`, or in `]minval, maxval[` if it
@@ -385,10 +433,14 @@ def assert_all_in_range(vector,
         maxval = tf.convert_to_tensor(value=maxval, dtype=vector.dtype)
 
         if open_bounds:
-            assert_ops = (tf.debugging.assert_less(vector, maxval),
-                          tf.debugging.assert_greater(vector, minval))
+            assert_ops = (
+                tf.debugging.assert_less(vector, maxval),
+                tf.debugging.assert_greater(vector, minval),
+            )
         else:
-            assert_ops = (tf.debugging.assert_less_equal(vector, maxval),
-                          tf.debugging.assert_greater_equal(vector, minval))
+            assert_ops = (
+                tf.debugging.assert_less_equal(vector, maxval),
+                tf.debugging.assert_greater_equal(vector, minval),
+            )
         with tf.control_dependencies(assert_ops):
             return tf.identity(vector)

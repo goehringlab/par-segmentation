@@ -8,8 +8,13 @@ from .funcs import in_notebook
 
 # TODO: plot_segmentation fails if only one image
 
-def view_stack_tk(frames: Union[list, np.ndarray], start_frame: int = 0, end_frame: Optional[int] = None,
-                  show: bool = True):
+
+def view_stack_tk(
+    frames: Union[list, np.ndarray],
+    start_frame: int = 0,
+    end_frame: Optional[int] = None,
+    show: bool = True,
+):
     """
     Interactive stack viewer
 
@@ -33,7 +38,9 @@ def view_stack_tk(frames: Union[list, np.ndarray], start_frame: int = 0, end_fra
         frames_ = list(frames)
     else:
         stack = False
-        frames_ = [frames, ]
+        frames_ = [
+            frames,
+        ]
 
     # Set up figure
     plt.ion()
@@ -49,11 +56,13 @@ def view_stack_tk(frames: Union[list, np.ndarray], start_frame: int = 0, end_fra
         axframe = plt.axes([0.25, 0.1, 0.65, 0.03])
         if end_frame is None:
             end_frame = len(frames_)
-        sframe = Slider(axframe, 'Frame', start_frame, end_frame, valinit=start_frame, valfmt='%d')
+        sframe = Slider(
+            axframe, "Frame", start_frame, end_frame, valinit=start_frame, valfmt="%d"
+        )
 
         def update(i):
             ax.clear()
-            ax.imshow(frames_[int(i)], cmap='gray', vmin=vmin, vmax=vmax)
+            ax.imshow(frames_[int(i)], cmap="gray", vmin=vmin, vmax=vmax)
             ax.set_xticks([])
             ax.set_yticks([])
 
@@ -62,11 +71,11 @@ def view_stack_tk(frames: Union[list, np.ndarray], start_frame: int = 0, end_fra
 
     # Single frame
     else:
-        ax.imshow(frames_[0], cmap='gray', vmin=vmin, vmax=vmax)
+        ax.imshow(frames_[0], cmap="gray", vmin=vmin, vmax=vmax)
         ax.set_xticks([])
         ax.set_yticks([])
 
-    fig.canvas.set_window_title('')
+    fig.canvas.set_window_title("")
 
     if show:
         plt.show(block=True)
@@ -74,7 +83,11 @@ def view_stack_tk(frames: Union[list, np.ndarray], start_frame: int = 0, end_fra
     return fig, ax
 
 
-def view_stack_jupyter(frames: Union[list, np.ndarray], start_frame: int = 0, end_frame: Optional[int] = None):
+def view_stack_jupyter(
+    frames: Union[list, np.ndarray],
+    start_frame: int = 0,
+    end_frame: Optional[int] = None,
+):
     # Detect if single frame or stack
     if type(frames) is list:
         stack = True
@@ -84,7 +97,9 @@ def view_stack_jupyter(frames: Union[list, np.ndarray], start_frame: int = 0, en
         frames_ = list(frames)
     else:
         stack = False
-        frames_ = [frames, ]
+        frames_ = [
+            frames,
+        ]
 
     # Set up figure
     fig, ax = plt.subplots()
@@ -101,13 +116,13 @@ def view_stack_jupyter(frames: Union[list, np.ndarray], start_frame: int = 0, en
         @widgets.interact(Frame=(start_frame, end_frame, 1))
         def update(Frame=start_frame):
             ax.clear()
-            ax.imshow(frames_[int(Frame)], cmap='gray', vmin=vmin, vmax=vmax)
+            ax.imshow(frames_[int(Frame)], cmap="gray", vmin=vmin, vmax=vmax)
             ax.set_xticks([])
             ax.set_yticks([])
 
     # Single frame
     else:
-        ax.imshow(frames_[0], cmap='gray', vmin=vmin, vmax=vmax)
+        ax.imshow(frames_[0], cmap="gray", vmin=vmin, vmax=vmax)
         ax.set_xticks([])
         ax.set_yticks([])
 
@@ -117,7 +132,11 @@ def view_stack_jupyter(frames: Union[list, np.ndarray], start_frame: int = 0, en
     return fig, ax
 
 
-def view_stack(frames: Union[list, np.ndarray], start_frame: int = 0, end_frame: Optional[int] = None):
+def view_stack(
+    frames: Union[list, np.ndarray],
+    start_frame: int = 0,
+    end_frame: Optional[int] = None,
+):
     jupyter = in_notebook()
     if jupyter:
         view_stack_jupyter(frames, start_frame, end_frame)
@@ -149,7 +168,9 @@ def plot_segmentation(frames: Union[list, np.ndarray], rois: Union[list, np.ndar
         frames_ = list(frames)
     else:
         stack = False
-        frames_ = [frames, ]
+        frames_ = [
+            frames,
+        ]
 
     # Specify ylim
     ylim_top = max([np.percentile(i, 99.9) for i in frames_])
@@ -157,38 +178,39 @@ def plot_segmentation(frames: Union[list, np.ndarray], rois: Union[list, np.ndar
 
     # Single frame
     if not stack:
-        ax.imshow(frames_[0], cmap='gray', vmin=ylim_bottom, vmax=ylim_top)
-        ax.plot(rois[:, 0], rois[:, 1], c='lime')
-        ax.scatter(rois[0, 0], rois[0, 1], c='lime')
+        ax.imshow(frames_[0], cmap="gray", vmin=ylim_bottom, vmax=ylim_top)
+        ax.plot(rois[:, 0], rois[:, 1], c="lime")
+        ax.scatter(rois[0, 0], rois[0, 1], c="lime")
         ax.set_xticks([])
         ax.set_yticks([])
 
     # Stack
     else:
-
         # Add frame slider
         plt.subplots_adjust(left=0.25, bottom=0.25)
         axframe = plt.axes([0.25, 0.1, 0.65, 0.03])
-        sframe = Slider(axframe, 'Frame', 0, len(frames_), valinit=0, valfmt='%d')
+        sframe = Slider(axframe, "Frame", 0, len(frames_), valinit=0, valfmt="%d")
 
         def update(i):
             ax.clear()
-            ax.imshow(frames_[int(i)], cmap='gray', vmin=ylim_bottom, vmax=ylim_top)
-            ax.plot(rois[int(i)][:, 0], rois[int(i)][:, 1], c='lime')
-            ax.scatter(rois[int(i)][0, 0], rois[int(i)][0, 1], c='lime')
+            ax.imshow(frames_[int(i)], cmap="gray", vmin=ylim_bottom, vmax=ylim_top)
+            ax.plot(rois[int(i)][:, 0], rois[int(i)][:, 1], c="lime")
+            ax.scatter(rois[int(i)][0, 0], rois[int(i)][0, 1], c="lime")
             ax.set_xticks([])
             ax.set_yticks([])
 
         sframe.on_changed(update)
         update(0)
 
-    fig.canvas.set_window_title('Segmentation')
+    fig.canvas.set_window_title("Segmentation")
     plt.show(block=True)
 
     return fig, ax
 
 
-def plot_segmentation_jupyter(frames: Union[list, np.ndarray], rois: Union[list, np.ndarray]):
+def plot_segmentation_jupyter(
+    frames: Union[list, np.ndarray], rois: Union[list, np.ndarray]
+):
     """
     Plot segmentation results - use this function in a jupyter notebook environment
 
@@ -212,7 +234,9 @@ def plot_segmentation_jupyter(frames: Union[list, np.ndarray], rois: Union[list,
         frames_ = list(frames)
     else:
         stack = False
-        frames_ = [frames, ]
+        frames_ = [
+            frames,
+        ]
 
     # Specify ylim
     ylim_top = max([np.percentile(i, 99.9) for i in frames_])
@@ -220,20 +244,21 @@ def plot_segmentation_jupyter(frames: Union[list, np.ndarray], rois: Union[list,
 
     # Single frame
     if not stack:
-        ax.imshow(frames_[0], cmap='gray', vmin=ylim_bottom, vmax=ylim_top)
-        ax.plot(rois[:, 0], rois[:, 1], c='lime')
-        ax.scatter(rois[0, 0], rois[0, 1], c='lime')
+        ax.imshow(frames_[0], cmap="gray", vmin=ylim_bottom, vmax=ylim_top)
+        ax.plot(rois[:, 0], rois[:, 1], c="lime")
+        ax.scatter(rois[0, 0], rois[0, 1], c="lime")
         ax.set_xticks([])
         ax.set_yticks([])
 
     # Stack
     else:
+
         @widgets.interact(Frame=(0, len(frames_) - 1, 1))
         def update(Frame=0):
             ax.clear()
-            ax.imshow(frames_[int(Frame)], cmap='gray', vmin=ylim_bottom, vmax=ylim_top)
-            ax.plot(rois[int(Frame)][:, 0], rois[int(Frame)][:, 1], c='lime')
-            ax.scatter(rois[int(Frame)][0, 0], rois[int(Frame)][0, 1], c='lime')
+            ax.imshow(frames_[int(Frame)], cmap="gray", vmin=ylim_bottom, vmax=ylim_top)
+            ax.plot(rois[int(Frame)][:, 0], rois[int(Frame)][:, 1], c="lime")
+            ax.scatter(rois[int(Frame)][0, 0], rois[int(Frame)][0, 1], c="lime")
             ax.set_xticks([])
             ax.set_yticks([])
 
@@ -265,19 +290,20 @@ def plot_quantification(mems: Union[list, np.ndarray]):
         mems_ = list(mems)
     else:
         stack = False
-        mems_ = [mems, ]
+        mems_ = [
+            mems,
+        ]
 
     # Single frame
     if not stack:
         ax.plot(mems_[0])
-        ax.set_xlabel('Position')
-        ax.set_ylabel('Membrane concentration')
+        ax.set_xlabel("Position")
+        ax.set_ylabel("Membrane concentration")
         ax.set_ylim(bottom=min(0, np.min(mems_[0])))
-        ax.axhline(0, c='k', linestyle='--')
+        ax.axhline(0, c="k", linestyle="--")
 
     # Stack
     else:
-
         # Specify ylim
         ylim_top = max([np.max(m) for m in mems_])
         ylim_bottom = min([np.min(m) for m in mems_])
@@ -285,20 +311,20 @@ def plot_quantification(mems: Union[list, np.ndarray]):
         # Add frame silder
         plt.subplots_adjust(left=0.25, bottom=0.25)
         axframe = plt.axes([0.25, 0.1, 0.65, 0.03])
-        sframe = Slider(axframe, 'Frame', 0, len(mems_), valinit=0, valfmt='%d')
+        sframe = Slider(axframe, "Frame", 0, len(mems_), valinit=0, valfmt="%d")
 
         def update(i):
             ax.clear()
             ax.plot(mems_[int(i)])
-            ax.axhline(0, c='k', linestyle='--')
-            ax.set_xlabel('Position')
-            ax.set_ylabel('Membrane concentration')
+            ax.axhline(0, c="k", linestyle="--")
+            ax.set_xlabel("Position")
+            ax.set_ylabel("Membrane concentration")
             ax.set_ylim(min(ylim_bottom, 0), ylim_top)
 
         sframe.on_changed(update)
         update(0)
 
-    fig.canvas.set_window_title('Membrane Quantification')
+    fig.canvas.set_window_title("Membrane Quantification")
     plt.show(block=True)
 
     return fig, ax
@@ -326,19 +352,20 @@ def plot_quantification_jupyter(mems: Union[list, np.ndarray]):
         mems_ = list(mems)
     else:
         stack = False
-        mems_ = [mems, ]
+        mems_ = [
+            mems,
+        ]
 
     # Single frame
     if not stack:
         ax.plot(mems_[0])
-        ax.set_xlabel('Position')
-        ax.set_ylabel('Membrane concentration')
+        ax.set_xlabel("Position")
+        ax.set_ylabel("Membrane concentration")
         ax.set_ylim(bottom=min(0, np.min(mems_[0])))
-        ax.axhline(0, c='k', linestyle='--')
+        ax.axhline(0, c="k", linestyle="--")
 
     # Stack
     else:
-
         # Specify ylim
         ylim_top = max([np.max(m) for m in mems_])
         ylim_bottom = min([np.min(m) for m in mems_] + [0])
@@ -347,9 +374,9 @@ def plot_quantification_jupyter(mems: Union[list, np.ndarray]):
         def update(Frame=0):
             ax.clear()
             ax.plot(mems_[int(Frame)])
-            ax.axhline(0, c='k', linestyle='--')
-            ax.set_xlabel('Position')
-            ax.set_ylabel('Membrane concentration')
+            ax.axhline(0, c="k", linestyle="--")
+            ax.set_xlabel("Position")
+            ax.set_ylabel("Membrane concentration")
             ax.set_ylim(ylim_bottom, ylim_top)
 
     fig.set_size_inches(5, 3)
@@ -359,10 +386,7 @@ def plot_quantification_jupyter(mems: Union[list, np.ndarray]):
 
 
 class _FitPlotter:
-    def __init__(self,
-                 target: Union[list, np.ndarray],
-                 fit: Union[list, np.ndarray]):
-
+    def __init__(self, target: Union[list, np.ndarray], fit: Union[list, np.ndarray]):
         # Detect if single frame or stack
         if type(target) is list:
             self.stack = True
@@ -374,8 +398,12 @@ class _FitPlotter:
             fit_ = list(fit)
         else:
             self.stack = False
-            target_ = [target, ]
-            fit_ = [fit, ]
+            target_ = [
+                target,
+            ]
+            fit_ = [
+                fit,
+            ]
 
         # Internal variables
         self.target = target_
@@ -400,14 +428,16 @@ class _FitPlotter:
         if self.stack:
             plt.subplots_adjust(bottom=0.25, left=0.25)
             axframe = plt.axes([0.25, 0.1, 0.65, 0.03])
-            slider_frame = Slider(axframe, 'Frame', 0, len(self.target), valinit=0, valfmt='%d')
+            slider_frame = Slider(
+                axframe, "Frame", 0, len(self.target), valinit=0, valfmt="%d"
+            )
             slider_frame.on_changed(lambda f: self.update_frame(int(f)))
 
         # Initial plot
         self.update_frame(0)
 
         # Show
-        self.fig.canvas.set_window_title('Local fits')
+        self.fig.canvas.set_window_title("Local fits")
         plt.show(block=True)
 
     def update_pos(self, p: float):
@@ -420,8 +450,16 @@ class _FitPlotter:
         self._fit = self.fit[i]
 
         # Position slider
-        self.slider_pos = Slider(self.ax1, '', 0, len(self._target[0, :]), valinit=self.pos, valfmt='%d',
-                                 facecolor='none', edgecolor='none')
+        self.slider_pos = Slider(
+            self.ax1,
+            "",
+            0,
+            len(self._target[0, :]),
+            valinit=self.pos,
+            valfmt="%d",
+            facecolor="none",
+            edgecolor="none",
+        )
         self.slider_pos.on_changed(self.update_pos)
 
         self.ax1_update()
@@ -429,19 +467,21 @@ class _FitPlotter:
 
     def ax1_update(self):
         self.ax1.clear()
-        self.ax1.imshow(self._target, cmap='gray', vmin=self.ylim_bottom, vmax=1.1 * self.ylim_top)
-        self.ax1.axvline(self.pos, c='r')
+        self.ax1.imshow(
+            self._target, cmap="gray", vmin=self.ylim_bottom, vmax=1.1 * self.ylim_top
+        )
+        self.ax1.axvline(self.pos, c="r")
         self.ax1.set_yticks([])
-        self.ax1.set_xlabel('Position')
-        self.ax1.xaxis.set_label_position('top')
+        self.ax1.set_xlabel("Position")
+        self.ax1.xaxis.set_label_position("top")
 
     def ax2_update(self):
         self.ax2.clear()
-        self.ax2.plot(self._target[:, self.pos], label='Actual')
-        self.ax2.plot(self._fit[:, self.pos], label='Fit')
+        self.ax2.plot(self._target[:, self.pos], label="Actual")
+        self.ax2.plot(self._fit[:, self.pos], label="Fit")
         self.ax2.set_xticks([])
-        self.ax2.set_ylabel('Intensity')
-        self.ax2.legend(frameon=False, loc='upper left', fontsize='small')
+        self.ax2.set_ylabel("Intensity")
+        self.ax2.legend(frameon=False, loc="upper left", fontsize="small")
         self.ax2.set_ylim(bottom=self.ylim_bottom, top=self.ylim_top)
 
 
@@ -462,8 +502,12 @@ def plot_fits_jupyter(target: Union[list, np.ndarray], fit: Union[list, np.ndarr
         fit = list(fit)
     else:
         stack = False
-        target = [target, ]
-        fit = [fit, ]
+        target = [
+            target,
+        ]
+        fit = [
+            fit,
+        ]
 
     # Set up figure
     fig = plt.figure()
@@ -486,18 +530,20 @@ def plot_fits_jupyter(target: Union[list, np.ndarray], fit: Union[list, np.ndarr
             position = int(Position * target[int(Frame)].shape[1] - 1)
 
             ax1.clear()
-            ax1.imshow(target[int(Frame)], cmap='gray', vmin=ylim_bottom, vmax=1.1 * ylim_top)
-            ax1.axvline(position, c='r')
+            ax1.imshow(
+                target[int(Frame)], cmap="gray", vmin=ylim_bottom, vmax=1.1 * ylim_top
+            )
+            ax1.axvline(position, c="r")
             ax1.set_yticks([])
-            ax1.set_xlabel('Position')
-            ax1.xaxis.set_label_position('top')
+            ax1.set_xlabel("Position")
+            ax1.xaxis.set_label_position("top")
 
             ax2.clear()
-            ax2.plot(target[int(Frame)][:, position], label='Actual')
-            ax2.plot(fit[int(Frame)][:, position], label='Fit')
+            ax2.plot(target[int(Frame)][:, position], label="Actual")
+            ax2.plot(fit[int(Frame)][:, position], label="Fit")
             ax2.set_xticks([])
-            ax2.set_ylabel('Intensity')
-            ax2.legend(frameon=False, loc='upper left', fontsize='small')
+            ax2.set_ylabel("Intensity")
+            ax2.legend(frameon=False, loc="upper left", fontsize="small")
             ax2.set_ylim(bottom=ylim_bottom, top=ylim_top)
 
     else:
@@ -507,18 +553,18 @@ def plot_fits_jupyter(target: Union[list, np.ndarray], fit: Union[list, np.ndarr
             position = int(Position * (target[0].shape[1] - 1))
 
             ax1.clear()
-            ax1.imshow(target[0], cmap='gray', vmin=ylim_bottom, vmax=1.1 * ylim_top)
-            ax1.axvline(position, c='r')
+            ax1.imshow(target[0], cmap="gray", vmin=ylim_bottom, vmax=1.1 * ylim_top)
+            ax1.axvline(position, c="r")
             ax1.set_yticks([])
-            ax1.set_xlabel('Position')
-            ax1.xaxis.set_label_position('top')
+            ax1.set_xlabel("Position")
+            ax1.xaxis.set_label_position("top")
 
             ax2.clear()
-            ax2.plot(target[0][:, position], label='Actual')
-            ax2.plot(fit[0][:, position], label='Fit')
+            ax2.plot(target[0][:, position], label="Actual")
+            ax2.plot(fit[0][:, position], label="Fit")
             ax2.set_xticks([])
-            ax2.set_ylabel('Intensity')
-            ax2.legend(frameon=False, loc='upper left', fontsize='small')
+            ax2.set_ylabel("Intensity")
+            ax2.legend(frameon=False, loc="upper left", fontsize="small")
             ax2.set_ylim(bottom=ylim_bottom, top=ylim_top)
 
     fig.set_size_inches(5, 3)

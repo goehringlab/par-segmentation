@@ -43,11 +43,16 @@ def save_img(img: np.ndarray, direc: str):
 
     """
 
-    io.imsave(direc, img.astype('float32'))
+    io.imsave(direc, img.astype("float32"))
 
 
-def save_img_jpeg(img: np.ndarray, direc: str, cmin: Optional[float] = None, cmax: Optional[float] = None,
-                  cmap: str = 'gray'):
+def save_img_jpeg(
+    img: np.ndarray,
+    direc: str,
+    cmin: Optional[float] = None,
+    cmax: Optional[float] = None,
+    cmap: str = "gray",
+):
     """
     Saves 2D array as jpeg, according to min and max pixel intensities
 
@@ -66,8 +71,14 @@ def save_img_jpeg(img: np.ndarray, direc: str, cmin: Optional[float] = None, cma
 ########### IMAGE OPERATIONS ###########
 
 
-def straighten(img: np.ndarray, roi: np.ndarray, thickness: int, periodic: bool = True, interp: str = 'cubic',
-               ninterp: Optional[int] = None) -> np.ndarray:
+def straighten(
+    img: np.ndarray,
+    roi: np.ndarray,
+    thickness: int,
+    periodic: bool = True,
+    interp: str = "cubic",
+    ninterp: Optional[int] = None,
+) -> np.ndarray:
     """
     Creates straightened image based on coordinates
     Todo: Doesn't work properly for non-periodic rois
@@ -107,23 +118,41 @@ def straighten(img: np.ndarray, roi: np.ndarray, thickness: int, periodic: bool 
 
     # Get interpolation coordinates
     offsets = np.linspace(thickness / 2, -thickness / 2, ninterp)
-    xchange = ((offsets ** 2)[np.newaxis, :] / (1 + tangent_grad ** 2)[:, np.newaxis]) ** 0.5
+    xchange = (
+        (offsets**2)[np.newaxis, :] / (1 + tangent_grad**2)[:, np.newaxis]
+    ) ** 0.5
     ychange = xchange / abs(grad)[:, np.newaxis]
-    gridcoors_x = xcoors[:, np.newaxis] + np.sign(ydiffs)[:, np.newaxis] * np.sign(offsets)[np.newaxis, :] * xchange
-    gridcoors_y = ycoors[:, np.newaxis] - np.sign(xdiffs)[:, np.newaxis] * np.sign(offsets)[np.newaxis, :] * ychange
+    gridcoors_x = (
+        xcoors[:, np.newaxis]
+        + np.sign(ydiffs)[:, np.newaxis] * np.sign(offsets)[np.newaxis, :] * xchange
+    )
+    gridcoors_y = (
+        ycoors[:, np.newaxis]
+        - np.sign(xdiffs)[:, np.newaxis] * np.sign(offsets)[np.newaxis, :] * ychange
+    )
 
     # Interpolate
-    if interp == 'linear':
-        straight = map_coordinates(img.T, [gridcoors_x, gridcoors_y], order=1, mode='nearest')
-    elif interp == 'cubic':
-        straight = map_coordinates(img.T, [gridcoors_x, gridcoors_y], order=3, mode='nearest')
+    if interp == "linear":
+        straight = map_coordinates(
+            img.T, [gridcoors_x, gridcoors_y], order=1, mode="nearest"
+        )
+    elif interp == "cubic":
+        straight = map_coordinates(
+            img.T, [gridcoors_x, gridcoors_y], order=3, mode="nearest"
+        )
     else:
         raise ValueError('interp must be "linear" or "cubic"')
     return straight.astype(np.float64).T
 
 
-def rotated_embryo(img: np.ndarray, roi: np.ndarray, l: int, h: int, order: int = 1,
-                   return_roi: bool = False) -> Union[np.ndarray, Tuple[np.array, np.array]]:
+def rotated_embryo(
+    img: np.ndarray,
+    roi: np.ndarray,
+    l: int,
+    h: int,
+    order: int = 1,
+    return_roi: bool = False,
+) -> Union[np.ndarray, Tuple[np.array, np.array]]:
     """
     Takes an image and rotates according to coordinates so that anterior is on left, posterior on right
     Todo: some of the returned coordinates are anticlockwise
@@ -149,8 +178,8 @@ def rotated_embryo(img: np.ndarray, roi: np.ndarray, l: int, h: int, order: int 
     roi_transformed = np.dot(coeff.T, roi.T)
 
     # Force long axis orientation
-    x_range = (min(roi_transformed[0, :]) - max(roi_transformed[0, :]))
-    y_range = (min(roi_transformed[1, :]) - max(roi_transformed[1, :]))
+    x_range = min(roi_transformed[0, :]) - max(roi_transformed[0, :])
+    y_range = min(roi_transformed[1, :]) - max(roi_transformed[1, :])
     if x_range > y_range:
         img = img.T
         roi_transformed = np.flipud(roi_transformed)
@@ -163,10 +192,14 @@ def rotated_embryo(img: np.ndarray, roi: np.ndarray, l: int, h: int, order: int 
     yvals = np.arange(int(centre_y) - (h / 2), int(centre_y) + (h / 2))
     xvals_grid = np.tile(xvals, [len(yvals), 1])
     yvals_grid = np.tile(yvals, [len(xvals), 1]).T
-    roi_transformed = roi_transformed - np.expand_dims([centre_x - (l / 2), centre_y - (h / 2)], -1)
+    roi_transformed = roi_transformed - np.expand_dims(
+        [centre_x - (l / 2), centre_y - (h / 2)], -1
+    )
 
     # Transform coordinate grid back
-    [xvals_back, yvals_back] = np.dot(coeff, np.array([xvals_grid.flatten(), yvals_grid.flatten()]))
+    [xvals_back, yvals_back] = np.dot(
+        coeff, np.array([xvals_grid.flatten(), yvals_grid.flatten()])
+    )
     xvals_back_grid = np.reshape(xvals_back, [len(yvals), len(xvals)])
     yvals_back_grid = np.reshape(yvals_back, [len(yvals), len(xvals)])
 
@@ -248,7 +281,7 @@ def norm_roi(roi: np.ndarray):
 ########### ARRAY OPERATIONS ###########
 
 
-def interp_1d_array(array: np.ndarray, n: int, method: str = 'cubic') -> np.ndarray:
+def interp_1d_array(array: np.ndarray, n: int, method: str = "cubic") -> np.ndarray:
     """
     Interpolates a one dimensional array into n points
 
@@ -263,14 +296,20 @@ def interp_1d_array(array: np.ndarray, n: int, method: str = 'cubic') -> np.ndar
 
     """
     # If using linear interpolation, return the result of np.interp applied to the input array
-    if method == 'linear':
-        return np.interp(np.linspace(0, len(array) - 1, n), np.array(range(len(array))), array)
+    if method == "linear":
+        return np.interp(
+            np.linspace(0, len(array) - 1, n), np.array(range(len(array))), array
+        )
     # If using cubic interpolation, return the result of CubicSpline applied to the input array
-    elif method == 'cubic':
-        return CubicSpline(np.arange(len(array)), array)(np.linspace(0, len(array) - 1, n))
+    elif method == "cubic":
+        return CubicSpline(np.arange(len(array)), array)(
+            np.linspace(0, len(array) - 1, n)
+        )
 
 
-def interp_2d_array(array: np.ndarray, n: int, ax: int = 0, method: str = 'cubic') -> np.ndarray:
+def interp_2d_array(
+    array: np.ndarray, n: int, ax: int = 0, method: str = "cubic"
+) -> np.ndarray:
     """
     Interpolates a two dimensional array along one axis into n points
 
@@ -299,7 +338,7 @@ def interp_2d_array(array: np.ndarray, n: int, ax: int = 0, method: str = 'cubic
             interped[x, :] = interp_1d_array(array[x, :], n, method)
         return interped
     else:
-        raise ValueError('ax must be 0 or 1')
+        raise ValueError("ax must be 0 or 1")
 
 
 def rolling_ave_1d(array: np.ndarray, window: int, periodic: bool = True) -> np.ndarray:
@@ -323,10 +362,12 @@ def rolling_ave_1d(array: np.ndarray, window: int, periodic: bool = True) -> np.
 
     # If the array is not periodic, pad the array with its own reflected values on both ends
     if not periodic:
-        array_padded = np.r_[array[:int(window / 2)][::-1], array, array[-int(window / 2):][::-1]]
+        array_padded = np.r_[
+            array[: int(window / 2)][::-1], array, array[-int(window / 2) :][::-1]
+        ]
     # If the array is periodic, pad the array with its own values on both ends
     else:
-        array_padded = np.r_[array[-int(window / 2):], array, array[:int(window / 2)]]
+        array_padded = np.r_[array[-int(window / 2) :], array, array[: int(window / 2)]]
     # Compute the cumulative sum of the padded array
     cumsum = np.cumsum(array_padded)
     # Return the rolling average of the padded array
@@ -350,14 +391,22 @@ def rolling_ave_2d(array: np.ndarray, window: int, periodic: bool = True) -> np.
     if window == 1:
         return array
     if not periodic:
-        array_padded = np.c_[array[:, :int(window / 2)][:, :-1], array, array[:, -int(window / 2):][:, :-1]]
+        array_padded = np.c_[
+            array[:, : int(window / 2)][:, :-1],
+            array,
+            array[:, -int(window / 2) :][:, :-1],
+        ]
     else:
-        array_padded = np.c_[array[:, -int(np.ceil(window / 2)):], array, array[:, :int(window / 2)]]
+        array_padded = np.c_[
+            array[:, -int(np.ceil(window / 2)) :], array, array[:, : int(window / 2)]
+        ]
     cumsum = np.cumsum(array_padded, axis=1)
     return (cumsum[:, window:] - cumsum[:, :-window]) / window
 
 
-def bounded_mean_1d(array: np.ndarray, bounds: tuple, weights: Optional[np.ndarray] = None) -> float:
+def bounded_mean_1d(
+    array: np.ndarray, bounds: tuple, weights: Optional[np.ndarray] = None
+) -> float:
     """
     Averages 1D array over region specified by bounds
     Array and weights should be same length
@@ -377,12 +426,27 @@ def bounded_mean_1d(array: np.ndarray, bounds: tuple, weights: Optional[np.ndarr
     if weights is None:
         weights = np.ones([len(array)])
     if bounds[0] < bounds[1]:
-        mean = np.average(array[int(len(array) * bounds[0]): int(len(array) * bounds[1] + 1)],
-                          weights=weights[int(len(array) * bounds[0]): int(len(array) * bounds[1] + 1)])
+        mean = np.average(
+            array[int(len(array) * bounds[0]) : int(len(array) * bounds[1] + 1)],
+            weights=weights[
+                int(len(array) * bounds[0]) : int(len(array) * bounds[1] + 1)
+            ],
+        )
     else:
-        mean = np.average(np.hstack((array[:int(len(array) * bounds[1] + 1)], array[int(len(array) * bounds[0]):])),
-                          weights=np.hstack(
-                              (weights[:int(len(array) * bounds[1] + 1)], weights[int(len(array) * bounds[0]):])))
+        mean = np.average(
+            np.hstack(
+                (
+                    array[: int(len(array) * bounds[1] + 1)],
+                    array[int(len(array) * bounds[0]) :],
+                )
+            ),
+            weights=np.hstack(
+                (
+                    weights[: int(len(array) * bounds[1] + 1)],
+                    weights[int(len(array) * bounds[0]) :],
+                )
+            ),
+        )
     return mean
 
 
@@ -402,10 +466,22 @@ def bounded_mean_2d(array: np.ndarray, bounds: tuple) -> np.ndarray:
     """
 
     if bounds[0] < bounds[1]:
-        mean = np.mean(array[:, int(len(array[0, :]) * bounds[0]): int(len(array[0, :]) * bounds[1])], 1)
+        mean = np.mean(
+            array[
+                :, int(len(array[0, :]) * bounds[0]) : int(len(array[0, :]) * bounds[1])
+            ],
+            1,
+        )
     else:
         mean = np.mean(
-            np.hstack((array[:, :int(len(array[0, :]) * bounds[1])], array[:, int(len(array[0, :]) * bounds[0]):])), 1)
+            np.hstack(
+                (
+                    array[:, : int(len(array[0, :]) * bounds[1])],
+                    array[:, int(len(array[0, :]) * bounds[0]) :],
+                )
+            ),
+            1,
+        )
     return mean
 
 
@@ -441,7 +517,7 @@ def dosage(img: np.ndarray, roi: np.ndarray, expand: float) -> np.ndarray:
 
     Returns:
         dosage
-    
+
     """
 
     return np.nanmean(img * make_mask((512, 512), offset_coordinates(roi, expand)))
@@ -456,8 +532,8 @@ def make_mask(shape: tuple, roi: np.ndarray) -> np.ndarray:
         roi: roi of the mask region
 
     Returns:
-        binary mask 
-    
+        binary mask
+
     """
 
     return cv2.fillPoly(np.zeros(shape) * np.nan, [np.int32(roi)], 1)
@@ -476,9 +552,11 @@ def readnd(path: str) -> dict:
     """
 
     nd = {}
-    f = open(path, 'r').readlines()
+    f = open(path, "r").readlines()
     for line in f[:-1]:
-        nd[line.split(', ')[0].replace('"', '')] = line.split(', ')[1].strip().replace('"', '')
+        nd[line.split(", ")[0].replace('"', "")] = (
+            line.split(", ")[1].strip().replace('"', "")
+        )
     return nd
 
 
@@ -490,27 +568,33 @@ def organise_by_nd(path: str):
         path: path to folder containing nd files
 
     """
-    a = glob.glob(f'{path}/*.nd')
+    a = glob.glob(f"{path}/*.nd")
     for b in a:
         name = os.path.basename(os.path.normpath(b))
-        if name[0] == '_':
+        if name[0] == "_":
             folder = name[1:-3]
         else:
             folder = name[:-3]
-        os.makedirs(f'{path}/{folder}')
-        os.rename(b, f'{path}/{folder}/{name}')
-        for file in glob.glob(f'{b[:-3]}_*'):
-            os.rename(file, f'{path}/{folder}/{os.path.basename(os.path.normpath(file))}')
+        os.makedirs(f"{path}/{folder}")
+        os.rename(b, f"{path}/{folder}/{name}")
+        for file in glob.glob(f"{b[:-3]}_*"):
+            os.rename(
+                file, f"{path}/{folder}/{os.path.basename(os.path.normpath(file))}"
+            )
 
 
-def _direcslist(dest: str, levels: int = 0, exclude: Optional[tuple] = ('!',),
-                exclusive: Optional[tuple] = None) -> list:
-    lis = sorted(glob.glob(f'{dest}/*/'))
+def _direcslist(
+    dest: str,
+    levels: int = 0,
+    exclude: Optional[tuple] = ("!",),
+    exclusive: Optional[tuple] = None,
+) -> list:
+    lis = sorted(glob.glob(f"{dest}/*/"))
 
     for level in range(levels):
         newlis = []
         for e in lis:
-            newlis.extend(sorted(glob.glob(f'{e}/*/')))
+            newlis.extend(sorted(glob.glob(f"{e}/*/")))
         lis = newlis
         lis = [x[:-1] for x in lis]
 
@@ -536,8 +620,12 @@ def _direcslist(dest: str, levels: int = 0, exclude: Optional[tuple] = ('!',),
     return sorted(lis2)
 
 
-def direcslist(dest: str, levels: int = 0, exclude: Optional[tuple] = ('!',),
-               exclusive: Optional[tuple] = None) -> list:
+def direcslist(
+    dest: str,
+    levels: int = 0,
+    exclude: Optional[tuple] = ("!",),
+    exclusive: Optional[tuple] = None,
+) -> list:
     """
     Gives a list of directories within a given directory (full path)
     Todo: os.walk
@@ -572,7 +660,8 @@ def in_notebook():
     """
     try:
         from IPython import get_ipython
-        if 'IPKernelApp' not in get_ipython().config:  # pragma: no cover
+
+        if "IPKernelApp" not in get_ipython().config:  # pragma: no cover
             return False
     except ImportError:
         return False

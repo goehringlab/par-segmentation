@@ -14,9 +14,15 @@ Todo: Ability to specify a directory and open all channels. Or an nd file
 """
 
 
-def def_roi(stack: Union[np.ndarray, list], spline: bool = True, start_frame: int = 0, end_frame: Optional[int] = None,
-            periodic: bool = True, show_fit: bool = True, k: int = 3):
-    
+def def_roi(
+    stack: Union[np.ndarray, list],
+    spline: bool = True,
+    start_frame: int = 0,
+    end_frame: Optional[int] = None,
+    periodic: bool = True,
+    show_fit: bool = True,
+    k: int = 3,
+):
     """
     There are two different methods for drawing ROIs depending on if you're using normal python scripts or Jupyter notebooks.
     This is the one to use if you're using python scripts.
@@ -41,11 +47,18 @@ def def_roi(stack: Union[np.ndarray, list], spline: bool = True, start_frame: in
         ROI as a numpy array\n
         To save this in a fiji readable format:
         np.savetxt(filename, roi, fmt='%.4f', delimiter='\t')
-    
+
     """
 
-    r = _ROI(stack, spline=spline, start_frame=start_frame, end_frame=end_frame, periodic=periodic, show_fit=show_fit,
-            k=k)
+    r = _ROI(
+        stack,
+        spline=spline,
+        start_frame=start_frame,
+        end_frame=end_frame,
+        periodic=periodic,
+        show_fit=show_fit,
+        k=k,
+    )
     r.run()
     return r.roi
 
@@ -64,26 +77,29 @@ class _ROI:
     :return: cell boundary coordinates
     """
 
-    def __init__(self,
-                 img: Union[np.ndarray, list],
-                 spline: bool = True,
-                 start_frame: int = 0,
-                 end_frame: Optional[int] = None,
-                 periodic: bool = True,
-                 show_fit: bool = True,
-                 k: int = 3):
-
+    def __init__(
+        self,
+        img: Union[np.ndarray, list],
+        spline: bool = True,
+        start_frame: int = 0,
+        end_frame: Optional[int] = None,
+        periodic: bool = True,
+        show_fit: bool = True,
+        k: int = 3,
+    ):
         # Detect if single frame or stack
         if type(img) is list:
-            self.img_type = 'list'
+            self.img_type = "list"
             self.images = img
 
         elif len(img.shape) == 3:
-            self.img_type = 'stack'
+            self.img_type = "stack"
             self.images = list(img)
         else:
-            self.img_type = 'single'
-            self.images = [img, ]
+            self.img_type = "single"
+            self.images = [
+                img,
+            ]
 
         # Params
         self.spline = spline
@@ -102,10 +118,10 @@ class _ROI:
         self._fitted = False
 
         # Specify vlim
-        if self.img_type == 'stack' or self.img_type == 'single':
+        if self.img_type == "stack" or self.img_type == "single":
             self.vmax = max([np.percentile(i, 99.9) for i in self.images])
             self.vmin = min([np.percentile(i, 0.1) for i in self.images])
-        elif self.img_type == 'list':
+        elif self.img_type == "list":
             self.vmax = [np.percentile(i, 99.9) for i in self.images]
             self.vmin = [np.percentile(i, 0.1) for i in self.images]
 
@@ -120,24 +136,32 @@ class _ROI:
         self.fig = plt.figure()
         self.ax = self.fig.add_subplot(111)
 
-        self.fig.canvas.mpl_connect('button_press_event', self._button_press_callback)
-        self.fig.canvas.mpl_connect('key_press_event', self._key_press_callback)
+        self.fig.canvas.mpl_connect("button_press_event", self._button_press_callback)
+        self.fig.canvas.mpl_connect("key_press_event", self._key_press_callback)
 
         # Stack
-        if self.img_type == 'stack' or self.img_type == 'list':
+        if self.img_type == "stack" or self.img_type == "list":
             plt.subplots_adjust(left=0.25, bottom=0.25)
             self.axframe = plt.axes([0.25, 0.1, 0.65, 0.03])
             if self.end_frame is None:
                 self.end_frame = len(self.images)
-            self.sframe = Slider(self.axframe, 'Frame', self.start_frame, self.end_frame, valinit=self.start_frame,
-                                 valfmt='%d')
+            self.sframe = Slider(
+                self.axframe,
+                "Frame",
+                self.start_frame,
+                self.end_frame,
+                valinit=self.start_frame,
+                valfmt="%d",
+            )
             self.sframe.on_changed(self._draw_frame)
 
         self._draw_frame(self.start_frame)
 
         # Show figure
-        self.fig.canvas.set_window_title('Specify ROI')
-        self.fig.canvas.mpl_connect('close_event', lambda event: self.fig.canvas.stop_event_loop())
+        self.fig.canvas.set_window_title("Specify ROI")
+        self.fig.canvas.mpl_connect(
+            "close_event", lambda event: self.fig.canvas.stop_event_loop()
+        )
         self.fig.canvas.start_event_loop(timeout=-1)
 
     def _draw_frame(self, i: int):
@@ -145,21 +169,34 @@ class _ROI:
         self.ax.clear()
 
         # Plot image
-        if self.img_type == 'stack' or self.img_type == 'single':
-            self.ax.imshow(self.images[int(i)], cmap='gray', vmin=self.vmin, vmax=self.vmax)
+        if self.img_type == "stack" or self.img_type == "single":
+            self.ax.imshow(
+                self.images[int(i)], cmap="gray", vmin=self.vmin, vmax=self.vmax
+            )
         else:
-            self.ax.imshow(self.images[int(i)], cmap='gray', vmin=self.vmin[int(i)], vmax=self.vmax[int(i)])
+            self.ax.imshow(
+                self.images[int(i)],
+                cmap="gray",
+                vmin=self.vmin[int(i)],
+                vmax=self.vmax[int(i)],
+            )
 
         # Finalise figure
         self.ax.set_xticks([])
         self.ax.set_yticks([])
-        self.ax.text(0.03, 0.97,
-                     'Specify ROI clockwise (4 points minimum)'
-                     '\nClick to lay points'
-                     '\nBACKSPACE: undo'
-                     '\nENTER: Save and continue',
-                     color='white',
-                     transform=self.ax.transAxes, fontsize=8, va='top', ha='left')
+        self.ax.text(
+            0.03,
+            0.97,
+            "Specify ROI clockwise (4 points minimum)"
+            "\nClick to lay points"
+            "\nBACKSPACE: undo"
+            "\nENTER: Save and continue",
+            color="white",
+            transform=self.ax.transAxes,
+            fontsize=8,
+            va="top",
+            ha="left",
+        )
         self._display_points()
         self.fig.canvas.draw()
 
@@ -175,7 +212,7 @@ class _ROI:
                 self.fig.canvas.draw()
 
     def _key_press_callback(self, event: KeyEvent):
-        if event.key == 'backspace':
+        if event.key == "backspace":
             if not self._fitted:
                 # Remove last drawn point
                 if len(self.xpoints) != 0:
@@ -190,7 +227,7 @@ class _ROI:
                 self.roi = None
                 self.fig.canvas.draw()
 
-        if event.key == 'enter':
+        if event.key == "enter":
             if len(self.xpoints) != 0:
                 roi = np.vstack((self.xpoints, self.ypoints)).T
 
@@ -202,7 +239,9 @@ class _ROI:
 
                         # Display line
                         if self.show_fit:
-                            self._line = self.ax.plot(self.roi[:, 0], self.roi[:, 1], c='b')
+                            self._line = self.ax.plot(
+                                self.roi[:, 0], self.roi[:, 1], c="b"
+                            )
                             self.fig.canvas.draw()
                         else:
                             plt.close(self.fig)
@@ -225,8 +264,10 @@ class _ROI:
 
         # Plot all points
         if len(self.xpoints) != 0:
-            self._points = self.ax.scatter(self.xpoints, self.ypoints, c='lime', s=10)
-            self._point0 = self.ax.scatter(self.xpoints[0], self.ypoints[0], c='r', s=10)
+            self._points = self.ax.scatter(self.xpoints, self.ypoints, c="lime", s=10)
+            self._point0 = self.ax.scatter(
+                self.xpoints[0], self.ypoints[0], c="r", s=10
+            )
 
 
 class ROI_jupyter:
@@ -235,12 +276,12 @@ class ROI_jupyter:
     This is the one to use if you're using Jupyter notebooks.
 
     Example workflow:
-    
+
     ### Cell 1:\n
     r = RoiJupyter(img, periodic=True, spline=True)\n
     r.run()\n
     # A window will appear - draw the ROI and click save\n
-    
+
     ### Cell 2:\n
     roi = r.roi\n
     print(roi.shape)\n
@@ -258,33 +299,35 @@ class ROI_jupyter:
         show_fit: if True, will show the spline fit (if spline=True)
         k: degree of the spline (e.g. 3 = cubic)
 
-    
+
     """
 
-
-    def __init__(self,
-                 img: Union[np.ndarray, list],
-                 spline: bool = True,
-                 start_frame: int = 0,
-                 end_frame: Optional[int] = None,
-                 periodic: bool = True,
-                 show_fit: bool = True,
-                 k: int = 3):
-
+    def __init__(
+        self,
+        img: Union[np.ndarray, list],
+        spline: bool = True,
+        start_frame: int = 0,
+        end_frame: Optional[int] = None,
+        periodic: bool = True,
+        show_fit: bool = True,
+        k: int = 3,
+    ):
         self.fig = None
         self.ax = None
 
         # Detect if single frame or stack
         if type(img) is list:
-            self.img_type = 'list'
+            self.img_type = "list"
             self.images = img
 
         elif len(img.shape) == 3:
-            self.img_type = 'stack'
+            self.img_type = "stack"
             self.images = list(img)
         else:
-            self.img_type = 'single'
-            self.images = [img, ]
+            self.img_type = "single"
+            self.images = [
+                img,
+            ]
 
         # Params
         self.spline = spline
@@ -305,21 +348,23 @@ class ROI_jupyter:
 
     def run(self):
         self.fig, self.ax = plt.subplots()
-        self.fig.canvas.mpl_connect('button_press_event', self._button_press_callback)
+        self.fig.canvas.mpl_connect("button_press_event", self._button_press_callback)
 
         # Buttons
         self.ax_undo = plt.axes([0.7, 0.05, 0.1, 0.075])
-        self.b_undo = Button(self.ax_undo, 'Undo')
+        self.b_undo = Button(self.ax_undo, "Undo")
         self.b_undo.on_clicked(self._undo)
         self.ax_save = plt.axes([0.81, 0.05, 0.1, 0.075])
-        self.b_save = Button(self.ax_save, 'Save')
+        self.b_save = Button(self.ax_save, "Save")
         self.b_save.on_clicked(self._save)
 
         # Stack
-        if self.img_type == 'stack' or self.img_type == 'list':
+        if self.img_type == "stack" or self.img_type == "list":
+
             @widgets.interact(Frame=(0, len(self.images) - 1, 1))
             def update(Frame=0):
                 self._draw_frame(Frame)
+
         else:
             self._draw_frame(0)
 
@@ -352,7 +397,7 @@ class ROI_jupyter:
 
             # Display line
             if self.show_fit:
-                self._line = self.ax.plot(self.roi[:, 0], self.roi[:, 1], c='b')
+                self._line = self.ax.plot(self.roi[:, 0], self.roi[:, 1], c="b")
                 self.fig.canvas.draw()
         else:
             self.roi = roi
@@ -369,28 +414,38 @@ class ROI_jupyter:
 
         # Plot all points
         if len(self.xpoints) != 0:
-            self._points = self.ax.scatter(self.xpoints, self.ypoints, c='lime', s=10)
-            self._point0 = self.ax.scatter(self.xpoints[0], self.ypoints[0], c='r', s=10)
+            self._points = self.ax.scatter(self.xpoints, self.ypoints, c="lime", s=10)
+            self._point0 = self.ax.scatter(
+                self.xpoints[0], self.ypoints[0], c="r", s=10
+            )
 
     def _draw_frame(self, i: int):
         self.ax.clear()
 
         # Plot image
-        self.ax.imshow(self.images[int(i)], cmap='gray', vmin=self.vmin, vmax=self.vmax)
+        self.ax.imshow(self.images[int(i)], cmap="gray", vmin=self.vmin, vmax=self.vmax)
 
         # Finalise figure
         self.ax.set_xticks([])
         self.ax.set_yticks([])
-        self.ax.text(0.03, 0.97,
-                     'Specify ROI clockwise from posterior (4 points minimum)'
-                     '\nClick to lay points',
-                     color='white',
-                     transform=self.ax.transAxes, fontsize=8, va='top', ha='left')
+        self.ax.text(
+            0.03,
+            0.97,
+            "Specify ROI clockwise from posterior (4 points minimum)"
+            "\nClick to lay points",
+            color="white",
+            transform=self.ax.transAxes,
+            fontsize=8,
+            va="top",
+            ha="left",
+        )
         self._display_points()
         self.fig.canvas.draw()
 
 
-def spline_roi(roi: np.ndarray, periodic: bool = True, s: float = 0.0, k: int = 3) -> np.ndarray:
+def spline_roi(
+    roi: np.ndarray, periodic: bool = True, s: float = 0.0, k: int = 3
+) -> np.ndarray:
     """
     Fits a spline to points specifying the coordinates of the cortex, then interpolates to pixel distances
 
@@ -423,7 +478,9 @@ def spline_roi(roi: np.ndarray, periodic: bool = True, s: float = 0.0, k: int = 
     return interp_roi(np.vstack((xi, yi)).T, periodic=periodic)
 
 
-def interp_roi(roi: np.ndarray, periodic: bool = True, npoints: Optional[int] = None, gap: int = 1) -> np.ndarray:
+def interp_roi(
+    roi: np.ndarray, periodic: bool = True, npoints: Optional[int] = None, gap: int = 1
+) -> np.ndarray:
     """
     Interpolates coordinates to one pixel distances (or as close as possible to one pixel). Linear interpolation
 
@@ -449,7 +506,9 @@ def interp_roi(roi: np.ndarray, periodic: bool = True, npoints: Optional[int] = 
     total_length = sum(distances)
 
     # Interpolate
-    fx, fy = interp1d(distances_cumsum, c[:, 0], kind='linear'), interp1d(distances_cumsum, c[:, 1], kind='linear')
+    fx, fy = interp1d(distances_cumsum, c[:, 0], kind="linear"), interp1d(
+        distances_cumsum, c[:, 1], kind="linear"
+    )
     if npoints is None:
         positions = np.linspace(0, total_length, int(round(total_length / gap)))
     else:
@@ -459,7 +518,9 @@ def interp_roi(roi: np.ndarray, periodic: bool = True, npoints: Optional[int] = 
     return newpoints
 
 
-def offset_coordinates(roi: np.ndarray, offsets: Union[np.ndarray, float], periodic: bool = True) -> np.ndarray:
+def offset_coordinates(
+    roi: np.ndarray, offsets: Union[np.ndarray, float], periodic: bool = True
+) -> np.ndarray:
     """
     Reads in coordinates, adjusts according to offsets
 
@@ -491,7 +552,7 @@ def offset_coordinates(roi: np.ndarray, offsets: Union[np.ndarray, float], perio
     tangent_grad = -1 / grad
 
     # Offset coordinates
-    xchange = ((offsets ** 2) / (1 + tangent_grad ** 2)) ** 0.5
+    xchange = ((offsets**2) / (1 + tangent_grad**2)) ** 0.5
     ychange = xchange / abs(grad)
     newxs = xcoors + np.sign(ydiffs) * np.sign(offsets) * xchange
     newys = ycoors - np.sign(xdiffs) * np.sign(offsets) * ychange
