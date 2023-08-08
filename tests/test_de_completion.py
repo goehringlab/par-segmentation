@@ -1,5 +1,6 @@
 from par_segmentation import *
-
+import os
+import numpy as np
 
 class TestDeCompletion:
     """

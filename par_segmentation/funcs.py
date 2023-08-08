@@ -14,6 +14,9 @@ from typing import Optional, Union, Tuple
 
 """
 
+__all__ = ['load_image', 'save_img', 'save_img_jpeg', 'straighten', 'rotated_embryo', 'rotate_roi', 'norm_roi', 'interp_1d_array', 'interp_2d_array',
+           'rolling_ave_1d', 'rolling_ave_2d', 'bounded_mean_1d', 'bounded_mean_2d', 'asi', 'dosage', 'make_mask', 'readnd', 'organise_by_nd',
+           'direcslist', 'in_notebook']
 
 ########## IMAGE HANDLING ###########
 

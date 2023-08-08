@@ -1,5 +1,7 @@
 from par_segmentation import *
 import pytest
+import os
+import numpy as np
 
 class TestDeCorrectTests:
     """

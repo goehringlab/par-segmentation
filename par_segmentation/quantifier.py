@@ -2,7 +2,7 @@ import numpy as np
 import os
 import pandas as pd
 from .funcs import save_img, in_notebook
-from ._interactive import (
+from .interactive import (
     view_stack,
     view_stack_jupyter,
     plot_fits,
@@ -12,9 +12,11 @@ from ._interactive import (
     plot_quantification,
     plot_quantification_jupyter,
 )
-from ._model import ImageQuantGradientDescent
-from ._legacy import ImageQuantDifferentialEvolutionMulti
+from .model import ImageQuantGradientDescent
+from .legacy import ImageQuantDifferentialEvolutionMulti
 from typing import Union, Optional
+
+__all__ = ['ImageQuant']
 
 
 class ImageQuant:
