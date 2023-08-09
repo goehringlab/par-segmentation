@@ -1,9 +1,20 @@
-.idea/
-docs/setup
-docs/model schematic.ai
-dist/
-par_segmentation.egg-info/
-.ipynb_checkpoints
-/scripts/Figs/spline.ai
+# Bytecode
 __pycache__/
+
+# Distribution/packaging
+build/
+dist/
+*.egg-info/
+
+# Unit tests
+.coverage
+.pytest_cache/
+
+# OS
 .DS_Store
+
+# IPython notebooks
+.ipynb_checkpoints
+
+# Illustrator files
+*.ai
