@@ -1,19 +1,21 @@
-import time
-import numpy as np
-from scipy.optimize import differential_evolution
-from joblib import Parallel, delayed
 import multiprocessing
+import time
+from typing import Optional, Tuple, Union
+
+import cv2
+import numpy as np
+from joblib import Parallel, delayed
+from scipy.optimize import differential_evolution
+from scipy.special import erf
+
 from .funcs import (
-    straighten,
-    rolling_ave_2d,
     interp_1d_array,
     interp_2d_array,
+    rolling_ave_2d,
     rotate_roi,
+    straighten,
 )
-from scipy.special import erf
 from .roi import interp_roi, offset_coordinates, spline_roi
-from typing import Union, Optional, Tuple
-import cv2
 
 """
 Legacy code including differential evolution algorithm and other functions no longer used

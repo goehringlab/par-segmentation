@@ -3,11 +3,12 @@ tfg.math.interpolation.bspline.interpolate
 
 """
 
-from typing import Union, Sequence, Tuple
+import enum
+from typing import Sequence, Tuple, Union
+
 import numpy as np
 import tensorflow as tf
 from absl import flags
-import enum
 
 FLAGS = flags.FLAGS
 

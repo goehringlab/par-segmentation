@@ -1,14 +1,16 @@
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy.ndimage.interpolation import map_coordinates
-from scipy.interpolate import CubicSpline
-from skimage import io
-import cv2
-import glob
 import copy
+import glob
 import os
+from typing import Optional, Tuple, Union
+
+import cv2
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.interpolate import CubicSpline
+from scipy.ndimage.interpolation import map_coordinates
+from skimage import io
+
 from .roi import offset_coordinates
-from typing import Optional, Union, Tuple
 
 """
 
@@ -574,7 +576,7 @@ def readnd(path: str) -> dict:
     """
 
     nd = {}
-    f = open(path, "r").readlines()
+    f = open(path).readlines()
     for line in f[:-1]:
         nd[line.split(", ")[0].replace('"', "")] = (
             line.split(", ")[1].strip().replace('"', "")

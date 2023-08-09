@@ -1,11 +1,11 @@
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.widgets import Slider
-from scipy.interpolate import splprep, splev, interp1d
-from matplotlib.widgets import Button
+from typing import Optional, Union
+
 import ipywidgets as widgets
-from typing import Union, Optional
-from matplotlib.backend_bases import MouseEvent, KeyEvent
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.backend_bases import KeyEvent, MouseEvent
+from matplotlib.widgets import Button, Slider
+from scipy.interpolate import interp1d, splev, splprep
 
 """
 Todo: This no longer works with multiple channels - intensity ranges

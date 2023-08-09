@@ -1,20 +1,22 @@
-import numpy as np
 import os
+from typing import Optional, Union
+
+import numpy as np
 import pandas as pd
-from .funcs import save_img, in_notebook
+
+from .funcs import in_notebook, save_img
 from .interactive import (
-    view_stack,
-    view_stack_jupyter,
     plot_fits,
     plot_fits_jupyter,
-    plot_segmentation,
-    plot_segmentation_jupyter,
     plot_quantification,
     plot_quantification_jupyter,
+    plot_segmentation,
+    plot_segmentation_jupyter,
+    view_stack,
+    view_stack_jupyter,
 )
-from .model import ImageQuantGradientDescent
 from .legacy import ImageQuantDifferentialEvolutionMulti
-from typing import Union, Optional
+from .model import ImageQuantGradientDescent
 
 __all__ = ["ImageQuant"]
 

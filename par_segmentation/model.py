@@ -1,19 +1,21 @@
+import time
+from typing import Tuple, Union
+
+import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
-from .funcs import (
-    straighten,
-    rolling_ave_2d,
-    interp_1d_array,
-    interp_2d_array,
-    rotate_roi,
-)
-from .roi import offset_coordinates, interp_roi
 from scipy.interpolate import interp1d
 from tqdm import tqdm
-import time
+
 from ._tgf_interpolate import interpolate
-import matplotlib.pyplot as plt
-from typing import Union, Tuple
+from .funcs import (
+    interp_1d_array,
+    interp_2d_array,
+    rolling_ave_2d,
+    rotate_roi,
+    straighten,
+)
+from .roi import interp_roi, offset_coordinates
 
 """
 To do:

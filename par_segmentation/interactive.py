@@ -1,10 +1,11 @@
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.widgets import Slider
-import ipywidgets as widgets
-from typing import Union, Optional
-from .funcs import in_notebook
+from typing import Optional, Union
 
+import ipywidgets as widgets
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.widgets import Slider
+
+from .funcs import in_notebook
 
 # TODO: plot_segmentation fails if only one image
 
