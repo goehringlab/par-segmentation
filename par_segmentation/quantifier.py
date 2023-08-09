@@ -16,7 +16,7 @@ from .model import ImageQuantGradientDescent
 from .legacy import ImageQuantDifferentialEvolutionMulti
 from typing import Union, Optional
 
-__all__ = ['ImageQuant']
+__all__ = ["ImageQuant"]
 
 
 class ImageQuant:

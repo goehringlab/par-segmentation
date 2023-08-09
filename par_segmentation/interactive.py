@@ -8,7 +8,7 @@ from .funcs import in_notebook
 
 # TODO: plot_segmentation fails if only one image
 
-# __all__ = ['view_stack_tk', 'view_stack_jupyter', 'plot_segmentation', 'plot_segmentation_jupyter', 'plot_quantification', 
+# __all__ = ['view_stack_tk', 'view_stack_jupyter', 'plot_segmentation', 'plot_segmentation_jupyter', 'plot_quantification',
 #            'plot_quantification_jupyter', 'plot_fits', 'plot_fits_jupyter']
 
 

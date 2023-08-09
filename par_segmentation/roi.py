@@ -13,7 +13,7 @@ Todo: Ability to specify a directory and open all channels. Or an nd file
 
 """
 
-__all__ = ['def_roi', 'ROI_jupyter', 'spline_roi', 'interp_roi', 'offset_coordinates']
+__all__ = ["def_roi", "ROI_jupyter", "spline_roi", "interp_roi", "offset_coordinates"]
 
 
 def def_roi(

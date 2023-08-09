@@ -20,7 +20,7 @@ Legacy code including differential evolution algorithm and other functions no lo
 
 """
 
-__all__ = ['gaus', 'error_func', 'polycrop', 'bg_subtraction']
+__all__ = ["gaus", "error_func", "polycrop", "bg_subtraction"]
 
 
 class ImageQuantDifferentialEvolutionSingle:
