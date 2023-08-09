@@ -4,6 +4,7 @@
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=flat&logo=tensorflow&logoColor=white)
 [![Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+[![Tests](https://github.com/tsmbland/par-segmentation/actions/workflows/test.yaml/badge.svg)](https://github.com/tsmbland/par-segmentation/actions/workflows/test.yaml)
 [![PyPi version](https://badgen.net/pypi/v/par-segmentation/)](https://pypi.org/project/par-segmentation)
 [![Documentation Status](https://readthedocs.org/projects/par-segmentation/badge/?version=latest)](https://par-segmentation.readthedocs.io/en/latest/?badge=latest)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?logo=docker)](https://www.docker.com/)
