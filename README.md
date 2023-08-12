@@ -10,6 +10,8 @@
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?logo=docker)](https://www.docker.com/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?logo=anaconda)](https://docs.conda.io/en/latest/)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tsmbland/par-segmentation/HEAD?filepath=%2Fscripts/Tutorial.ipynb)
+[![codecov](https://codecov.io/gh/tsmbland/par-segmentation/branch/master/graph/badge.svg?token=QCFC9AWK0R)](https://codecov.io/gh/tsmbland/par-segmentation)
+
 
 Tools for segmenting, straightening and quantifying the cortex of cells.
 Works by combining spline-based segmentation with a custom quantification model, using a gradient descent optimisation procedure.
