@@ -9,6 +9,7 @@ dist/
 # Unit tests
 .coverage
 .pytest_cache/
+coverage.xml
 
 # OS
 .DS_Store
