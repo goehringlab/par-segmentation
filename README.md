@@ -99,17 +99,19 @@ See [here](https://github.com/tsmbland/discco) for an extension of the method de
 
 ## Publications
 
-Code in this repository has been used in the following publications for PAR protein segmentation and/or quantification: 
+This package has been used in the following publications: 
 
-Illukkumbura, R., Hirani, N., Borrego-Pinto, J., Bland, T., Ng, K., Hubatsch, L., McQuade, J., Endres, R.G., and Goehring, N.W. (2022). Design principles for selective polarization of PAR proteins by cortical flows. BioRxiv 2022.09.05.506621.
+Bland, T., Hirani, N., Briggs, D., Rossetto, R. Ng, K., McDonald, N. Q., Zwicker, D., Goehring, N.W. (2023). [Optimized dimerization of the PAR-2 RING domain drives cooperative and selective membrane recruitment for robust feedback-driven cell polarization](https://www.biorxiv.org/content/10.1101/2023.08.10.552581v1). BioRxiv.
 
-Ng, K., Hirani, N., Bland, T., Borrego-pinto, J., and Goehring, N.W. (2022a). Cleavage furrow-directed cortical flows bias mechanochemical pathways for PAR polarization in the C . elegans germ lineage. BioRxiv 1–32.
+Illukkumbura, R., Hirani, N., Borrego-Pinto, J., Bland, T., Ng, K., Hubatsch, L., McQuade, J., Endres, R.G., and Goehring, N.W. (2023). [Design principles for selective polarization of PAR proteins by cortical flows](https://rupress.org/jcb/article/222/8/e202209111/214138/Design-principles-for-selective-polarization-of). JCB.
 
-Ng, K., Bland, T., Hirani, N., and Goehring, N.W. (2022b). An analog sensitive allele permits rapid and reversible chemical inhibition of PKC-3 activity in C . elegans. MicroPublication Biol.
+Ng, K., Hirani, N., Bland, T., Borrego-pinto, J., and Goehring, N.W. (2022b). [Cleavage furrow-directed cortical flows bias mechanochemical pathways for PAR polarization in the C . elegans germ lineage](https://www.biorxiv.org/content/10.1101/2022.12.22.521633v1.abstract). BioRxiv.
 
-Rodrigues, N.T.L., Bland, T., Borrego-Pinto, J., Ng, K., Hirani, N., Gu, Y., Foo, S., and Goehring, N.W. (2022). SAIBR : A simple, platform-independent method for spectral autofluorescence correction. Development.
+Ng, K., Bland, T., Hirani, N., and Goehring, N.W. (2022a). [An analog sensitive allele permits rapid and reversible chemical inhibition of PKC-3 activity in C. elegans](https://www.micropublication.org/journals/biology/micropub-biology-000610). MicroPublication Biol.
 
+Rodrigues, N.T.L., Bland, T., Borrego-Pinto, J., Ng, K., Hirani, N., Gu, Y., Foo, S., and Goehring, N.W. (2022). [SAIBR : A simple, platform-independent method for spectral autofluorescence correction](https://journals.biologists.com/dev/article/149/14/dev200545/276004/SAIBR-a-simple-platform-independent-method-for). Development.
 
+_To add your paper to this list, please use the issues form, or create a pull request_
 
 
 ## License
