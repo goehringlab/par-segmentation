@@ -101,15 +101,15 @@ See [here](https://github.com/tsmbland/discco) for an extension of the method de
 
 This package has been used in the following publications: 
 
-[Optimized dimerization of the PAR-2 RING domain drives cooperative and selective membrane recruitment for robust feedback-driven cell polarization.](https://www.biorxiv.org/content/10.1101/2023.08.10.552581v1) BioRxiv (2023).
+- [Optimized dimerization of the PAR-2 RING domain drives cooperative and selective membrane recruitment for robust feedback-driven cell polarization.](https://www.biorxiv.org/content/10.1101/2023.08.10.552581v1) BioRxiv (2023).
 
-[Design principles for selective polarization of PAR proteins by cortical flows.](https://rupress.org/jcb/article/222/8/e202209111/214138/Design-principles-for-selective-polarization-of) Journal of Cell Biology (2023).
+- [Design principles for selective polarization of PAR proteins by cortical flows.](https://rupress.org/jcb/article/222/8/e202209111/214138/Design-principles-for-selective-polarization-of) Journal of Cell Biology (2023).
 
-[Cleavage furrow-directed cortical flows bias mechanochemical pathways for PAR polarization in the C . elegans germ lineage.](https://www.biorxiv.org/content/10.1101/2022.12.22.521633v1.abstract) BioRxiv (2022).
+- [Cleavage furrow-directed cortical flows bias mechanochemical pathways for PAR polarization in the C . elegans germ lineage.](https://www.biorxiv.org/content/10.1101/2022.12.22.521633v1.abstract) BioRxiv (2022).
 
-[An analog sensitive allele permits rapid and reversible chemical inhibition of PKC-3 activity in C. elegans.](https://www.micropublication.org/journals/biology/micropub-biology-000610) Micropublication Biology (2022).
+- [An analog sensitive allele permits rapid and reversible chemical inhibition of PKC-3 activity in C. elegans.](https://www.micropublication.org/journals/biology/micropub-biology-000610) Micropublication Biology (2022).
 
-[SAIBR : A simple, platform-independent method for spectral autofluorescence correction.](https://journals.biologists.com/dev/article/149/14/dev200545/276004/SAIBR-a-simple-platform-independent-method-for) Development (2022).
+- [SAIBR : A simple, platform-independent method for spectral autofluorescence correction.](https://journals.biologists.com/dev/article/149/14/dev200545/276004/SAIBR-a-simple-platform-independent-method-for) Development (2022).
 
 _To add your paper to this list, please use the issues form, or create a pull request_
 
