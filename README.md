@@ -101,15 +101,15 @@ See [here](https://github.com/tsmbland/discco) for an extension of the method de
 
 This package has been used in the following publications: 
 
-Bland, T., Hirani, N., Briggs, D., Rossetto, R. Ng, K., McDonald, N. Q., Zwicker, D., Goehring, N.W. (2023). [Optimized dimerization of the PAR-2 RING domain drives cooperative and selective membrane recruitment for robust feedback-driven cell polarization](https://www.biorxiv.org/content/10.1101/2023.08.10.552581v1). BioRxiv.
+[Optimized dimerization of the PAR-2 RING domain drives cooperative and selective membrane recruitment for robust feedback-driven cell polarization.](https://www.biorxiv.org/content/10.1101/2023.08.10.552581v1) BioRxiv (2023).
 
-Illukkumbura, R., Hirani, N., Borrego-Pinto, J., Bland, T., Ng, K., Hubatsch, L., McQuade, J., Endres, R.G., and Goehring, N.W. (2023). [Design principles for selective polarization of PAR proteins by cortical flows](https://rupress.org/jcb/article/222/8/e202209111/214138/Design-principles-for-selective-polarization-of). JCB.
+[Design principles for selective polarization of PAR proteins by cortical flows.](https://rupress.org/jcb/article/222/8/e202209111/214138/Design-principles-for-selective-polarization-of) Journal of Cell Biology (2023).
 
-Ng, K., Hirani, N., Bland, T., Borrego-pinto, J., and Goehring, N.W. (2022b). [Cleavage furrow-directed cortical flows bias mechanochemical pathways for PAR polarization in the C . elegans germ lineage](https://www.biorxiv.org/content/10.1101/2022.12.22.521633v1.abstract). BioRxiv.
+[Cleavage furrow-directed cortical flows bias mechanochemical pathways for PAR polarization in the C . elegans germ lineage.](https://www.biorxiv.org/content/10.1101/2022.12.22.521633v1.abstract) BioRxiv (2022).
 
-Ng, K., Bland, T., Hirani, N., and Goehring, N.W. (2022a). [An analog sensitive allele permits rapid and reversible chemical inhibition of PKC-3 activity in C. elegans](https://www.micropublication.org/journals/biology/micropub-biology-000610). MicroPublication Biol.
+[An analog sensitive allele permits rapid and reversible chemical inhibition of PKC-3 activity in C. elegans.](https://www.micropublication.org/journals/biology/micropub-biology-000610) Micropublication Biology (2022).
 
-Rodrigues, N.T.L., Bland, T., Borrego-Pinto, J., Ng, K., Hirani, N., Gu, Y., Foo, S., and Goehring, N.W. (2022). [SAIBR : A simple, platform-independent method for spectral autofluorescence correction](https://journals.biologists.com/dev/article/149/14/dev200545/276004/SAIBR-a-simple-platform-independent-method-for). Development.
+[SAIBR : A simple, platform-independent method for spectral autofluorescence correction.](https://journals.biologists.com/dev/article/149/14/dev200545/276004/SAIBR-a-simple-platform-independent-method-for) Development (2022).
 
 _To add your paper to this list, please use the issues form, or create a pull request_
 
