@@ -21,6 +21,15 @@ Designed primarily for membrane-bound PAR proteins in C. elegans zygotes.
     <img src="https://raw.githubusercontent.com/tsmbland/par-segmentation/master/scripts/Figs/animation.gif" width="100%" height="100%"/>
 </p>
 
+Advantages:
+
+- Combine segmentation and membrane quantification in a single step
+- No ground truth training data required
+
+Disadvantages:
+
+- Requires a small amount of manual annotation for every image
+- A little slow compared to some other segmentation methods 
 
 ## Instructions
 
@@ -92,9 +101,8 @@ The program learns the amplitude of these two components at each position around
     <img src="https://raw.githubusercontent.com/tsmbland/par-segmentation/master/scripts/Figs/animation2.gif" width="100%" height="100%"/>
 </p>
 
-The model is a slight simplification of reality, and doesn't account for the possibility of a non-Gaussian PSF and complex 3D light-scattering behaviours, but is a close enough approximation for many purposes. 
-Nevertheless, one can relax these assumptions if higher quantification accuracy is required. 
-See [here](https://github.com/tsmbland/discco) for an extension of the method designed for more accurate quantification.
+Modelling the PSF as a Gaussian, and ignoring out-of-focus contributions, is a clear simplification of reality, but is a close enough approximation for many purposes (e.g. if you're interested in relative concentrations rather than absolute concentrations). Nevertheless, one can relax these assumptions (with some added caveats) if higher accuracy is required. 
+See [here](https://github.com/tsmbland/discco).
 
 
 ## Publications
