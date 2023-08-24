@@ -25,11 +25,13 @@ Advantages:
 
 - Combine segmentation and membrane quantification in a single step
 - No ground truth training data required
+- Works for single snapshots or timelapse movies
 
 Disadvantages:
 
 - Requires a small amount of manual annotation for every image
 - A little slow compared to some other segmentation methods 
+
 
 ## Instructions
 
