@@ -15,4 +15,4 @@ pytest
 pytest-cov
 sphinx_rtd_theme==1.0.0
 pre-commit
-matplotlib-polyroi==0.1.6
+matplotlib-polyroi>=0.1.6
