@@ -6,7 +6,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name="par_segmentation",
-    version="0.1.9",
+    version="0.1.10",
     license="CC BY 4.0",
     author="Tom Bland",
     author_email="tom_bland@hotmail.co.uk",
@@ -24,6 +24,7 @@ setup(
         "tqdm",
         "pandas",
         "absl-py",
+        "matplotlib-polyroi==0.1.6",
     ],
     description="Cell cortex segmentation in C. elegans PAR protein images",
     long_description=long_description,
