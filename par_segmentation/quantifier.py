@@ -235,19 +235,10 @@ class ImageQuant:
 
         """
 
-        # Create empty dataframe
-        df = pd.DataFrame(
-            {
-                "Frame": [],
-                "Position": [],
-                "Membrane signal": [],
-                "Cytoplasmic signal": [],
-            }
-        )
-
-        # Fill with data
+        # Assemble dataframe
+        _dfs = []
         for i, (m, c) in enumerate(zip(self.mems, self.cyts)):
-            df = df.append(
+            _dfs.append(
                 pd.DataFrame(
                     {
                         "Frame": i,
@@ -258,6 +249,9 @@ class ImageQuant:
                 )
             )
 
+        df = pd.concat(_dfs)
+
+        # Tidy up
         df = df.reindex(
             columns=["Frame", "Position", "Membrane signal", "Cytoplasmic signal"]
         )

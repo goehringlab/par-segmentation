@@ -118,3 +118,15 @@ class TestGdCompletion:
             zerocap=True,
         )
         iq.run()
+
+    def test_9(self):
+        # Testing that it runs to completion with multiple images
+        iq = ImageQuant(
+            img=self.imgs + self.imgs,
+            roi=self.rois + self.rois,
+            method="GD",
+            descent_steps=10,
+            verbose=False,
+        )
+        iq.run()
+        res = iq.compile_res()
