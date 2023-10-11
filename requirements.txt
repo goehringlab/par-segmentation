@@ -2,6 +2,7 @@ numpy
 matplotlib
 scipy
 ipywidgets
+ipympl
 scikit-image
 jupyter
 opencv-python
