@@ -31,6 +31,6 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     project_urls={
-        "Source Code": "https://github.com/tsmbland/par-segmentation",
+        "Source Code": "https://github.com/goehringlab/par-segmentation",
     },
 )
