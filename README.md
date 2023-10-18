@@ -4,13 +4,13 @@
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=flat&logo=tensorflow&logoColor=white)
 [![Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
-[![Tests](https://github.com/tsmbland/par-segmentation/actions/workflows/test.yaml/badge.svg)](https://github.com/tsmbland/par-segmentation/actions/workflows/test.yaml)
+[![Tests](https://github.com/goehringlab/par-segmentation/actions/workflows/test.yaml/badge.svg)](https://github.com/goehringlab/par-segmentation/actions/workflows/test.yaml)
 [![PyPi version](https://badgen.net/pypi/v/par-segmentation/)](https://pypi.org/project/par-segmentation)
 [![Documentation Status](https://readthedocs.org/projects/par-segmentation/badge/?version=latest)](https://par-segmentation.readthedocs.io/en/latest/?badge=latest)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?logo=docker)](https://www.docker.com/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?logo=anaconda)](https://docs.conda.io/en/latest/)
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tsmbland/par-segmentation/HEAD?filepath=%2Fscripts/Tutorial.ipynb)
-[![codecov](https://codecov.io/gh/tsmbland/par-segmentation/branch/master/graph/badge.svg?token=QCFC9AWK0R)](https://codecov.io/gh/tsmbland/par-segmentation)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/goehringlab/par-segmentation/HEAD?filepath=%2Fscripts/Tutorial.ipynb)
+[![codecov](https://codecov.io/gh/goehringlab/par-segmentation/branch/master/graph/badge.svg?token=QCFC9AWK0R)](https://codecov.io/gh/goehringlab/par-segmentation)
 
 
 Tools for segmenting, straightening and quantifying the cortex of cells.
@@ -18,7 +18,7 @@ Works by combining spline-based segmentation with a custom quantification model,
 Designed primarily for membrane-bound PAR proteins in C. elegans zygotes.
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/tsmbland/par-segmentation/master/scripts/Figs/animation.gif" width="100%" height="100%"/>
+    <img src="https://raw.githubusercontent.com/goehringlab/par-segmentation/master/scripts/Figs/animation.gif" width="100%" height="100%"/>
 </p>
 
 Advantages:
@@ -35,11 +35,11 @@ Disadvantages:
 
 ## Instructions
 
-As a first step, I would recommend checking out the [tutorial notebook](https://nbviewer.org/github/tsmbland/par-segmentation/blob/master/scripts/Tutorial.ipynb). To run the notebook interactively you have a few options:
+As a first step, I would recommend checking out the [tutorial notebook](https://nbviewer.org/github/goehringlab/par-segmentation/blob/master/scripts/Tutorial.ipynb). To run the notebook interactively you have a few options:
 
 #### Option 1: Binder
 
-To run in the cloud using Binder, click here: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tsmbland/par-segmentation/HEAD?filepath=%2Fscripts/Tutorial.ipynb)
+To run in the cloud using Binder, click here: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/goehringlab/par-segmentation/HEAD?filepath=%2Fscripts/Tutorial.ipynb)
 
 (Please note that it may take several minutes to open the notebook)
 
@@ -81,26 +81,26 @@ The program then attempts to mimic this straightened image by differentiable sim
 In doing so, it learns the position of the cortex, which enables the ROI to be adjusted (Step 3) and the cortex re-straightened.
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/tsmbland/par-segmentation/master/docs/model schematic.png" width="100%" height="100%"/>
+    <img src="https://raw.githubusercontent.com/goehringlab/par-segmentation/master/docs/model schematic.png" width="100%" height="100%"/>
 </p>
 
 Cortex positions are modelled as a spline with a user-specified number of evenly spaced knots which are optimised by gradient descent:
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/tsmbland/par-segmentation/master/scripts/Figs/spline.png" width="80%" height="80%"/>
+    <img src="https://raw.githubusercontent.com/goehringlab/par-segmentation/master/scripts/Figs/spline.png" width="80%" height="80%"/>
 </p>
 
 Cross-cortex intensity profiles at each position around the cortex are modelled as the sum of distinct cytoplasmic and membrane signal components:
 an error function and Gaussian function respectively, representing the expected shape of a step and a point convolved by a Gaussian point spread function (PSF) in one dimension:
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/tsmbland/par-segmentation/master/scripts/Figs/profiles.png" width="100%" height="100%"/>
+    <img src="https://raw.githubusercontent.com/goehringlab/par-segmentation/master/scripts/Figs/profiles.png" width="100%" height="100%"/>
 </p>
 
 The program learns the amplitude of these two components at each position around the cortex, so can serve as a quantification tool as well as a segmentation tool:
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/tsmbland/par-segmentation/master/scripts/Figs/animation2.gif" width="100%" height="100%"/>
+    <img src="https://raw.githubusercontent.com/goehringlab/par-segmentation/master/scripts/Figs/animation2.gif" width="100%" height="100%"/>
 </p>
 
 Modelling the PSF as a Gaussian, and ignoring out-of-focus contributions, is a clear simplification of reality, but is a close enough approximation for many purposes (e.g. if you're interested in relative concentrations rather than absolute concentrations). Nevertheless, one can relax these assumptions (with some added caveats) if higher accuracy is required. 
