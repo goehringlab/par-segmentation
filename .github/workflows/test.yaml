@@ -5,11 +5,17 @@ on:
     branches:
       - master
   pull_request:
+  workflow_call:
 
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ windows-latest, ubuntu-latest, macos-latest ]
+        python-version: [ "3.8", "3.11" ]
 
     steps:
       - uses: actions/checkout@v3
@@ -17,7 +23,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.7'
+          python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
         run: |
@@ -29,6 +35,7 @@ jobs:
           pytest --cov=./ --cov-report=xml
 
       - name: Upload coverage to Codecov
+        if: matrix.platform == 'ubuntu-latest' && matrix.python-version == '3.11'
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
