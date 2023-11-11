@@ -1,0 +1,1 @@
+FROM ghcr.io/goehringlab/par-segmentation:latest
