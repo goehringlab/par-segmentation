@@ -19,3 +19,6 @@ coverage.xml
 
 # Illustrator files
 *.ai
+
+# Virtual environment
+.venv

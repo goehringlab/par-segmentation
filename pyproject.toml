@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools"]
+
+[tool.setuptools]
+packages = ["par_segmentation"]
+
+[project]
+name = "par_segmentation"
+description = "Cell cortex segmentation in C. elegans PAR protein images"
+readme = "README.md"
+version = "0.1.12"
+license = {file = "LICENSE"}
+authors = [
+    { name = "Tom Bland", email = "tom_bland@hotmail.co.uk" },
+]
+dependencies = [
+    "numpy",
+    "matplotlib",
+    "scipy",
+    "scikit-image",
+    "opencv-python",
+    "joblib",
+    "tensorflow>=2.9.1",
+    "tqdm",
+    "pandas",
+    "absl-py",
+    "matplotlib-polyroi>=0.1.6",
+    "ipympl",
+]
+
+[project.urls]
+Documentation = "https://par-segmentation.readthedocs.io/"
+Source = "https://github.com/goehringlab/par-segmentation"
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pre-commit",
+    "black",
+    "pip-tools",
+    "pytest-cov",
+]
+
+doc = [
+    "sphinx_rtd_theme==1.0.0",
+]
+
