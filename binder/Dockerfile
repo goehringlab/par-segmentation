@@ -1,1 +1,1 @@
-FROM ghcr.io/goehringlab/par-segmentation:latest
+FROM ghcr.io/goehringlab/par-segmentation
