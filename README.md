@@ -7,7 +7,6 @@
 [![Tests](https://github.com/goehringlab/par-segmentation/actions/workflows/test.yaml/badge.svg)](https://github.com/goehringlab/par-segmentation/actions/workflows/test.yaml)
 [![PyPi version](https://badgen.net/pypi/v/par-segmentation/)](https://pypi.org/project/par-segmentation)
 [![Documentation Status](https://readthedocs.org/projects/par-segmentation/badge/?version=latest)](https://par-segmentation.readthedocs.io/en/latest/?badge=latest)
-[![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?logo=docker)](https://www.docker.com/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?logo=anaconda)](https://docs.conda.io/en/latest/)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/goehringlab/par-segmentation/HEAD?filepath=%2Fscripts/Tutorial.ipynb)
 [![codecov](https://codecov.io/gh/goehringlab/par-segmentation/branch/master/graph/badge.svg?token=QCFC9AWK0R)](https://codecov.io/gh/goehringlab/par-segmentation)
@@ -35,37 +34,11 @@ Disadvantages:
 
 ## Instructions
 
-As a first step, I would recommend checking out the [tutorial notebook](https://nbviewer.org/github/goehringlab/par-segmentation/blob/master/scripts/Tutorial.ipynb). To run the notebook interactively you have a few options:
+As a first step, I would recommend checking out the [tutorial notebook](https://nbviewer.org/github/goehringlab/par-segmentation/blob/master/scripts/Tutorial.ipynb). This can be run in the cloud using Binder (please note that it may take several minutes to open the notebook):
 
-#### Option 1: Binder
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/goehringlab/par-segmentation/HEAD?filepath=%2Fscripts/Tutorial.ipynb)
 
-To run in the cloud using Binder, click here: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/goehringlab/par-segmentation/HEAD?filepath=%2Fscripts/Tutorial.ipynb)
-
-(Please note that it may take several minutes to open the notebook)
-
-#### Option 2: Docker
-
-Step 1: Make sure [Docker](https://www.docker.com/products/docker-desktop/) is installed and open on your machine 
-
-Step 2: Download and run the Docker container: 
-
-    docker run --rm -p 8888:8888 tsmbland/par-segmentation
-
-Once the Docker image has finished downloading, this will print two URLs at the bottom for you to copy and paste into your web browser to open up Jupyter (please try both)
-
-Step 3: Navigate to _scripts/Tutorial.ipynb_ to run the notebook
-
-Step 4: When finished, delete the image:
-
-    docker image rm tsmbland/par-segmentation
-
-#### Option 3: Conda
-
-You can use the environment.yml file to set up a [Conda](https://conda.io/projects/conda/en/latest/user-guide/getting-started.html) environment on your machine from which the notebook can be run
-
-    conda env create -f environment.yml
-    conda activate par-segmentation
-    jupyter notebook
+To run locally, download the code and install the relevant requirements (requirements.txt) in a virtual environment.
 
 
 ## Installation
