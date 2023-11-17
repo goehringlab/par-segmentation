@@ -43,9 +43,13 @@ To run locally, download the code and install the relevant requirements (require
 
 ## Installation
 
-To explore further and incorporate into your own analysis pipelines, you can install the package using pip:
+To explore further and incorporate into your own analysis pipelines, you can install the package from PyPI using pip:
 
     pip install par-segmentation
+
+If you want to make changes to the code you can download/clone this folder, navigate to it, and run:
+
+    pip install -e .[dev]
 
 ## Methods
 
