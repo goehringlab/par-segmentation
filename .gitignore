@@ -22,3 +22,6 @@ coverage.xml
 
 # Virtual environment
 .venv
+
+# Visual Studio Code
+.vscode

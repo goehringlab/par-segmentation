@@ -165,25 +165,28 @@ class ImageQuant:
     def run(self):
         """
         Performs segmentation/quantification and saves results
-
         """
         self.iq.run()
 
-        # Save new ROI
-        self.roi = self.iq.roi
-
         # Save results
-        self.mems = self.iq.mems
-        self.cyts = self.iq.cyts
-        self.offsets = self.iq.offsets
-        self.mems_full = self.iq.mems_full
-        self.cyts_full = self.iq.cyts_full
-        self.offsets_full = self.iq.offsets_full
-        self.target_full = self.iq.target_full
-        self.sim_full = self.iq.sim_full
-        self.resids_full = self.iq.resids_full
+        attributes = [
+            "roi",
+            "mems",
+            "cyts",
+            "offsets",
+            "mems_full",
+            "cyts_full",
+            "offsets_full",
+            "target_full",
+            "sim_full",
+            "resids_full",
+        ]
+
         if self.method == "GD":
-            self.sigma = self.iq.sigma
+            attributes.append("sigma")
+
+        for attr in attributes:
+            setattr(self, attr, getattr(self.iq, attr))
 
     """
     Saving
@@ -198,33 +201,29 @@ class ImageQuant:
         Args:
             save_path: path to save full results
             i: index of the image to save (if quantifying multiple images in batch)
-
         """
+        i = 0 if not self.iq.stack else i
 
-        if not self.iq.stack:
-            i = 0
+        os.makedirs(save_path, exist_ok=True)
 
-        if not os.path.isdir(save_path):
-            os.mkdir(save_path)
-        np.savetxt(
-            save_path + "/offsets.txt", self.offsets[i], fmt="%.4f", delimiter="\t"
-        )
-        np.savetxt(
-            save_path + "/cytoplasmic_concentrations.txt",
-            self.cyts[i],
-            fmt="%.4f",
-            delimiter="\t",
-        )
-        np.savetxt(
-            save_path + "/membrane_concentrations.txt",
-            self.mems[i],
-            fmt="%.4f",
-            delimiter="\t",
-        )
-        np.savetxt(save_path + "/roi.txt", self.roi[i], fmt="%.4f", delimiter="\t")
-        save_img(self.target_full[i], save_path + "/target.tif")
-        save_img(self.sim_full[i], save_path + "/fit.tif")
-        save_img(self.resids_full[i], save_path + "/residuals.tif")
+        data_files = {
+            "/offsets.txt": self.offsets[i],
+            "/cytoplasmic_concentrations.txt": self.cyts[i],
+            "/membrane_concentrations.txt": self.mems[i],
+            "/roi.txt": self.roi[i],
+        }
+
+        for filename, data in data_files.items():
+            np.savetxt(save_path + filename, data, fmt="%.4f", delimiter="\t")
+
+        image_files = {
+            "/target.tif": self.target_full[i],
+            "/fit.tif": self.sim_full[i],
+            "/residuals.tif": self.resids_full[i],
+        }
+
+        for filename, img in image_files.items():
+            save_img(img, save_path + filename)
 
     def compile_res(self):
         """
@@ -232,24 +231,19 @@ class ImageQuant:
 
         Returns:
             A pandas dataframe containing quantification results
-
         """
-
         # Assemble dataframe
-        _dfs = []
-        for i, (m, c) in enumerate(zip(self.mems, self.cyts)):
-            _dfs.append(
-                pd.DataFrame(
-                    {
-                        "Frame": i,
-                        "Position": range(len(m)),
-                        "Membrane signal": m,
-                        "Cytoplasmic signal": c,
-                    }
-                )
+        df = pd.concat(
+            pd.DataFrame(
+                {
+                    "Frame": i,
+                    "Position": range(len(m)),
+                    "Membrane signal": m,
+                    "Cytoplasmic signal": c,
+                }
             )
-
-        df = pd.concat(_dfs)
+            for i, (m, c) in enumerate(zip(self.mems, self.cyts))
+        )
 
         # Tidy up
         df = df.reindex(
@@ -266,77 +260,43 @@ class ImageQuant:
     def view_frames(self):
         """
         Opens an interactive widget to view image(s)
-
         """
-
         jupyter = in_notebook()
-        if not jupyter:
-            if self.iq.stack:
-                fig, ax = view_stack(self.img)
-            else:
-                fig, ax = view_stack(self.img[0])
-        else:
-            if self.iq.stack:
-                fig, ax = view_stack_jupyter(self.img)
-            else:
-                fig, ax = view_stack_jupyter(self.img[0])
+        img = self.img if self.iq.stack else self.img[0]
+        view_func = view_stack_jupyter if jupyter else view_stack
+        fig, ax = view_func(img)
         return fig, ax
 
     def plot_quantification(self):
         """
         Opens an interactive widget to plot membrane quantification results
-
         """
-
         jupyter = in_notebook()
-        if not jupyter:
-            if self.iq.stack:
-                fig, ax = plot_quantification(self.mems_full)
-            else:
-                fig, ax = plot_quantification(self.mems_full[0])
-        else:
-            if self.iq.stack:
-                fig, ax = plot_quantification_jupyter(self.mems_full)
-            else:
-                fig, ax = plot_quantification_jupyter(self.mems_full[0])
+        mems_full = self.mems_full if self.iq.stack else self.mems_full[0]
+        plot_func = plot_quantification_jupyter if jupyter else plot_quantification
+        fig, ax = plot_func(mems_full)
         return fig, ax
 
     def plot_fits(self):
         """
         Opens an interactive widget to plot actual vs fit profiles
-
         """
-
         jupyter = in_notebook()
-        if not jupyter:
-            if self.iq.stack:
-                fig, ax = plot_fits(self.target_full, self.sim_full)
-            else:
-                fig, ax = plot_fits(self.target_full[0], self.sim_full[0])
-        else:
-            if self.iq.stack:
-                fig, ax = plot_fits_jupyter(self.target_full, self.sim_full)
-            else:
-                fig, ax = plot_fits_jupyter(self.target_full[0], self.sim_full[0])
+        target_full = self.target_full if self.iq.stack else self.target_full[0]
+        sim_full = self.sim_full if self.iq.stack else self.sim_full[0]
+        plot_func = plot_fits_jupyter if jupyter else plot_fits
+        fig, ax = plot_func(target_full, sim_full)
         return fig, ax
 
     def plot_segmentation(self):
         """
         Opens an interactive widget to plot segmentation results
-
         """
-
         jupyter = in_notebook()
-        if not jupyter:
-            if self.iq.stack:
-                fig, ax = plot_segmentation(self.img, self.roi)
-            else:
-                fig, ax = plot_segmentation(self.img[0], self.roi[0])
-        else:
-            if self.iq.stack:
-                fig, ax = plot_segmentation_jupyter(self.img, self.roi)
-            else:
-                fig, ax = plot_segmentation_jupyter(self.img[0], self.roi[0])
+        img = self.img if self.iq.stack else self.img[0]
+        roi = self.roi if self.iq.stack else self.roi[0]
+        plot_func = plot_segmentation_jupyter if jupyter else plot_segmentation
+        fig, ax = plot_func(img, roi)
         return fig, ax
 
     def plot_losses(self, log: bool = False):
@@ -345,10 +305,6 @@ class ImageQuant:
 
         Args:
             log: if True, plot the logarithm of losses
-
         """
-
         if self.method == "GD":
             self.iq.plot_losses(log=log)
-        else:
-            pass
