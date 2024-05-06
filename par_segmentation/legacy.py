@@ -1,6 +1,5 @@
 import multiprocessing
 import time
-from typing import Optional, Tuple, Union
 
 import cv2
 import numpy as np
@@ -21,8 +20,6 @@ from .roi import interp_roi, offset_coordinates, spline_roi
 Legacy code including differential evolution algorithm and other functions no longer used
 
 """
-
-__all__ = ["gaus", "error_func", "polycrop", "bg_subtraction"]
 
 
 class ImageQuantDifferentialEvolutionSingle:
@@ -65,19 +62,19 @@ class ImageQuantDifferentialEvolutionSingle:
 
     def __init__(
         self,
-        img: Union[np.ndarray, list],
+        img: np.ndarray | list,
         sigma: float = 2.0,
-        roi: Union[np.ndarray, list] = None,
+        roi: np.ndarray | list = None,
         freedom: float = 0.5,
         periodic: bool = True,
         thickness: int = 50,
         itp: int = 10,
         rol_ave: int = 10,
         parallel: bool = False,
-        cores: Optional[int] = None,
+        cores: int | None = None,
         rotate: bool = False,
         zerocap: bool = True,
-        nfits: Optional[int] = None,
+        nfits: int | None = None,
         iterations: int = 2,
         interp: str = "cubic",
         bg_subtract: bool = False,
@@ -219,7 +216,7 @@ class ImageQuantDifferentialEvolutionSingle:
             self.mems, len(self.roi[:, 0]), method="linear"
         )
 
-    def _fit_profile(self, profile: np.ndarray) -> Tuple[float, float, float]:
+    def _fit_profile(self, profile: np.ndarray) -> tuple[float, float, float]:
         if self.zerocap:
             bounds = (
                 (
@@ -243,9 +240,11 @@ class ImageQuantDifferentialEvolutionSingle:
         return o, res.x[1], res.x[2]
 
     def _mse(self, l_c_m: list, profile: np.ndarray) -> np.ndarray:
-        l, c, m = l_c_m
-        y = (c * self.cytbg_itp[int(l) : int(l) + self.thickness_itp]) + (
-            m * self.membg_itp[int(l) : int(l) + self.thickness_itp]
+        slice_index, c, m = l_c_m
+        y = (
+            c * self.cytbg_itp[int(slice_index) : int(slice_index) + self.thickness_itp]
+        ) + (
+            m * self.membg_itp[int(slice_index) : int(slice_index) + self.thickness_itp]
         )
         return np.mean((profile - y) ** 2)
 
@@ -262,10 +261,12 @@ class ImageQuantDifferentialEvolutionSingle:
         for x in range(len(self.roi[:, 0])):
             c = self.cyts_full[x]
             m = self.mems_full[x]
-            l = int(self.offsets_full[x] * self.itp + (self.thickness_itp / 2))
+            slice_index = int(
+                self.offsets_full[x] * self.itp + (self.thickness_itp / 2)
+            )
             self.straight_fit[:, x] = interp_1d_array(
-                (c * self.cytbg_itp[l : l + self.thickness_itp])
-                + (m * self.membg_itp[l : l + self.thickness_itp]),
+                (c * self.cytbg_itp[slice_index : slice_index + self.thickness_itp])
+                + (m * self.membg_itp[slice_index : slice_index + self.thickness_itp]),
                 self.thickness,
                 method=self.interp,
             )
@@ -330,8 +331,8 @@ class ImageQuantDifferentialEvolutionSingle:
 class ImageQuantDifferentialEvolutionMulti:
     def __init__(
         self,
-        img: Union[np.ndarray, list],
-        roi: Union[np.ndarray, list] = None,
+        img: np.ndarray | list,
+        roi: np.ndarray | list = None,
         sigma: float = 2.0,
         periodic: bool = True,
         thickness: int = 50,
@@ -339,17 +340,17 @@ class ImageQuantDifferentialEvolutionMulti:
         itp: int = 10,
         rol_ave: int = 10,
         parallel: bool = False,
-        cores: Optional[int] = None,
+        cores: int | None = None,
         rotate: bool = False,
         zerocap: bool = True,
-        nfits: Optional[int] = None,
+        nfits: int | None = None,
         iterations: int = 1,
         interp: str = "cubic",
         bg_subtract: bool = False,
         verbose: bool = True,
     ):
         # Detect if single frame or stack
-        if type(img) is list:
+        if isinstance(img, list):
             self.stack = True
             self.img = img
         elif len(img.shape) == 3:
@@ -367,7 +368,7 @@ class ImageQuantDifferentialEvolutionMulti:
             self.roi = [
                 roi,
             ]
-        elif type(roi) is list:
+        elif isinstance(roi, list):
             if len(roi) > 1:
                 self.roi = roi
             else:

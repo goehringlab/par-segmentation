@@ -22,3 +22,9 @@ coverage.xml
 
 # Virtual environment
 .venv
+
+# Visual Studio Code
+.vscode
+
+# Ruff
+.ruff_cache/

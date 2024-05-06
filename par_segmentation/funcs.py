@@ -1,7 +1,5 @@
-import copy
 import glob
 import os
-from typing import Optional, Tuple, Union
 
 import cv2
 import matplotlib.pyplot as plt
@@ -11,33 +9,6 @@ from scipy.ndimage.interpolation import map_coordinates
 from skimage import io
 
 from .roi import offset_coordinates
-
-"""
-
-"""
-
-__all__ = [
-    "load_image",
-    "save_img",
-    "save_img_jpeg",
-    "straighten",
-    "rotated_embryo",
-    "rotate_roi",
-    "norm_roi",
-    "interp_1d_array",
-    "interp_2d_array",
-    "rolling_ave_1d",
-    "rolling_ave_2d",
-    "bounded_mean_1d",
-    "bounded_mean_2d",
-    "asi",
-    "dosage",
-    "make_mask",
-    "readnd",
-    "organise_by_nd",
-    "direcslist",
-    "in_notebook",
-]
 
 ########## IMAGE HANDLING ###########
 
@@ -73,8 +44,8 @@ def save_img(img: np.ndarray, direc: str):
 def save_img_jpeg(
     img: np.ndarray,
     direc: str,
-    cmin: Optional[float] = None,
-    cmax: Optional[float] = None,
+    cmin: float | None = None,
+    cmax: float | None = None,
     cmap: str = "gray",
 ):
     """
@@ -101,7 +72,7 @@ def straighten(
     thickness: int,
     periodic: bool = True,
     interp: str = "cubic",
-    ninterp: Optional[int] = None,
+    ninterp: int | None = None,
 ) -> np.ndarray:
     """
     Creates straightened image based on coordinates
@@ -156,27 +127,25 @@ def straighten(
     )
 
     # Interpolate
-    if interp == "linear":
-        straight = map_coordinates(
-            img.T, [gridcoors_x, gridcoors_y], order=1, mode="nearest"
-        )
-    elif interp == "cubic":
-        straight = map_coordinates(
-            img.T, [gridcoors_x, gridcoors_y], order=3, mode="nearest"
-        )
-    else:
+    if interp not in ["linear", "cubic"]:
         raise ValueError('interp must be "linear" or "cubic"')
+
+    order = 1 if interp == "linear" else 3
+    straight = map_coordinates(
+        img.T, [gridcoors_x, gridcoors_y], order=order, mode="nearest"
+    )
+
     return straight.astype(np.float64).T
 
 
 def rotated_embryo(
     img: np.ndarray,
     roi: np.ndarray,
-    l: int,
-    h: int,
+    width: int,
+    height: int,
     order: int = 1,
     return_roi: bool = False,
-) -> Union[np.ndarray, Tuple[np.array, np.array]]:
+) -> np.ndarray | tuple[np.array, np.array]:
     """
     Takes an image and rotates according to coordinates so that anterior is on left, posterior on right
     Todo: some of the returned coordinates are anticlockwise
@@ -184,8 +153,8 @@ def rotated_embryo(
     Args:
         img: numpy array of image to rotate
         roi: roi of cell boundary (two columns specifying x and y coordinates)
-        l: length of output image (pixel units)
-        h: height of output image (pixel units)
+        width: width of output image (pixel units)
+        height: height of output image (pixel units)
         order: interpolation order. 1 or 3 for linear or cubic interpolation
         return_roi: if True, will return roi corresponding to the cell edge in the new image
 
@@ -196,7 +165,7 @@ def rotated_embryo(
     """
 
     # PCA on ROI coordinates
-    [_, coeff] = np.linalg.eig(np.cov(roi.T))
+    _, coeff = np.linalg.eig(np.cov(roi.T))
 
     # Transform ROI
     roi_transformed = np.dot(coeff.T, roi.T)
@@ -211,13 +180,13 @@ def rotated_embryo(
 
     # Coordinate grid
     centre_x = (min(roi_transformed[0, :]) + max(roi_transformed[0, :])) / 2
-    xvals = np.arange(int(centre_x) - (l / 2), int(centre_x) + (l / 2))
+    xvals = np.arange(int(centre_x) - (width / 2), int(centre_x) + (width / 2))
     centre_y = (min(roi_transformed[1, :]) + max(roi_transformed[1, :])) // 2
-    yvals = np.arange(int(centre_y) - (h / 2), int(centre_y) + (h / 2))
+    yvals = np.arange(int(centre_y) - (height / 2), int(centre_y) + (height / 2))
     xvals_grid = np.tile(xvals, [len(yvals), 1])
     yvals_grid = np.tile(yvals, [len(xvals), 1]).T
     roi_transformed = roi_transformed - np.expand_dims(
-        [centre_x - (l / 2), centre_y - (h / 2)], -1
+        [centre_x - (width / 2), centre_y - (height / 2)], -1
     )
 
     # Transform coordinate grid back
@@ -233,12 +202,9 @@ def rotated_embryo(
     # Force posterior on right
     if roi_transformed[0, 0] < roi_transformed[0, roi_transformed.shape[1] // 2]:
         zvals = np.fliplr(zvals)
-        roi_transformed[0, :] = l - roi_transformed[0, :]
+        roi_transformed[0, :] = width - roi_transformed[0, :]
 
-    if return_roi:
-        return zvals, roi_transformed.T
-    else:
-        return zvals
+    return (zvals, roi_transformed.T) if return_roi else zvals
 
 
 ########### ROI OPERATIONS ###########
@@ -249,11 +215,10 @@ def rotate_roi(roi: np.ndarray) -> np.ndarray:
     Rotates coordinate array so that most posterior point is at the beginning
 
     Args:
-        roi: two column numpy array of coordinates to rotate
+        roi: A 2D numpy array where each row represents a coordinate in the ROI.
 
     Returns:
-        numpy array of same shape as roi with rotated coordinates
-
+        A 2D numpy array of the rotated ROI coordinates.
     """
 
     # PCA to find long axis
@@ -319,16 +284,15 @@ def interp_1d_array(array: np.ndarray, n: int, method: str = "cubic") -> np.ndar
         interpolated array (one dimensional array of length n)
 
     """
-    # If using linear interpolation, return the result of np.interp applied to the input array
+    x = np.arange(len(array))
+    x_new = np.linspace(0, len(array) - 1, n)
+
     if method == "linear":
-        return np.interp(
-            np.linspace(0, len(array) - 1, n), np.array(range(len(array))), array
-        )
-    # If using cubic interpolation, return the result of CubicSpline applied to the input array
+        return np.interp(x_new, x, array)
     elif method == "cubic":
-        return CubicSpline(np.arange(len(array)), array)(
-            np.linspace(0, len(array) - 1, n)
-        )
+        return CubicSpline(x, array)(x_new)
+    else:
+        raise ValueError("Invalid method. Choose either 'linear' or 'cubic'.")
 
 
 def interp_2d_array(
@@ -347,22 +311,18 @@ def interp_2d_array(
         Interpolated array. 2D array of shape [array.shape[0], n] if ax==1, or [n, array.shape[1] if ax==0
 
     """
-    # If interpolating along the rows (axis 0), create a new array with shape [n, len(array[0, :])]
-    if ax == 0:
-        interped = np.zeros([n, len(array[0, :])])
-        # Loop through each column and interpolate the values along axis 0
-        for x in range(len(array[0, :])):
-            interped[:, x] = interp_1d_array(array[:, x], n, method)
-        return interped
-    # If interpolating along the columns (axis 1), create a new array with shape [len(array[:, 0]), n]
-    elif ax == 1:
-        interped = np.zeros([len(array[:, 0]), n])
-        # Loop through each row and interpolate the values along axis 1
-        for x in range(len(array[:, 0])):
-            interped[x, :] = interp_1d_array(array[x, :], n, method)
-        return interped
-    else:
+    if ax not in [0, 1]:
         raise ValueError("ax must be 0 or 1")
+
+    interped = (
+        np.zeros((n, array.shape[1])) if ax == 0 else np.zeros((array.shape[0], n))
+    )
+
+    for x in range(interped.shape[1 - ax]):
+        slice_ = (slice(None), x) if ax == 0 else (x, slice(None))
+        interped[slice_] = interp_1d_array(array[slice_], n, method)
+
+    return interped
 
 
 def rolling_ave_1d(array: np.ndarray, window: int, periodic: bool = True) -> np.ndarray:
@@ -429,13 +389,11 @@ def rolling_ave_2d(array: np.ndarray, window: int, periodic: bool = True) -> np.
 
 
 def bounded_mean_1d(
-    array: np.ndarray, bounds: tuple, weights: Optional[np.ndarray] = None
+    array: np.ndarray, bounds: tuple, weights: np.ndarray | None = None
 ) -> float:
     """
     Averages 1D array over region specified by bounds
     Array and weights should be same length
-    Todo: Should add interpolation step first?
-    Todo: combine with 2d function
 
     Args:
         array: one dimensional numpy array
@@ -446,39 +404,31 @@ def bounded_mean_1d(
         single number corresponding to mean value over the bounds specified
 
     """
+    array_length = len(array)
+    lower_bound, upper_bound = (
+        int(array_length * bounds[0]),
+        int(array_length * bounds[1] + 1),
+    )
 
     if weights is None:
-        weights = np.ones([len(array)])
-    if bounds[0] < bounds[1]:
+        weights = np.ones(array_length)
+
+    if lower_bound < upper_bound:
         mean = np.average(
-            array[int(len(array) * bounds[0]) : int(len(array) * bounds[1] + 1)],
-            weights=weights[
-                int(len(array) * bounds[0]) : int(len(array) * bounds[1] + 1)
-            ],
+            array[lower_bound:upper_bound], weights=weights[lower_bound:upper_bound]
         )
     else:
         mean = np.average(
-            np.hstack(
-                (
-                    array[: int(len(array) * bounds[1] + 1)],
-                    array[int(len(array) * bounds[0]) :],
-                )
-            ),
-            weights=np.hstack(
-                (
-                    weights[: int(len(array) * bounds[1] + 1)],
-                    weights[int(len(array) * bounds[0]) :],
-                )
-            ),
+            np.hstack((array[:upper_bound], array[lower_bound:])),
+            weights=np.hstack((weights[:upper_bound], weights[lower_bound:])),
         )
+
     return mean
 
 
 def bounded_mean_2d(array: np.ndarray, bounds: tuple) -> np.ndarray:
     """
     Averages 2D array in y dimension over region specified by bounds
-    Todo: Should add axis parameter
-    Todo: Should add interpolation step first
 
     Args:
         array: two dimensional numpy array
@@ -488,24 +438,19 @@ def bounded_mean_2d(array: np.ndarray, bounds: tuple) -> np.ndarray:
         one dimensional numpy array of length array.shape[0], corresponding to mean value over the bounds specified
 
     """
+    array_length = array.shape[1]
+    lower_bound, upper_bound = (
+        int(array_length * bounds[0]),
+        int(array_length * bounds[1]),
+    )
 
-    if bounds[0] < bounds[1]:
-        mean = np.mean(
-            array[
-                :, int(len(array[0, :]) * bounds[0]) : int(len(array[0, :]) * bounds[1])
-            ],
-            1,
-        )
+    if lower_bound < upper_bound:
+        mean = np.mean(array[:, lower_bound:upper_bound], axis=1)
     else:
         mean = np.mean(
-            np.hstack(
-                (
-                    array[:, : int(len(array[0, :]) * bounds[1])],
-                    array[:, int(len(array[0, :]) * bounds[0]) :],
-                )
-            ),
-            1,
+            np.hstack((array[:, :upper_bound], array[:, lower_bound:])), axis=1
         )
+
     return mean
 
 
@@ -610,45 +555,35 @@ def organise_by_nd(path: str):
 def _direcslist(
     dest: str,
     levels: int = 0,
-    exclude: Optional[tuple] = ("!",),
-    exclusive: Optional[tuple] = None,
+    exclude: tuple | None = ("!",),
+    exclusive: tuple | None = None,
 ) -> list:
-    lis = sorted(glob.glob(f"{dest}/*/"))
+    directories = sorted(glob.glob(f"{dest}/*/"))
 
-    for level in range(levels):
-        newlis = []
-        for e in lis:
-            newlis.extend(sorted(glob.glob(f"{e}/*/")))
-        lis = newlis
-        lis = [x[:-1] for x in lis]
+    for _ in range(levels):
+        directories = [
+            subdir for dir in directories for subdir in sorted(glob.glob(f"{dir}/*/"))
+        ]
+        directories = [dir[:-1] for dir in directories]
 
     # Excluded directories
-    lis_copy = copy.deepcopy(lis)
     if exclude is not None:
-        for x in lis:
-            for i in exclude:
-                if i in x:
-                    lis_copy.remove(x)
-                    break
+        directories = [
+            dir for dir in directories if not any(ex in dir for ex in exclude)
+        ]
 
     # Exclusive directories
     if exclusive is not None:
-        lis2 = []
-        for x in lis_copy:
-            for i in exclusive:
-                if i in x:
-                    lis2.append(x)
-    else:
-        lis2 = lis_copy
+        directories = [dir for dir in directories if any(ex in dir for ex in exclusive)]
 
-    return sorted(lis2)
+    return sorted(directories)
 
 
 def direcslist(
     dest: str,
     levels: int = 0,
-    exclude: Optional[tuple] = ("!",),
-    exclusive: Optional[tuple] = None,
+    exclude: tuple | None = ("!",),
+    exclusive: tuple | None = None,
 ) -> list:
     """
     Gives a list of directories within a given directory (full path)
@@ -666,7 +601,7 @@ def direcslist(
 
     """
 
-    if type(dest) is list:
+    if isinstance(dest, list):
         out = []
         for d in dest:
             out.extend(_direcslist(d, levels, exclude, exclusive))
