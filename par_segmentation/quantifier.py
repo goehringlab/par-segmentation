@@ -14,8 +14,6 @@ from .interactive import (
     view_stack,
     view_stack_jupyter,
 )
-from .legacy import ImageQuantDifferentialEvolutionMulti
-from .model import ImageQuantGradientDescent
 
 
 class ImageQuant:
@@ -90,6 +88,8 @@ class ImageQuant:
         # Set up quantifier
         self.method = method
         if self.method == "GD":
+            from .model import ImageQuantGradientDescent
+
             self.iq = ImageQuantGradientDescent(
                 img=img,
                 roi=roi,
@@ -114,6 +114,8 @@ class ImageQuant:
             )
 
         elif self.method == "DE":
+            from .legacy import ImageQuantDifferentialEvolutionMulti
+
             self.iq = ImageQuantDifferentialEvolutionMulti(
                 img=img,
                 roi=roi,
