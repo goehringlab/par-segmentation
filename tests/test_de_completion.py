@@ -1,6 +1,9 @@
-from par_segmentation import *
 import os
+
 import numpy as np
+
+from par_segmentation import load_image
+from par_segmentation.quantifier import ImageQuant
 
 
 class TestDeCompletion:
@@ -30,4 +33,4 @@ class TestDeCompletion:
             img=self.imgs, roi=self.rois, method="DE", verbose=False, parallel=False
         )
         iq.run()
-        res = iq.compile_res()
+        iq.compile_res()

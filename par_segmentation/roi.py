@@ -1,5 +1,3 @@
-from typing import Optional, Union
-
 import numpy as np
 from scipy.interpolate import interp1d, splev, splprep
 
@@ -8,8 +6,6 @@ Todo: This no longer works with multiple channels - intensity ranges
 Todo: Ability to specify a directory and open all channels. Or an nd file
 
 """
-
-__all__ = ["spline_roi", "interp_roi", "offset_coordinates"]
 
 
 def spline_roi(
@@ -26,21 +22,16 @@ def spline_roi(
 
     Returns:
         spline ROI (numpy array)
-
     """
+    x, y = roi[:, 0], roi[:, 1]
 
-    # Append the starting x,y coordinates
+    # Append the starting x,y coordinates if the ROI is periodic
     if periodic:
-        x = np.r_[roi[:, 0], roi[0, 0]]
-        y = np.r_[roi[:, 1], roi[0, 1]]
-    else:
-        x = roi[:, 0]
-        y = roi[:, 1]
+        x = np.r_[x, x[0]]
+        y = np.r_[y, y[0]]
 
-    # Fit spline
-    tck, u = splprep([x, y], s=s, per=periodic, k=k)
-
-    # Evaluate spline
+    # Fit spline and evaluate it
+    tck, _ = splprep([x, y], s=s, per=periodic, k=k)
     xi, yi = splev(np.linspace(0, 1, 10000), tck)
 
     # Interpolate
@@ -48,7 +39,7 @@ def spline_roi(
 
 
 def interp_roi(
-    roi: np.ndarray, periodic: bool = True, npoints: Optional[int] = None, gap: int = 1
+    roi: np.ndarray, periodic: bool = True, npoints: int | None = None, gap: int = 1
 ) -> np.ndarray:
     """
     Interpolates coordinates to one pixel distances (or as close as possible to one pixel). Linear interpolation
@@ -63,32 +54,24 @@ def interp_roi(
         interpolated ROI (numpy array)
 
     """
-
-    if periodic:
-        c = np.append(roi, [roi[0, :]], axis=0)
-    else:
-        c = roi
+    c = np.append(roi, [roi[0, :]], axis=0) if periodic else roi
 
     # Calculate distance between points in pixel units
-    distances = ((np.diff(c[:, 0]) ** 2) + (np.diff(c[:, 1]) ** 2)) ** 0.5
+    distances = np.sqrt(np.sum(np.diff(c, axis=0) ** 2, axis=1))
     distances_cumsum = np.r_[0, np.cumsum(distances)]
-    total_length = sum(distances)
+    total_length = distances_cumsum[-1]
 
     # Interpolate
-    fx, fy = interp1d(distances_cumsum, c[:, 0], kind="linear"), interp1d(
-        distances_cumsum, c[:, 1], kind="linear"
+    fx, fy = interp1d(distances_cumsum, c[:, 0]), interp1d(distances_cumsum, c[:, 1])
+    positions = np.linspace(
+        0, total_length, npoints + 1 if npoints else int(round(total_length / gap))
     )
-    if npoints is None:
-        positions = np.linspace(0, total_length, int(round(total_length / gap)))
-    else:
-        positions = np.linspace(0, total_length, npoints + 1)
-    xcoors, ycoors = fx(positions), fy(positions)
-    newpoints = np.c_[xcoors[:-1], ycoors[:-1]]
+    newpoints = np.column_stack((fx(positions), fy(positions)))[:-1]
     return newpoints
 
 
 def offset_coordinates(
-    roi: np.ndarray, offsets: Union[np.ndarray, float], periodic: bool = True
+    roi: np.ndarray, offsets: np.ndarray | float, periodic: bool = True
 ) -> np.ndarray:
     """
     Reads in coordinates, adjusts according to offsets
@@ -121,9 +104,8 @@ def offset_coordinates(
     tangent_grad = -1 / grad
 
     # Offset coordinates
-    xchange = ((offsets**2) / (1 + tangent_grad**2)) ** 0.5
-    ychange = xchange / abs(grad)
+    xchange = np.sqrt((offsets**2) / (1 + tangent_grad**2))
+    ychange = xchange / np.abs(grad)
     newxs = xcoors + np.sign(ydiffs) * np.sign(offsets) * xchange
     newys = ycoors - np.sign(xdiffs) * np.sign(offsets) * ychange
-    newcoors = np.swapaxes(np.vstack([newxs, newys]), 0, 1)
-    return newcoors
+    return np.column_stack([newxs, newys])

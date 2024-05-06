@@ -1,7 +1,10 @@
-from par_segmentation import *
-import pytest
 import os
+
 import numpy as np
+import pytest
+
+from par_segmentation import load_image
+from par_segmentation.quantifier import ImageQuant
 
 
 class TestGdCorrect:
@@ -33,6 +36,10 @@ class TestGdCorrect:
 
         assert res.iloc[0]["Frame"] == 0
         assert res.iloc[0]["Position"] == 0
-        assert res.iloc[0]["Membrane signal"] == pytest.approx(6924.348109365306, rel=1e-4)
-        assert res.iloc[0]["Cytoplasmic signal"] == pytest.approx(6995.061025591719, rel=1e-4)
+        assert res.iloc[0]["Membrane signal"] == pytest.approx(
+            6924.348109365306, rel=1e-4
+        )
+        assert res.iloc[0]["Cytoplasmic signal"] == pytest.approx(
+            6995.061025591719, rel=1e-4
+        )
         assert iq.roi[0][0, 0] == pytest.approx(182.18897189832285, rel=1e-4)

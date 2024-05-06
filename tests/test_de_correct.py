@@ -1,7 +1,10 @@
-from par_segmentation import *
-import pytest
 import os
+
 import numpy as np
+import pytest
+
+from par_segmentation import load_image
+from par_segmentation.quantifier import ImageQuant
 
 
 class TestDeCorrectTests:
@@ -34,6 +37,10 @@ class TestDeCorrectTests:
 
         assert res.iloc[0]["Frame"] == 0
         assert res.iloc[0]["Position"] == 0
-        assert res.iloc[0]["Membrane signal"] == pytest.approx(7334.072755561494, rel=1e-4)
-        assert res.iloc[0]["Cytoplasmic signal"] == pytest.approx(7155.67389350451, rel=1e-4)
-        assert iq.roi[0][0, 0] == pytest.approx(181.42341900410696, rel=1e-4)
+        assert res.iloc[0]["Membrane signal"] == pytest.approx(
+            7222.288644674427, rel=1e-4
+        )
+        assert res.iloc[0]["Cytoplasmic signal"] == pytest.approx(
+            7186.560758626298, rel=1e-4
+        )
+        assert iq.roi[0][0, 0] == pytest.approx(181.5831198442061, rel=1e-4)

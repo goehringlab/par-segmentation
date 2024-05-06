@@ -1,5 +1,3 @@
-from typing import Optional, Union
-
 import ipywidgets as widgets
 import matplotlib.pyplot as plt
 import numpy as np
@@ -9,14 +7,11 @@ from .funcs import in_notebook
 
 # TODO: plot_segmentation fails if only one image
 
-# __all__ = ['view_stack_tk', 'view_stack_jupyter', 'plot_segmentation', 'plot_segmentation_jupyter', 'plot_quantification',
-#            'plot_quantification_jupyter', 'plot_fits', 'plot_fits_jupyter']
-
 
 def view_stack_tk(
-    frames: Union[list, np.ndarray],
+    frames: list | np.ndarray,
     start_frame: int = 0,
-    end_frame: Optional[int] = None,
+    end_frame: int | None = None,
     show: bool = True,
 ):
     """
@@ -34,7 +29,7 @@ def view_stack_tk(
     """
 
     # Detect if single frame or stack
-    if type(frames) is list:
+    if isinstance(frames, list):
         stack = True
         frames_ = frames
     elif len(frames.shape) == 3:
@@ -88,12 +83,12 @@ def view_stack_tk(
 
 
 def view_stack_jupyter(
-    frames: Union[list, np.ndarray],
+    frames: list | np.ndarray,
     start_frame: int = 0,
-    end_frame: Optional[int] = None,
+    end_frame: int | None = None,
 ):
     # Detect if single frame or stack
-    if type(frames) is list:
+    if isinstance(frames, list):
         stack = True
         frames_ = frames
     elif len(frames.shape) == 3:
@@ -137,9 +132,9 @@ def view_stack_jupyter(
 
 
 def view_stack(
-    frames: Union[list, np.ndarray],
+    frames: list | np.ndarray,
     start_frame: int = 0,
-    end_frame: Optional[int] = None,
+    end_frame: int | None = None,
 ):
     jupyter = in_notebook()
     if jupyter:
@@ -148,7 +143,7 @@ def view_stack(
         view_stack_tk(frames, start_frame, end_frame)
 
 
-def plot_segmentation(frames: Union[list, np.ndarray], rois: Union[list, np.ndarray]):
+def plot_segmentation(frames: list | np.ndarray, rois: list | np.ndarray):
     """
     Plot segmentation results
 
@@ -164,7 +159,7 @@ def plot_segmentation(frames: Union[list, np.ndarray], rois: Union[list, np.ndar
     fig, ax = plt.subplots()
 
     # Detect if single frame or stack
-    if type(frames) is list:
+    if isinstance(frames, list):
         stack = True
         frames_ = frames
     elif len(frames.shape) == 3:
@@ -212,9 +207,7 @@ def plot_segmentation(frames: Union[list, np.ndarray], rois: Union[list, np.ndar
     return fig, ax
 
 
-def plot_segmentation_jupyter(
-    frames: Union[list, np.ndarray], rois: Union[list, np.ndarray]
-):
+def plot_segmentation_jupyter(frames: list | np.ndarray, rois: list | np.ndarray):
     """
     Plot segmentation results - use this function in a jupyter notebook environment
 
@@ -230,7 +223,7 @@ def plot_segmentation_jupyter(
     fig, ax = plt.subplots()
 
     # Detect if single frame or stack
-    if type(frames) is list:
+    if isinstance(frames, list):
         stack = True
         frames_ = frames
     elif len(frames.shape) == 3:
@@ -272,7 +265,7 @@ def plot_segmentation_jupyter(
     return fig, ax
 
 
-def plot_quantification(mems: Union[list, np.ndarray]):
+def plot_quantification(mems: list | np.ndarray):
     """
     Plot quantification results
 
@@ -286,7 +279,7 @@ def plot_quantification(mems: Union[list, np.ndarray]):
     fig, ax = plt.subplots()
 
     # Detect if single frame or stack
-    if type(mems) is list:
+    if isinstance(mems, list):
         stack = True
         mems_ = mems
     elif len(mems.shape) == 2:
@@ -334,7 +327,7 @@ def plot_quantification(mems: Union[list, np.ndarray]):
     return fig, ax
 
 
-def plot_quantification_jupyter(mems: Union[list, np.ndarray]):
+def plot_quantification_jupyter(mems: list | np.ndarray):
     """
     Plot quantification results - use this function in a jupyter notebook environment
 
@@ -348,7 +341,7 @@ def plot_quantification_jupyter(mems: Union[list, np.ndarray]):
     fig, ax = plt.subplots()
 
     # Detect if single frame or stack
-    if type(mems) is list:
+    if isinstance(mems, list):
         stack = True
         mems_ = mems
     elif len(mems.shape) == 2:
@@ -390,9 +383,9 @@ def plot_quantification_jupyter(mems: Union[list, np.ndarray]):
 
 
 class _FitPlotter:
-    def __init__(self, target: Union[list, np.ndarray], fit: Union[list, np.ndarray]):
+    def __init__(self, target: list | np.ndarray, fit: list | np.ndarray):
         # Detect if single frame or stack
-        if type(target) is list:
+        if isinstance(target, list):
             self.stack = True
             target_ = target
             fit_ = fit
@@ -489,14 +482,14 @@ class _FitPlotter:
         self.ax2.set_ylim(bottom=self.ylim_bottom, top=self.ylim_top)
 
 
-def plot_fits(target: Union[list, np.ndarray], fit_total: Union[list, np.ndarray]):
+def plot_fits(target: list | np.ndarray, fit_total: list | np.ndarray):
     fp = _FitPlotter(target, fit_total)
     return fp.fig, (fp.ax1, fp.ax2)
 
 
-def plot_fits_jupyter(target: Union[list, np.ndarray], fit: Union[list, np.ndarray]):
+def plot_fits_jupyter(target: list | np.ndarray, fit: list | np.ndarray):
     # Detect if single frame or stack
-    if type(target) is list:
+    if isinstance(target, list):
         stack = True
         target = target
         fit = fit
