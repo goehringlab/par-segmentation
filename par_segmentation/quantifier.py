@@ -1,5 +1,4 @@
 import os
-from typing import Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -17,8 +16,6 @@ from .interactive import (
 )
 from .legacy import ImageQuantDifferentialEvolutionMulti
 from .model import ImageQuantGradientDescent
-
-__all__ = ["ImageQuant"]
 
 
 class ImageQuant:
@@ -63,14 +60,14 @@ class ImageQuant:
 
     def __init__(
         self,
-        img: Union[np.ndarray, list],
-        roi: Union[np.ndarray, list],
+        img: np.ndarray | list,
+        roi: np.ndarray | list,
         sigma: float = 3.5,
         periodic: bool = True,
         thickness: int = 50,
         rol_ave: int = 5,
         rotate: bool = False,
-        nfits: Union[int, None] = 100,
+        nfits: int | None = 100,
         iterations: int = 2,
         lr: float = 0.01,
         descent_steps: int = 400,
@@ -85,7 +82,7 @@ class ImageQuant:
         itp: int = 10,
         parallel: bool = False,
         zerocap: bool = False,
-        cores: Optional[float] = None,
+        cores: float | None = None,
         bg_subtract: bool = False,
         interp: str = "cubic",
         verbose: bool = True,
@@ -193,7 +190,7 @@ class ImageQuant:
     
     """
 
-    def save(self, save_path: str, i: Optional[int] = None):
+    def save(self, save_path: str, i: int | None = None):
         """
         Save results for a single image to save_path as a series of txt files and tifs
         I'd recommend using compile_res() instead as this will create a single pandas dataframe with all the results

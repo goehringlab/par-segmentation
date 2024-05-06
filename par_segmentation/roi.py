@@ -1,5 +1,3 @@
-from typing import Optional, Union
-
 import numpy as np
 from scipy.interpolate import interp1d, splev, splprep
 
@@ -8,8 +6,6 @@ Todo: This no longer works with multiple channels - intensity ranges
 Todo: Ability to specify a directory and open all channels. Or an nd file
 
 """
-
-__all__ = ["spline_roi", "interp_roi", "offset_coordinates"]
 
 
 def spline_roi(
@@ -43,7 +39,7 @@ def spline_roi(
 
 
 def interp_roi(
-    roi: np.ndarray, periodic: bool = True, npoints: Optional[int] = None, gap: int = 1
+    roi: np.ndarray, periodic: bool = True, npoints: int | None = None, gap: int = 1
 ) -> np.ndarray:
     """
     Interpolates coordinates to one pixel distances (or as close as possible to one pixel). Linear interpolation
@@ -75,7 +71,7 @@ def interp_roi(
 
 
 def offset_coordinates(
-    roi: np.ndarray, offsets: Union[np.ndarray, float], periodic: bool = True
+    roi: np.ndarray, offsets: np.ndarray | float, periodic: bool = True
 ) -> np.ndarray:
     """
     Reads in coordinates, adjusts according to offsets

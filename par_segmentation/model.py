@@ -1,5 +1,4 @@
 import time
-from typing import Tuple, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -23,20 +22,18 @@ To do:
 
 """
 
-# __all__ = ['ImageQuantGradientDescent', 'create_offsets_spline']
-
 
 class ImageQuantGradientDescent:
     def __init__(
         self,
-        img: Union[np.ndarray, list],
-        roi: Union[np.ndarray, list],
+        img: np.ndarray | list,
+        roi: np.ndarray | list,
         sigma: float = 3.5,
         periodic: bool = True,
         thickness: int = 50,
         rol_ave: int = 5,
         rotate: bool = False,
-        nfits: Union[int, None] = 100,
+        nfits: int | None = 100,
         iterations: int = 2,
         lr: float = 0.01,
         descent_steps: int = 300,
@@ -134,7 +131,7 @@ class ImageQuantGradientDescent:
 
     def preprocess(
         self, frame: np.ndarray, roi: np.ndarray
-    ) -> Tuple[np.ndarray, float, np.ndarray]:
+    ) -> tuple[np.ndarray, float, np.ndarray]:
         """
         Preprocesses a single image with roi specified
 
@@ -210,7 +207,7 @@ class ImageQuantGradientDescent:
         if self.adaptive_sigma:
             self.vars["sigma"] = self.sigma_t
 
-    def sim_images(self) -> Tuple[tf.Tensor, tf.Tensor]:
+    def sim_images(self) -> tuple[tf.Tensor, tf.Tensor]:
         """
         Simulates images according to current membrane and cytoplasm concentration estimates and offsets
         """
@@ -364,20 +361,20 @@ class ImageQuantGradientDescent:
                 )
 
         # Save and rescale sim images (rescaled)
-        self.sim_both, self.target = [
+        self.sim_both, self.target = (
             data * self.norms[:, np.newaxis, np.newaxis]
             for data in [self.sim_images()[0].numpy(), self.target]
-        ]
+        )
 
         # Save and rescale results
-        mems, cyts = [
+        mems, cyts = (
             data * tf.math.sigmoid(self.swish_factor * data) if self.zerocap else data
             for data in [self.mems_t, self.cyts_t]
-        ]
+        )
 
-        self.mems, self.cyts = [
+        self.mems, self.cyts = (
             data.numpy() * self.norms[:, np.newaxis] for data in [mems, cyts]
-        ]
+        )
 
         # Create offsets spline
         offsets_spline = create_offsets_spline(
@@ -389,14 +386,14 @@ class ImageQuantGradientDescent:
 
         # Crop results
         if self.nfits is None:
-            self.offsets, self.cyts, self.mems = [
+            self.offsets, self.cyts, self.mems = (
                 [data[mask == 1] for data, mask in zip(dataset, self.masks)]
                 for dataset in [self.offsets, self.cyts, self.mems]
-            ]
+            )
 
         # Interpolated results
         if self.nfits is not None:
-            self.offsets_full, self.cyts_full, self.mems_full = [
+            self.offsets_full, self.cyts_full, self.mems_full = (
                 [
                     interp_1d_array(data, len(roi[:, 0]), method=method)
                     for data, roi in zip(dataset, self.roi)
@@ -404,7 +401,7 @@ class ImageQuantGradientDescent:
                 for dataset, method in zip(
                     [self.offsets, self.cyts, self.mems], ["cubic", "linear", "linear"]
                 )
-            ]
+            )
         else:
             self.offsets_full, self.cyts_full, self.mems_full = (
                 self.offsets,
@@ -414,7 +411,7 @@ class ImageQuantGradientDescent:
 
         # Interpolated sim images
         if self.nfits is not None:
-            self.sim_full, self.target_full = [
+            self.sim_full, self.target_full = (
                 [
                     interp1d(np.arange(self.nfits), data, axis=-1)(
                         np.linspace(0, self.nfits - 1, len(roi[:, 0]))
@@ -422,12 +419,12 @@ class ImageQuantGradientDescent:
                     for roi, data in zip(self.roi, dataset)
                 ]
                 for dataset in [self.sim_both, self.target]
-            ]
+            )
         else:
-            self.sim_full, self.target_full = [
+            self.sim_full, self.target_full = (
                 [data.T[mask == 1].T for data, mask in zip(dataset, self.masks)]
                 for dataset in [self.sim_both, self.target]
-            ]
+            )
 
         self.resids_full = [i - j for i, j in zip(self.target_full, self.sim_full)]
 

@@ -25,3 +25,6 @@ coverage.xml
 
 # Visual Studio Code
 .vscode
+
+# Ruff
+.ruff_cache/

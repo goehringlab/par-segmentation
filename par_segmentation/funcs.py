@@ -1,6 +1,5 @@
 import glob
 import os
-from typing import Optional, Tuple, Union
 
 import cv2
 import matplotlib.pyplot as plt
@@ -10,33 +9,6 @@ from scipy.ndimage.interpolation import map_coordinates
 from skimage import io
 
 from .roi import offset_coordinates
-
-"""
-
-"""
-
-__all__ = [
-    "load_image",
-    "save_img",
-    "save_img_jpeg",
-    "straighten",
-    "rotated_embryo",
-    "rotate_roi",
-    "norm_roi",
-    "interp_1d_array",
-    "interp_2d_array",
-    "rolling_ave_1d",
-    "rolling_ave_2d",
-    "bounded_mean_1d",
-    "bounded_mean_2d",
-    "asi",
-    "dosage",
-    "make_mask",
-    "readnd",
-    "organise_by_nd",
-    "direcslist",
-    "in_notebook",
-]
 
 ########## IMAGE HANDLING ###########
 
@@ -72,8 +44,8 @@ def save_img(img: np.ndarray, direc: str):
 def save_img_jpeg(
     img: np.ndarray,
     direc: str,
-    cmin: Optional[float] = None,
-    cmax: Optional[float] = None,
+    cmin: float | None = None,
+    cmax: float | None = None,
     cmap: str = "gray",
 ):
     """
@@ -100,7 +72,7 @@ def straighten(
     thickness: int,
     periodic: bool = True,
     interp: str = "cubic",
-    ninterp: Optional[int] = None,
+    ninterp: int | None = None,
 ) -> np.ndarray:
     """
     Creates straightened image based on coordinates
@@ -169,11 +141,11 @@ def straighten(
 def rotated_embryo(
     img: np.ndarray,
     roi: np.ndarray,
-    l: int,
-    h: int,
+    width: int,
+    height: int,
     order: int = 1,
     return_roi: bool = False,
-) -> Union[np.ndarray, Tuple[np.array, np.array]]:
+) -> np.ndarray | tuple[np.array, np.array]:
     """
     Takes an image and rotates according to coordinates so that anterior is on left, posterior on right
     Todo: some of the returned coordinates are anticlockwise
@@ -181,8 +153,8 @@ def rotated_embryo(
     Args:
         img: numpy array of image to rotate
         roi: roi of cell boundary (two columns specifying x and y coordinates)
-        l: length of output image (pixel units)
-        h: height of output image (pixel units)
+        width: width of output image (pixel units)
+        height: height of output image (pixel units)
         order: interpolation order. 1 or 3 for linear or cubic interpolation
         return_roi: if True, will return roi corresponding to the cell edge in the new image
 
@@ -208,13 +180,13 @@ def rotated_embryo(
 
     # Coordinate grid
     centre_x = (min(roi_transformed[0, :]) + max(roi_transformed[0, :])) / 2
-    xvals = np.arange(int(centre_x) - (l / 2), int(centre_x) + (l / 2))
+    xvals = np.arange(int(centre_x) - (width / 2), int(centre_x) + (width / 2))
     centre_y = (min(roi_transformed[1, :]) + max(roi_transformed[1, :])) // 2
-    yvals = np.arange(int(centre_y) - (h / 2), int(centre_y) + (h / 2))
+    yvals = np.arange(int(centre_y) - (height / 2), int(centre_y) + (height / 2))
     xvals_grid = np.tile(xvals, [len(yvals), 1])
     yvals_grid = np.tile(yvals, [len(xvals), 1]).T
     roi_transformed = roi_transformed - np.expand_dims(
-        [centre_x - (l / 2), centre_y - (h / 2)], -1
+        [centre_x - (width / 2), centre_y - (height / 2)], -1
     )
 
     # Transform coordinate grid back
@@ -230,7 +202,7 @@ def rotated_embryo(
     # Force posterior on right
     if roi_transformed[0, 0] < roi_transformed[0, roi_transformed.shape[1] // 2]:
         zvals = np.fliplr(zvals)
-        roi_transformed[0, :] = l - roi_transformed[0, :]
+        roi_transformed[0, :] = width - roi_transformed[0, :]
 
     return (zvals, roi_transformed.T) if return_roi else zvals
 
@@ -417,7 +389,7 @@ def rolling_ave_2d(array: np.ndarray, window: int, periodic: bool = True) -> np.
 
 
 def bounded_mean_1d(
-    array: np.ndarray, bounds: tuple, weights: Optional[np.ndarray] = None
+    array: np.ndarray, bounds: tuple, weights: np.ndarray | None = None
 ) -> float:
     """
     Averages 1D array over region specified by bounds
@@ -583,8 +555,8 @@ def organise_by_nd(path: str):
 def _direcslist(
     dest: str,
     levels: int = 0,
-    exclude: Optional[tuple] = ("!",),
-    exclusive: Optional[tuple] = None,
+    exclude: tuple | None = ("!",),
+    exclusive: tuple | None = None,
 ) -> list:
     directories = sorted(glob.glob(f"{dest}/*/"))
 
@@ -610,8 +582,8 @@ def _direcslist(
 def direcslist(
     dest: str,
     levels: int = 0,
-    exclude: Optional[tuple] = ("!",),
-    exclusive: Optional[tuple] = None,
+    exclude: tuple | None = ("!",),
+    exclusive: tuple | None = None,
 ) -> list:
     """
     Gives a list of directories within a given directory (full path)
@@ -629,7 +601,7 @@ def direcslist(
 
     """
 
-    if type(dest) is list:
+    if isinstance(dest, list):
         out = []
         for d in dest:
             out.extend(_direcslist(d, levels, exclude, exclusive))
