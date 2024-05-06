@@ -6,9 +6,9 @@ packages = ["par_segmentation"]
 
 [project]
 name = "par_segmentation"
-description = "Cell cortex segmentation in C. elegans PAR protein images"
+description = "Cell cortex segmentation and quantification in C. elegans PAR protein images"
 readme = "README.md"
-version = "0.1.13"
+version = "0.1.14"
 license = {file = "LICENSE"}
 requires-python = ">= 3.11"
 authors = [

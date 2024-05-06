@@ -32,7 +32,7 @@ To do:
 """
 
 
-class Discco:
+class ImageQuant2:
     def __init__(
         self,
         img,
@@ -619,25 +619,15 @@ class Discco:
         df = pd.concat(_dfs)
 
         # Reorder columns
+        columns_order = [
+            "EmbryoID",
+            "Position",
+            "Membrane signal",
+            "Cytoplasmic signal",
+        ]
         if extra_columns is not None:
-            df = df.reindex(
-                columns=[
-                    "EmbryoID",
-                    "Position",
-                    "Membrane signal",
-                    "Cytoplasmic signal",
-                ]
-                + list(extra_columns.keys())
-            )
-        else:
-            df = df.reindex(
-                columns=[
-                    "EmbryoID",
-                    "Position",
-                    "Membrane signal",
-                    "Cytoplasmic signal",
-                ]
-            )
+            columns_order += list(extra_columns.keys())
+        df = df.reindex(columns=columns_order)
 
         # Specify column types
         df = df.astype({"EmbryoID": int, "Position": int})
@@ -649,77 +639,62 @@ class Discco:
     """
 
     def view_frames(self):
+        """
+        Opens an interactive widget to view image(s)
+        """
         jupyter = in_notebook()
-        if not jupyter:
-            if self.stack:
-                fig, ax = view_stack(self.img)
-            else:
-                fig, ax = view_stack(self.img[0])
-        else:
-            if self.stack:
-                fig, ax = view_stack_jupyter(self.img)
-            else:
-                fig, ax = view_stack_jupyter(self.img[0])
+        img = self.img if self.stack else self.img[0]
+        view_func = view_stack_jupyter if jupyter else view_stack
+        fig, ax = view_func(img)
         return fig, ax
 
     def plot_quantification(self):
+        """
+        Opens an interactive widget to plot membrane quantification results
+        """
         jupyter = in_notebook()
-        if not jupyter:
-            if self.stack:
-                fig, ax = plot_quantification(self.mems)
-            else:
-                fig, ax = plot_quantification(self.mems[0])
-        else:
-            if self.stack:
-                fig, ax = plot_quantification_jupyter(self.mems)
-            else:
-                fig, ax = plot_quantification_jupyter(self.mems[0])
+        mems_full = self.mems if self.stack else self.mems[0]
+        plot_func = plot_quantification_jupyter if jupyter else plot_quantification
+        fig, ax = plot_func(mems_full)
         return fig, ax
 
     def plot_fits(self):
+        """
+        Opens an interactive widget to plot actual vs fit profiles
+        """
         jupyter = in_notebook()
-        if not jupyter:
-            if self.stack:
-                fig, ax = plot_fits(self.straight_images, self.straight_images_sim)
-            else:
-                fig, ax = plot_fits(
-                    self.straight_images[0], self.straight_images_sim[0]
-                )
-        else:
-            if self.stack:
-                fig, ax = plot_fits_jupyter(
-                    self.straight_images, self.straight_images_sim
-                )
-            else:
-                fig, ax = plot_fits_jupyter(
-                    self.straight_images[0], self.straight_images_sim[0]
-                )
+        target_full = self.straight_images if self.iq.stack else self.straight_images[0]
+        sim_full = (
+            self.straight_images_sim if self.iq.stack else self.straight_images_sim[0]
+        )
+        plot_func = plot_fits_jupyter if jupyter else plot_fits
+        fig, ax = plot_func(target_full, sim_full)
         return fig, ax
 
     def plot_segmentation(self):
+        """
+        Opens an interactive widget to plot segmentation results
+        """
         jupyter = in_notebook()
-        if not jupyter:
-            if self.stack:
-                fig, ax = plot_segmentation(self.img, self.roi)
-            else:
-                fig, ax = plot_segmentation(self.img[0], self.roi[0])
-        else:
-            if self.stack:
-                fig, ax = plot_segmentation_jupyter(self.img, self.roi)
-            else:
-                fig, ax = plot_segmentation_jupyter(self.img[0], self.roi[0])
+        img = self.img if self.iq.stack else self.img[0]
+        roi = self.roi if self.iq.stack else self.roi[0]
+        plot_func = plot_segmentation_jupyter if jupyter else plot_segmentation
+        fig, ax = plot_func(img, roi)
         return fig, ax
 
-    def plot_losses(self, log=False):
+    def plot_losses(self, log: bool = False):
+        """
+        Plot loss curves (one line for each image)
+
+        Args:
+            log: if True, plot the logarithm of losses
+        """
         fig, ax = plt.subplots()
-        if not log:
-            ax.plot(self.losses.T)
-            ax.set_xlabel("Descent step")
-            ax.set_ylabel("Mean square error")
-        else:
-            ax.plot(np.log10(self.losses.T))
-            ax.set_xlabel("Descent step")
-            ax.set_ylabel("log10(Mean square error)")
+        losses = np.log10(self.losses.T) if log else self.losses.T
+        ylabel = "log10(Mean square error)" if log else "Mean square error"
+        ax.plot(losses)
+        ax.set_xlabel("Descent step")
+        ax.set_ylabel(ylabel)
         return fig, ax
 
 
@@ -767,11 +742,3 @@ def masked_loss_function(sim, target, masks):
         masks, axis=1
     )  # masked average
     return mse
-
-
-"""
-Legacy naming
-
-"""
-
-ImageQuant2 = Discco
