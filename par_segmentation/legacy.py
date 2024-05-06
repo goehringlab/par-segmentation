@@ -348,7 +348,7 @@ class ImageQuantDifferentialEvolutionMulti:
         verbose: bool = True,
     ):
         # Detect if single frame or stack
-        if type(img) is list:
+        if isinstance(img, list):
             self.stack = True
             self.img = img
         elif len(img.shape) == 3:
@@ -366,7 +366,7 @@ class ImageQuantDifferentialEvolutionMulti:
             self.roi = [
                 roi,
             ]
-        elif type(roi) is list:
+        elif isinstance(roi, list):
             if len(roi) > 1:
                 self.roi = roi
             else:

@@ -32,7 +32,7 @@ def view_stack_tk(
     """
 
     # Detect if single frame or stack
-    if type(frames) is list:
+    if isinstance(frames, list):
         stack = True
         frames_ = frames
     elif len(frames.shape) == 3:
@@ -91,7 +91,7 @@ def view_stack_jupyter(
     end_frame: int | None = None,
 ):
     # Detect if single frame or stack
-    if type(frames) is list:
+    if isinstance(frames, list):
         stack = True
         frames_ = frames
     elif len(frames.shape) == 3:
@@ -162,7 +162,7 @@ def plot_segmentation(frames: list | np.ndarray, rois: list | np.ndarray):
     fig, ax = plt.subplots()
 
     # Detect if single frame or stack
-    if type(frames) is list:
+    if isinstance(frames, list):
         stack = True
         frames_ = frames
     elif len(frames.shape) == 3:
@@ -226,7 +226,7 @@ def plot_segmentation_jupyter(frames: list | np.ndarray, rois: list | np.ndarray
     fig, ax = plt.subplots()
 
     # Detect if single frame or stack
-    if type(frames) is list:
+    if isinstance(frames, list):
         stack = True
         frames_ = frames
     elif len(frames.shape) == 3:
@@ -282,7 +282,7 @@ def plot_quantification(mems: list | np.ndarray):
     fig, ax = plt.subplots()
 
     # Detect if single frame or stack
-    if type(mems) is list:
+    if isinstance(mems, list):
         stack = True
         mems_ = mems
     elif len(mems.shape) == 2:
@@ -344,7 +344,7 @@ def plot_quantification_jupyter(mems: list | np.ndarray):
     fig, ax = plt.subplots()
 
     # Detect if single frame or stack
-    if type(mems) is list:
+    if isinstance(mems, list):
         stack = True
         mems_ = mems
     elif len(mems.shape) == 2:
@@ -388,7 +388,7 @@ def plot_quantification_jupyter(mems: list | np.ndarray):
 class _FitPlotter:
     def __init__(self, target: list | np.ndarray, fit: list | np.ndarray):
         # Detect if single frame or stack
-        if type(target) is list:
+        if isinstance(target, list):
             self.stack = True
             target_ = target
             fit_ = fit
@@ -492,7 +492,7 @@ def plot_fits(target: list | np.ndarray, fit_total: list | np.ndarray):
 
 def plot_fits_jupyter(target: list | np.ndarray, fit: list | np.ndarray):
     # Detect if single frame or stack
-    if type(target) is list:
+    if isinstance(target, list):
         stack = True
         target = target
         fit = fit

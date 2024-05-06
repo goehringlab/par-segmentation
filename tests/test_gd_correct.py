@@ -1,7 +1,9 @@
-from par_segmentation import *
-import pytest
 import os
+
 import numpy as np
+import pytest
+
+from par_segmentation import *
 
 
 class TestGdCorrect:

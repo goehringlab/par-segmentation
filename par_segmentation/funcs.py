@@ -628,7 +628,7 @@ def direcslist(
 
     """
 
-    if type(dest) is list:
+    if isinstance(dest, list):
         out = []
         for d in dest:
             out.extend(_direcslist(d, levels, exclude, exclusive))
