@@ -22,8 +22,6 @@ To do:
 
 """
 
-# __all__ = ['ImageQuantGradientDescent', 'create_offsets_spline']
-
 
 class ImageQuantGradientDescent:
     def __init__(

@@ -17,8 +17,6 @@ from .interactive import (
 from .legacy import ImageQuantDifferentialEvolutionMulti
 from .model import ImageQuantGradientDescent
 
-__all__ = ["ImageQuant"]
-
 
 class ImageQuant:
     """

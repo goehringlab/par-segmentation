@@ -16,4 +16,4 @@ class TestDeCompletion:
         with open(f) as file:
             nb = nbformat.read(file, as_version=4)
             ep = ExecutePreprocessor(kernel_name="python3")
-            out = ep.preprocess(nb, {"metadata": {"path": run_path}})
+            ep.preprocess(nb, {"metadata": {"path": run_path}})

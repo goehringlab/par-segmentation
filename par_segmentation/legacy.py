@@ -21,8 +21,6 @@ Legacy code including differential evolution algorithm and other functions no lo
 
 """
 
-__all__ = ["gaus", "error_func", "polycrop", "bg_subtraction"]
-
 
 class ImageQuantDifferentialEvolutionSingle:
     """
@@ -242,9 +240,11 @@ class ImageQuantDifferentialEvolutionSingle:
         return o, res.x[1], res.x[2]
 
     def _mse(self, l_c_m: list, profile: np.ndarray) -> np.ndarray:
-        l, c, m = l_c_m
-        y = (c * self.cytbg_itp[int(l) : int(l) + self.thickness_itp]) + (
-            m * self.membg_itp[int(l) : int(l) + self.thickness_itp]
+        slice_index, c, m = l_c_m
+        y = (
+            c * self.cytbg_itp[int(slice_index) : int(slice_index) + self.thickness_itp]
+        ) + (
+            m * self.membg_itp[int(slice_index) : int(slice_index) + self.thickness_itp]
         )
         return np.mean((profile - y) ** 2)
 
@@ -261,10 +261,12 @@ class ImageQuantDifferentialEvolutionSingle:
         for x in range(len(self.roi[:, 0])):
             c = self.cyts_full[x]
             m = self.mems_full[x]
-            l = int(self.offsets_full[x] * self.itp + (self.thickness_itp / 2))
+            slice_index = int(
+                self.offsets_full[x] * self.itp + (self.thickness_itp / 2)
+            )
             self.straight_fit[:, x] = interp_1d_array(
-                (c * self.cytbg_itp[l : l + self.thickness_itp])
-                + (m * self.membg_itp[l : l + self.thickness_itp]),
+                (c * self.cytbg_itp[slice_index : slice_index + self.thickness_itp])
+                + (m * self.membg_itp[slice_index : slice_index + self.thickness_itp]),
                 self.thickness,
                 method=self.interp,
             )
