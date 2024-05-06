@@ -65,19 +65,19 @@ class ImageQuantDifferentialEvolutionSingle:
 
     def __init__(
         self,
-        img: Union[np.ndarray, list],
+        img: np.ndarray | list,
         sigma: float = 2.0,
-        roi: Union[np.ndarray, list] = None,
+        roi: np.ndarray | list = None,
         freedom: float = 0.5,
         periodic: bool = True,
         thickness: int = 50,
         itp: int = 10,
         rol_ave: int = 10,
         parallel: bool = False,
-        cores: Optional[int] = None,
+        cores: int | None = None,
         rotate: bool = False,
         zerocap: bool = True,
-        nfits: Optional[int] = None,
+        nfits: int | None = None,
         iterations: int = 2,
         interp: str = "cubic",
         bg_subtract: bool = False,
@@ -219,7 +219,7 @@ class ImageQuantDifferentialEvolutionSingle:
             self.mems, len(self.roi[:, 0]), method="linear"
         )
 
-    def _fit_profile(self, profile: np.ndarray) -> Tuple[float, float, float]:
+    def _fit_profile(self, profile: np.ndarray) -> tuple[float, float, float]:
         if self.zerocap:
             bounds = (
                 (
@@ -330,8 +330,8 @@ class ImageQuantDifferentialEvolutionSingle:
 class ImageQuantDifferentialEvolutionMulti:
     def __init__(
         self,
-        img: Union[np.ndarray, list],
-        roi: Union[np.ndarray, list] = None,
+        img: np.ndarray | list,
+        roi: np.ndarray | list = None,
         sigma: float = 2.0,
         periodic: bool = True,
         thickness: int = 50,
@@ -339,10 +339,10 @@ class ImageQuantDifferentialEvolutionMulti:
         itp: int = 10,
         rol_ave: int = 10,
         parallel: bool = False,
-        cores: Optional[int] = None,
+        cores: int | None = None,
         rotate: bool = False,
         zerocap: bool = True,
-        nfits: Optional[int] = None,
+        nfits: int | None = None,
         iterations: int = 1,
         interp: str = "cubic",
         bg_subtract: bool = False,

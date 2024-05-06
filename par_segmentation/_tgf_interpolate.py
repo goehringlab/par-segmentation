@@ -4,7 +4,8 @@ tfg.math.interpolation.bspline.interpolate
 """
 
 import enum
-from typing import Sequence, Tuple, Union
+from typing import Tuple, Union
+from collections.abc import Sequence
 
 import numpy as np
 import tensorflow as tf
@@ -282,7 +283,7 @@ def knot_weights(
     cyclical: bool,
     sparse_mode: bool = False,
     name: str = "bspline_knot_weights",
-) -> Union[tf.Tensor, Tuple[tf.Tensor, tf.Tensor]]:
+) -> tf.Tensor | tuple[tf.Tensor, tf.Tensor]:
     """Function that converts cardinal B-spline positions to knot weights.
     Note:
       In the following, A1 to An are optional batch dimensions.

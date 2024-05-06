@@ -43,7 +43,7 @@ def spline_roi(
 
 
 def interp_roi(
-    roi: np.ndarray, periodic: bool = True, npoints: Optional[int] = None, gap: int = 1
+    roi: np.ndarray, periodic: bool = True, npoints: int | None = None, gap: int = 1
 ) -> np.ndarray:
     """
     Interpolates coordinates to one pixel distances (or as close as possible to one pixel). Linear interpolation
@@ -75,7 +75,7 @@ def interp_roi(
 
 
 def offset_coordinates(
-    roi: np.ndarray, offsets: Union[np.ndarray, float], periodic: bool = True
+    roi: np.ndarray, offsets: np.ndarray | float, periodic: bool = True
 ) -> np.ndarray:
     """
     Reads in coordinates, adjusts according to offsets

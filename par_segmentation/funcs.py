@@ -72,8 +72,8 @@ def save_img(img: np.ndarray, direc: str):
 def save_img_jpeg(
     img: np.ndarray,
     direc: str,
-    cmin: Optional[float] = None,
-    cmax: Optional[float] = None,
+    cmin: float | None = None,
+    cmax: float | None = None,
     cmap: str = "gray",
 ):
     """
@@ -100,7 +100,7 @@ def straighten(
     thickness: int,
     periodic: bool = True,
     interp: str = "cubic",
-    ninterp: Optional[int] = None,
+    ninterp: int | None = None,
 ) -> np.ndarray:
     """
     Creates straightened image based on coordinates
@@ -173,7 +173,7 @@ def rotated_embryo(
     h: int,
     order: int = 1,
     return_roi: bool = False,
-) -> Union[np.ndarray, Tuple[np.array, np.array]]:
+) -> np.ndarray | tuple[np.array, np.array]:
     """
     Takes an image and rotates according to coordinates so that anterior is on left, posterior on right
     Todo: some of the returned coordinates are anticlockwise
@@ -417,7 +417,7 @@ def rolling_ave_2d(array: np.ndarray, window: int, periodic: bool = True) -> np.
 
 
 def bounded_mean_1d(
-    array: np.ndarray, bounds: tuple, weights: Optional[np.ndarray] = None
+    array: np.ndarray, bounds: tuple, weights: np.ndarray | None = None
 ) -> float:
     """
     Averages 1D array over region specified by bounds
@@ -583,8 +583,8 @@ def organise_by_nd(path: str):
 def _direcslist(
     dest: str,
     levels: int = 0,
-    exclude: Optional[tuple] = ("!",),
-    exclusive: Optional[tuple] = None,
+    exclude: tuple | None = ("!",),
+    exclusive: tuple | None = None,
 ) -> list:
     directories = sorted(glob.glob(f"{dest}/*/"))
 
@@ -610,8 +610,8 @@ def _direcslist(
 def direcslist(
     dest: str,
     levels: int = 0,
-    exclude: Optional[tuple] = ("!",),
-    exclusive: Optional[tuple] = None,
+    exclude: tuple | None = ("!",),
+    exclusive: tuple | None = None,
 ) -> list:
     """
     Gives a list of directories within a given directory (full path)
