@@ -38,7 +38,7 @@ As a first step, I would recommend checking out the [tutorial notebook](https://
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/goehringlab/par-segmentation/HEAD?filepath=%2Fscripts/Tutorial.ipynb)
 
-To run locally, download the code and install the relevant requirements (requirements.txt) in a virtual environment.
+To run locally, download the code and install the relevant requirements (requirements.txt) in a virtual environment
 
 
 ## Installation
