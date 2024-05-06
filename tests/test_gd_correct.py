@@ -3,7 +3,8 @@ import os
 import numpy as np
 import pytest
 
-from par_segmentation import ImageQuant, load_image
+from par_segmentation import load_image
+from par_segmentation.quantifier import ImageQuant
 
 
 class TestGdCorrect:

@@ -21,11 +21,9 @@ from .funcs import (
     straighten,
 )
 from .legacy import bg_subtraction, error_func, gaus, polycrop
-from .quantifier import ImageQuant
 from .roi import interp_roi, offset_coordinates, spline_roi
 
-__all__ = ["ImageQuant"]
-__all__ += [
+__all__ = [
     "load_image",
     "save_img",
     "save_img_jpeg",
