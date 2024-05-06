@@ -32,7 +32,7 @@ To do:
 """
 
 
-class ImageQuant2:
+class ImageQuantFlexi:
     def __init__(
         self,
         img,
@@ -171,7 +171,7 @@ class ImageQuant2:
         self._init_params()
 
         # Gradient descent
-        res_interim = self.gradient_descent_quantification(
+        res_interim = self._gradient_descent_quantification(
             lr=lr, descent_steps=descent_steps, save_interim=save_interim
         )
 
@@ -190,7 +190,7 @@ class ImageQuant2:
         self._init_params()
 
         # Cytbg calibration
-        res_interim = self.gradient_descent_cytoplasm_calibration(
+        res_interim = self._gradient_descent_cytoplasm_calibration(
             lr=lr, descent_steps=descent_steps, save_interim=save_interim
         )
 
@@ -209,7 +209,7 @@ class ImageQuant2:
         self._init_params()
 
         # Cytbg calibration
-        res_interim = self.gradient_descent_membrane_calibration(
+        res_interim = self._gradient_descent_membrane_calibration(
             lr=lr, descent_steps=descent_steps, save_interim=save_interim
         )
 
@@ -225,7 +225,7 @@ class ImageQuant2:
     
     """
 
-    def gradient_descent_quantification(self, lr, descent_steps, save_interim):
+    def _gradient_descent_quantification(self, lr, descent_steps, save_interim):
         # Initialisation
         opt = optax.adam(learning_rate=lr)  # Set up optimiser
         params = {
@@ -290,7 +290,7 @@ class ImageQuant2:
         else:
             return None
 
-    def gradient_descent_membrane_calibration(self, lr, descent_steps, save_interim):
+    def _gradient_descent_membrane_calibration(self, lr, descent_steps, save_interim):
         self.losses = np.zeros([self.nimgs, descent_steps])  # Create empty losses array
 
         # Initialisation
@@ -363,7 +363,7 @@ class ImageQuant2:
         else:
             return None
 
-    def gradient_descent_cytoplasm_calibration(self, lr, descent_steps, save_interim):
+    def _gradient_descent_cytoplasm_calibration(self, lr, descent_steps, save_interim):
         # Initialisation
         opt = optax.adam(learning_rate=lr)  # Set up optimiser
         params = {
@@ -742,3 +742,7 @@ def masked_loss_function(sim, target, masks):
         masks, axis=1
     )  # masked average
     return mse
+
+
+# Legacy alias
+ImageQuant2 = ImageQuantFlexi

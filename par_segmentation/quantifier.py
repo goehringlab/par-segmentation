@@ -88,7 +88,7 @@ class ImageQuant:
         # Set up quantifier
         self.method = method
         if self.method == "GD":
-            from .model import ImageQuantGradientDescent
+            from .model_gd import ImageQuantGradientDescent
 
             self.iq = ImageQuantGradientDescent(
                 img=img,
@@ -114,7 +114,7 @@ class ImageQuant:
             )
 
         elif self.method == "DE":
-            from .legacy import ImageQuantDifferentialEvolutionMulti
+            from .model_de import ImageQuantDifferentialEvolutionMulti
 
             self.iq = ImageQuantDifferentialEvolutionMulti(
                 img=img,
