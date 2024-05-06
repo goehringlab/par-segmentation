@@ -239,9 +239,7 @@ class ImageQuantGradientDescent:
         offsets = self.freedom * tf.math.tanh(offsets_spline)
 
         # Positions to evaluate mem and cyt curves
-        positions_ = np.arange(self.thickness, dtype=np.float64)[
-            tf.newaxis, tf.newaxis, :
-        ]
+        positions_ = tf.range(self.thickness, dtype=tf.float64)[tf.newaxis, tf.newaxis, :]
         positions = tf.reshape(tf.math.add(positions_, offsets[:, :, tf.newaxis]), [-1])
 
         # Cap positions off edge

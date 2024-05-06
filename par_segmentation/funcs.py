@@ -1,4 +1,3 @@
-import copy
 import glob
 import os
 from typing import Optional, Tuple, Union
@@ -434,8 +433,9 @@ def bounded_mean_1d(
 
     """
     array_length = len(array)
-    lower_bound, upper_bound = int(array_length * bounds[0]), int(
-        array_length * bounds[1] + 1
+    lower_bound, upper_bound = (
+        int(array_length * bounds[0]),
+        int(array_length * bounds[1] + 1),
     )
 
     if weights is None:
@@ -467,8 +467,9 @@ def bounded_mean_2d(array: np.ndarray, bounds: tuple) -> np.ndarray:
 
     """
     array_length = array.shape[1]
-    lower_bound, upper_bound = int(array_length * bounds[0]), int(
-        array_length * bounds[1]
+    lower_bound, upper_bound = (
+        int(array_length * bounds[0]),
+        int(array_length * bounds[1]),
     )
 
     if lower_bound < upper_bound:
