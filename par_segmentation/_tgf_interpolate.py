@@ -4,7 +4,7 @@ tfg.math.interpolation.bspline.interpolate
 """
 
 import enum
-from typing import Tuple, Union
+from typing import Union
 from collections.abc import Sequence
 
 import numpy as np

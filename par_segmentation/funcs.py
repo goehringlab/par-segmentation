@@ -1,6 +1,5 @@
 import glob
 import os
-from typing import Optional, Tuple, Union
 
 import cv2
 import matplotlib.pyplot as plt
