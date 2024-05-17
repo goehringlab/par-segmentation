@@ -19,8 +19,10 @@ from .funcs import (
     save_img,
     save_img_jpeg,
     straighten,
+    gaus,
+    error_func,
 )
-from .legacy import bg_subtraction, error_func, gaus, polycrop
+from .legacy import bg_subtraction, polycrop, calc_vol, calc_sa
 from .roi import interp_roi, offset_coordinates, spline_roi
 
 __all__ = [
@@ -44,6 +46,8 @@ __all__ = [
     "organise_by_nd",
     "direcslist",
     "in_notebook",
+    "gaus",
+    "error_func",
 ]
-__all__ += ["gaus", "error_func", "polycrop", "bg_subtraction"]
+__all__ += ["polycrop", "bg_subtraction", "calc_vol", "calc_sa"]
 __all__ += ["spline_roi", "interp_roi", "offset_coordinates"]

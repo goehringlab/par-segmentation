@@ -7,6 +7,7 @@ import numpy as np
 from scipy.interpolate import CubicSpline
 from scipy.ndimage.interpolation import map_coordinates
 from skimage import io
+from scipy.special import erf
 
 from .roi import offset_coordinates
 
@@ -455,6 +456,40 @@ def bounded_mean_2d(array: np.ndarray, bounds: tuple) -> np.ndarray:
 
 
 ########### MISC FUNCTIONS ###########
+
+
+def gaus(x: np.ndarray, centre: float, width: float) -> np.ndarray:
+    """
+    Create Gaussian curve with centre and width specified
+
+    Args:
+        x: array of input x values
+        centre: centre of the Gaussian curve (in x units)
+        width: width of the gaussian curve (in x units)
+
+    Returns:
+        Gaussian curve
+
+    """
+
+    return np.exp(-((x - centre) ** 2) / (2 * width**2))
+
+
+def error_func(x: np.ndarray, centre: float, width: float) -> np.ndarray:
+    """
+    Create error function with centre and width specified
+
+    Args:
+        x: array of input x values
+        centre: centre of the error function curve (in x units)
+        width: width of the error function curve (in x units)
+
+    Returns:
+        error function curve
+
+    """
+
+    return erf((x - centre) / width)
 
 
 def asi(mems: np.ndarray, size: float) -> float:

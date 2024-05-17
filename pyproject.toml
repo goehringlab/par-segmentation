@@ -6,9 +6,9 @@ packages = ["par_segmentation"]
 
 [project]
 name = "par_segmentation"
-description = "Cell cortex segmentation in C. elegans PAR protein images"
+description = "Cell cortex segmentation and quantification in C. elegans PAR protein images"
 readme = "README.md"
-version = "0.1.13"
+version = "0.1.14"
 license = {file = "LICENSE"}
 requires-python = ">= 3.11"
 authors = [
@@ -21,7 +21,6 @@ dependencies = [
     "scikit-image",
     "opencv-python",
     "joblib",
-    "tensorflow>=2.9.1",
     "tqdm",
     "pandas",
     "absl-py",
@@ -34,6 +33,16 @@ Documentation = "https://par-segmentation.readthedocs.io/"
 Source = "https://github.com/goehringlab/par-segmentation"
 
 [project.optional-dependencies]
+
+tensorflow = [
+    "tensorflow>=2.9.1",
+]
+
+jax = [
+    "jax",
+    "optax",
+]
+
 dev = [
     "pytest",
     "pre-commit",

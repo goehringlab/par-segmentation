@@ -15,15 +15,16 @@ from .funcs import (
     straighten,
 )
 from .roi import interp_roi, offset_coordinates
+from .model_base import ImageQuantBase
 
 """
-To do:
+TODO:
 - use a spline based method for nfits
 
 """
 
 
-class ImageQuantGradientDescent:
+class ImageQuantGradientDescent(ImageQuantBase):
     def __init__(
         self,
         img: np.ndarray | list,
@@ -36,10 +37,10 @@ class ImageQuantGradientDescent:
         nfits: int | None = 100,
         iterations: int = 2,
         lr: float = 0.01,
-        descent_steps: int = 300,
+        descent_steps: int = 400,
         adaptive_sigma: bool = False,
         batch_norm: bool = False,
-        freedom: float = 10,
+        freedom: float = 25,
         roi_knots: int = 20,
         fit_outer: bool = True,
         zerocap: bool = False,
@@ -47,65 +48,45 @@ class ImageQuantGradientDescent:
         save_sims: bool = False,
         verbose: bool = True,
     ):
-        # Detect if single frame or stack
-        if isinstance(img, list) or len(img.shape) == 3:
-            self.stack = True
-            self.img = list(img)
-        else:
-            self.stack = False
-            self.img = [img]
+        super().__init__(
+            img=img,
+            roi=roi,
+        )
 
-        self.n = len(self.img)
-
-        # ROI
-        if not self.stack:
-            self.roi = [roi]
-        elif isinstance(roi, list):
-            if len(roi) > 1:
-                self.roi = roi
-            else:
-                self.roi = roi * self.n
-        else:
-            self.roi = [roi] * self.n
-
+        # Model parameters
         self.periodic = periodic
-        self.roi_knots = roi_knots
-
-        # Normalisation
-        self.batch_norm = batch_norm
-
-        # Fitting parameters
-        self.iterations = iterations
         self.thickness = thickness
         self.rol_ave = rol_ave
         self.rotate = rotate
-        self.sigma = sigma
         self.nfits = nfits
+        self.zerocap = zerocap
+        self.roi_knots = roi_knots
+        self.iterations = iterations
+        self.rol_ave = rol_ave
+        self.rotate = rotate
+        self.sigma = sigma
         self.lr = lr
         self.descent_steps = descent_steps
         self.freedom = freedom
         self.fit_outer = fit_outer
-        self.save_training = save_training
-        self.save_sims = save_sims
-        self.zerocap = zerocap
         self.swish_factor = 10
-        self.verbose = verbose
-
-        # Learning
+        self.batch_norm = batch_norm
         self.adaptive_sigma = adaptive_sigma
 
-        # Results containers
-        self.offsets = None
-        self.cyts = None
-        self.mems = None
-        self.offsets_full = None
-        self.cyts_full = None
-        self.mems_full = None
+        # Misc
+        self.save_training = save_training
+        self.save_sims = save_sims
+        self.verbose = verbose
 
         # Tensors
         self.cyts_t = None
         self.mems_t = None
         self.offsets_t = None
+
+        # Interpolated results
+        self.mems_full = None
+        self.cyts_full = None
+        self.offsets_full = None
 
     """
     Run
@@ -122,14 +103,14 @@ class ImageQuantGradientDescent:
             time.sleep(0.1)
 
             if i > 0:
-                self.adjust_roi()
-            self.fit()
+                self._adjust_roi()
+            self._fit()
 
         if self.verbose:
             time.sleep(0.1)
             print("Time elapsed: %.2f seconds \n" % (time.time() - t))
 
-    def preprocess(
+    def _preprocess(
         self, frame: np.ndarray, roi: np.ndarray
     ) -> tuple[np.ndarray, float, np.ndarray]:
         """
@@ -138,7 +119,8 @@ class ImageQuantGradientDescent:
         Steps:
         - Straighten according to ROI
         - Apply rolling average
-        - Either interpolated to a common length (self.nfits) or pad to length of largest image if nfits is not speficied
+        - Either interpolated to a common length (self.nfits) or pad to length of
+            largest image if nfits is not speficied
         - Normalise images, either to themselves or globally
 
         """
@@ -169,7 +151,7 @@ class ImageQuantGradientDescent:
 
         return straight, norm, mask
 
-    def init_tensors(self):
+    def _init_tensors(self):
         """
         Initialising offsets, cytoplasmic concentrations and membrane concentrations as zero
         Sigma initialised as user-specified value (or default), and may be trained
@@ -207,9 +189,10 @@ class ImageQuantGradientDescent:
         if self.adaptive_sigma:
             self.vars["sigma"] = self.sigma_t
 
-    def sim_images(self) -> tuple[tf.Tensor, tf.Tensor]:
+    def _sim_images(self) -> tuple[tf.Tensor, tf.Tensor]:
         """
-        Simulates images according to current membrane and cytoplasm concentration estimates and offsets
+        Simulates images according to current membrane and cytoplasm concentration
+        estimates and offsets
         """
 
         nimages = self.mems_t.shape[0]
@@ -288,13 +271,14 @@ class ImageQuantGradientDescent:
             mask_, [0, 2, 1]
         )
 
-    def losses_full(self) -> tf.Tensor:
+    def _losses_full(self) -> tf.Tensor:
         """
-        Calculates the mean squared error (MSE) loss between the simulated and target images.
+        Calculates the mean squared error (MSE) loss between the simulated and target
+        images.
         """
 
         # Simulate images
-        self.sim, mask = self.sim_images()
+        self.sim, mask = self._sim_images()
 
         # Calculate squared errors
         sq_errors = tf.square(self.sim - self.target)
@@ -310,10 +294,10 @@ class ImageQuantGradientDescent:
 
         return mse
 
-    def fit(self):
+    def _fit(self):
         # Preprocess
         target, norms, masks = zip(
-            *[self.preprocess(frame, roi) for frame, roi in zip(self.img, self.roi)]
+            *[self._preprocess(frame, roi) for frame, roi in zip(self.img, self.roi)]
         )
         self.target = np.array(target)
         self.norms = np.array(norms)
@@ -326,7 +310,7 @@ class ImageQuantGradientDescent:
             self.norms = np.ones(self.target.shape[0]) * norm
 
         # Init tensors
-        self.init_tensors()
+        self._init_tensors()
 
         # Run optimisation
         self.saved_vars = []
@@ -342,7 +326,7 @@ class ImageQuantGradientDescent:
 
         for i in iterable:
             with tf.GradientTape() as tape:
-                losses_full = self.losses_full()
+                losses_full = self._losses_full()
                 self.losses[:, i] = losses_full
                 loss = tf.reduce_mean(losses_full)
                 grads = tape.gradient(loss, self.vars.values())
@@ -363,7 +347,7 @@ class ImageQuantGradientDescent:
         # Save and rescale sim images (rescaled)
         self.sim_both, self.target = (
             data * self.norms[:, np.newaxis, np.newaxis]
-            for data in [self.sim_images()[0].numpy(), self.target]
+            for data in [self._sim_images()[0].numpy(), self.target]
         )
 
         # Save and rescale results
@@ -411,7 +395,7 @@ class ImageQuantGradientDescent:
 
         # Interpolated sim images
         if self.nfits is not None:
-            self.sim_full, self.target_full = (
+            self.straight_images_sim, self.straight_images = (
                 [
                     interp1d(np.arange(self.nfits), data, axis=-1)(
                         np.linspace(0, self.nfits - 1, len(roi[:, 0]))
@@ -421,12 +405,14 @@ class ImageQuantGradientDescent:
                 for dataset in [self.sim_both, self.target]
             )
         else:
-            self.sim_full, self.target_full = (
+            self.straight_images_sim, self.straight_images = (
                 [data.T[mask == 1].T for data, mask in zip(dataset, self.masks)]
                 for dataset in [self.sim_both, self.target]
             )
 
-        self.resids_full = [i - j for i, j in zip(self.target_full, self.sim_full)]
+        self.straight_images_resids = [
+            i - j for i, j in zip(self.straight_images, self.straight_images_sim)
+        ]
 
         # Save adaptable params
         if self.sigma is not None:
@@ -437,7 +423,7 @@ class ImageQuantGradientDescent:
 
     """
 
-    def adjust_roi(self):
+    def _adjust_roi(self):
         """
         Adjusts the region of interest (ROI) after a preliminary fit to refine coordinates.
         A refit must be performed after this adjustment.
