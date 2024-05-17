@@ -44,9 +44,6 @@ jax = [
 ]
 
 dev = [
-    "tensorflow>=2.9.1",
-    "jax",
-    "optax",
     "pytest",
     "pre-commit",
     "black",

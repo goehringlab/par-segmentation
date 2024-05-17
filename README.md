@@ -47,9 +47,13 @@ To explore further and incorporate into your own analysis pipelines, you can ins
 
     pip install par-segmentation
 
+Depending on the underlying model you chose to use, you may have to install additional dependencies:
+
+    pip install par-segmentation[tensorflow,jax]
+
 If you want to make changes to the code you can download/clone this folder, navigate to it, and run:
 
-    pip install -e .[dev]
+    pip install -e .[dev,tensorflow,jax]
 
 ## Methods
 
