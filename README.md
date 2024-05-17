@@ -71,7 +71,7 @@ Cortex positions are modelled as a spline with a user-specified number of evenly
     <img src="https://raw.githubusercontent.com/goehringlab/par-segmentation/master/scripts/Figs/spline.png" width="80%" height="80%"/>
 </p>
 
-Cross-cortex intensity profiles at each position around the cortex are modelled as the sum of distinct cytoplasmic and membrane signal components:
+In the default model, cross-cortex intensity profiles at each position around the cortex are modelled as the sum of distinct cytoplasmic and membrane signal components:
 an error function and Gaussian function respectively, representing the expected shape of a step and a point convolved by a Gaussian point spread function (PSF) in one dimension:
 
 <p align="center">
@@ -84,8 +84,7 @@ The program learns the amplitude of these two components at each position around
     <img src="https://raw.githubusercontent.com/goehringlab/par-segmentation/master/scripts/Figs/animation2.gif" width="100%" height="100%"/>
 </p>
 
-Modelling the PSF as a Gaussian, and ignoring out-of-focus contributions, is a clear simplification of reality, but is a close enough approximation for many purposes (e.g. if you're interested in relative concentrations rather than absolute concentrations). Nevertheless, one can relax these assumptions (with some added caveats) if higher accuracy is required. 
-See [here](https://github.com/tsmbland/discco).
+An additional model is included that can relax these assumptions if higher accuracy is required, see [here](https://github.com/goehringlab/par-segmentation/tree/master/docs/model_flexi.md)
 
 
 ## Publications
