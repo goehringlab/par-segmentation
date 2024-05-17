@@ -3,27 +3,17 @@ import jax.numpy as jnp
 import matplotlib.pyplot as plt
 import numpy as np
 import optax
-import pandas as pd
 from jax.nn import sigmoid
 from scipy.special import erf
 from skimage.measure import block_reduce
 from tqdm import tqdm
 
-from .funcs import in_notebook, interp_2d_array, rolling_ave_2d, straighten
-from .interactive import (
-    plot_fits,
-    plot_fits_jupyter,
-    plot_quantification,
-    plot_quantification_jupyter,
-    plot_segmentation,
-    plot_segmentation_jupyter,
-    view_stack,
-    view_stack_jupyter,
-)
+from .funcs import interp_2d_array, rolling_ave_2d, straighten
 from .roi import interp_roi, offset_coordinates
+from .model_base import ImageQuantBase
 
 """
-To do:
+TODO:
 - plot_fits image looks squashed when pooling rate != 1
 - support for non-periodic ROIs
 - options to control verbosity
@@ -32,7 +22,7 @@ To do:
 """
 
 
-class ImageQuantFlexi:
+class ImageQuantFlexi(ImageQuantBase):
     def __init__(
         self,
         img,
@@ -47,44 +37,24 @@ class ImageQuantFlexi:
         rol_ave=1,
         nfits=None,
     ):
-        # Detect if single frame or stack
-        if isinstance(img, list):
-            self.stack = True
-            self.img = img
-        elif len(img.shape) == 3:
-            self.stack = True
-            self.img = list(img)
-        else:
-            self.stack = False
-            self.img = [
-                img,
-            ]
-        self.nimgs = len(self.img)
+        super().__init__(
+            img=img,
+            roi=roi,
+        )
 
-        # ROI
-        if not self.stack:
-            self.roi = [
-                roi,
-            ]
-        elif isinstance(roi, list):
-            if len(roi) > 1:
-                self.roi = roi
-            else:
-                self.roi = roi * self.nimgs
-        else:
-            self.roi = [roi] * self.nimgs
+        # Core parameters
+        self.thickness = thickness
+        self.nfits = nfits
 
         # Image preprocessing
-        self.thickness = thickness
+        self.rol_ave = rol_ave
         self.batch_norm = batch_norm
         self.norm_factor = norm_factor
         self.downsampling_rate = pooling_rate
-        self.rol_ave = rol_ave
-        self.nfits = nfits
 
         # Fitting parameters
-        self.zerocap = zerocap
         self.swish_factor = 30
+        self.zerocap = zerocap
 
         # Membrane/cytoplasmic reference profile
         self.cytbg = cytbg
@@ -93,6 +63,7 @@ class ImageQuantFlexi:
 
         # Internal variables for simulations (numpy arrays and tensors)
         self.target = None
+        self.sim = None
         self.norms = None
         self.masks = None
         self.losses = None
@@ -100,13 +71,6 @@ class ImageQuantFlexi:
         self.cyts_opt = None
         self.cytbg_opt = None
         self.membg_opt = None
-        self.sim = None
-
-        # Final results containers (lists of numpy arrays)
-        self.mems = None
-        self.cyts = None
-        self.straight_images = None
-        self.straight_images_sim = None
 
         # Calculate padded size
         self.padded_size = int(
@@ -233,7 +197,7 @@ class ImageQuantFlexi:
             "mems_opt": self.mems_opt,
         }  # Create params list
         opt_state = opt.init(params)  # Set up optimiser initial state
-        self.losses = np.zeros([self.nimgs, descent_steps])  # Create empty losses array
+        self.losses = np.zeros([self.n, descent_steps])  # Create empty losses array
 
         # Store initial values
         if save_interim:
@@ -268,8 +232,8 @@ class ImageQuantFlexi:
             self.losses[:, e] = losses_full
 
             # Scale gradients <- ensures training is invariant of batch size and pooling rate
-            grads["cyts_opt"] *= self.nimgs
-            grads["mems_opt"] *= self.nimgs * self.padded_size
+            grads["cyts_opt"] *= self.n
+            grads["mems_opt"] *= self.n * self.padded_size
 
             # Update parameters
             updates, opt_state = opt.update(grads, opt_state, params)
@@ -291,7 +255,7 @@ class ImageQuantFlexi:
             return None
 
     def _gradient_descent_membrane_calibration(self, lr, descent_steps, save_interim):
-        self.losses = np.zeros([self.nimgs, descent_steps])  # Create empty losses array
+        self.losses = np.zeros([self.n, descent_steps])  # Create empty losses array
 
         # Initialisation
         opt = optax.adam(learning_rate=lr)  # Set up optimiser
@@ -301,7 +265,7 @@ class ImageQuantFlexi:
             "membg_opt": self.membg_opt,
         }  # Create params list
         opt_state = opt.init(params)  # Set up optimiser initial state
-        self.losses = np.zeros([self.nimgs, descent_steps])  # Create empty losses array
+        self.losses = np.zeros([self.n, descent_steps])  # Create empty losses array
 
         # Store initial values
         if save_interim:
@@ -339,8 +303,8 @@ class ImageQuantFlexi:
             self.losses[:, e] = losses_full
 
             # Scale gradients
-            grads["cyts_opt"] *= self.nimgs
-            grads["mems_opt"] *= self.nimgs * self.padded_size
+            grads["cyts_opt"] *= self.n
+            grads["mems_opt"] *= self.n * self.padded_size
 
             # Update parameters
             updates, opt_state = opt.update(grads, opt_state, params)
@@ -371,7 +335,7 @@ class ImageQuantFlexi:
             "cytbg_opt": self.cytbg_opt,
         }  # Create params list
         opt_state = opt.init(params)  # Set up optimiser initial state
-        self.losses = np.zeros([self.nimgs, descent_steps])  # Create empty losses array
+        self.losses = np.zeros([self.n, descent_steps])  # Create empty losses array
 
         # Store initial values
         if save_interim:
@@ -406,7 +370,7 @@ class ImageQuantFlexi:
             self.losses[:, e] = losses_full
 
             # Scale gradients
-            grads["cyts_opt"] *= self.nimgs
+            grads["cyts_opt"] *= self.n
 
             # Update parameters
             updates, opt_state = opt.update(grads, opt_state, params)
@@ -439,7 +403,8 @@ class ImageQuantFlexi:
         Steps:
         - Straighten according to ROI
         - Apply rolling average
-        - Either interpolated to a common length (self.nfits) or pad to length of largest image if nfits is not speficied
+        - Either interpolated to a common length (self.nfits) or pad to length of
+            largest image if nfits is not speficied
         - Normalise images, either to themselves or globally
 
         """
@@ -588,99 +553,9 @@ class ImageQuantFlexi:
         self.membg = self.membg_opt
 
     """
-    Saving
-    
-    """
-
-    def compile_res(self, ids=None, extra_columns=None):
-        if ids is None:
-            ids = np.arange(self.nimgs)
-
-        # Loop through embryos
-        _dfs = []
-        for i, (m, c, _id) in enumerate(zip(self.mems, self.cyts, ids)):
-            # Construct dictionary
-            df_dict = {
-                "EmbryoID": [_id] * len(m),
-                "Position": np.arange(len(m)),
-                "Membrane signal": m,
-                "Cytoplasmic signal": c,
-            }
-
-            # Add extra columns
-            if extra_columns is not None:
-                for key, value in extra_columns.items():
-                    df_dict[key] = [value[i] for _ in range(len(m))]
-
-            # Append to list
-            _dfs.append(pd.DataFrame(df_dict))
-
-        # Combine
-        df = pd.concat(_dfs)
-
-        # Reorder columns
-        columns_order = [
-            "EmbryoID",
-            "Position",
-            "Membrane signal",
-            "Cytoplasmic signal",
-        ]
-        if extra_columns is not None:
-            columns_order += list(extra_columns.keys())
-        df = df.reindex(columns=columns_order)
-
-        # Specify column types
-        df = df.astype({"EmbryoID": int, "Position": int})
-        return df
-
-    """
     Interactive
     
     """
-
-    def view_frames(self):
-        """
-        Opens an interactive widget to view image(s)
-        """
-        jupyter = in_notebook()
-        img = self.img if self.stack else self.img[0]
-        view_func = view_stack_jupyter if jupyter else view_stack
-        fig, ax = view_func(img)
-        return fig, ax
-
-    def plot_quantification(self):
-        """
-        Opens an interactive widget to plot membrane quantification results
-        """
-        jupyter = in_notebook()
-        mems_full = self.mems if self.stack else self.mems[0]
-        plot_func = plot_quantification_jupyter if jupyter else plot_quantification
-        fig, ax = plot_func(mems_full)
-        return fig, ax
-
-    def plot_fits(self):
-        """
-        Opens an interactive widget to plot actual vs fit profiles
-        """
-        jupyter = in_notebook()
-        target_full = self.straight_images if self.iq.stack else self.straight_images[0]
-        sim_full = (
-            self.straight_images_sim if self.iq.stack else self.straight_images_sim[0]
-        )
-        plot_func = plot_fits_jupyter if jupyter else plot_fits
-        fig, ax = plot_func(target_full, sim_full)
-        return fig, ax
-
-    def plot_segmentation(self):
-        """
-        Opens an interactive widget to plot segmentation results
-        """
-        jupyter = in_notebook()
-        img = self.img if self.iq.stack else self.img[0]
-        roi = self.roi if self.iq.stack else self.roi[0]
-        plot_func = plot_segmentation_jupyter if jupyter else plot_segmentation
-        fig, ax = plot_func(img, roi)
-        return fig, ax
 
     def plot_losses(self, log: bool = False):
         """

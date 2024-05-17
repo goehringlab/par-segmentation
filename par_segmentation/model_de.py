@@ -15,10 +15,12 @@ from .funcs import (
     gaus,
 )
 from .roi import interp_roi, offset_coordinates, spline_roi
-from .quantifier_base import ImageQuantBase
+from .model_base import ImageQuantBase
 
 """
-Legacy code including differential evolution algorithm and other functions no longer used
+Legacy code for differential evolution algorithm 
+
+NO LONGER MAINTAINED
 
 """
 
@@ -64,18 +66,18 @@ class ImageQuantDifferentialEvolutionSingle(ImageQuantBase):
     def __init__(
         self,
         img: np.ndarray | list,
-        sigma: float = 2.0,
         roi: np.ndarray | list = None,
-        freedom: float = 0.5,
+        sigma: float = 3.5,
+        freedom: float = 25,
         periodic: bool = True,
         thickness: int = 50,
         itp: int = 10,
-        rol_ave: int = 10,
+        rol_ave: int = 5,
         parallel: bool = False,
         cores: int | None = None,
         rotate: bool = False,
-        zerocap: bool = True,
-        nfits: int | None = None,
+        zerocap: bool = False,
+        nfits: int | None = 100,
         iterations: int = 2,
         interp: str = "cubic",
         bg_subtract: bool = False,
@@ -83,18 +85,18 @@ class ImageQuantDifferentialEvolutionSingle(ImageQuantBase):
         super().__init__(
             img=img,
             roi=roi,
-            periodic=periodic,
-            thickness=thickness,
-            rol_ave=rol_ave,
-            rotate=rotate,
-            nfits=nfits,
-            zerocap=zerocap,
         )
         self.img = self.img[0]
         self.roi = self.roi[0]
         self.roi_init = self.roi
 
-        # Other parameters
+        # Model parameters
+        self.periodic = periodic
+        self.thickness = thickness
+        self.rol_ave = rol_ave
+        self.rotate = rotate
+        self.nfits = nfits
+        self.zerocap = zerocap
         self.bg_subtract = bg_subtract
         self.iterations = iterations
         self.itp = itp
@@ -133,6 +135,11 @@ class ImageQuantDifferentialEvolutionSingle(ImageQuantBase):
         self.straight_filtered = None
         self.straight_fit = None
         self.straight_resids = None
+
+        # Interpolated results
+        self.mems_full = None
+        self.cyts_full = None
+        self.offsets_full = None
 
         if self.roi is not None:
             self._reset_res()
@@ -325,53 +332,21 @@ class ImageQuantDifferentialEvolutionMulti(ImageQuantBase):
         self,
         img: np.ndarray | list,
         roi: np.ndarray | list = None,
-        sigma: float = 2.0,
-        periodic: bool = True,
-        thickness: int = 50,
-        freedom: float = 0.5,
-        itp: int = 10,
-        rol_ave: int = 10,
-        parallel: bool = False,
-        cores: int | None = None,
-        rotate: bool = False,
-        zerocap: bool = True,
-        nfits: int | None = None,
-        iterations: int = 1,
-        interp: str = "cubic",
-        bg_subtract: bool = False,
         verbose: bool = True,
+        **kwargs,
     ):
         super().__init__(
             img=img,
             roi=roi,
-            periodic=periodic,
-            thickness=thickness,
-            rol_ave=rol_ave,
-            rotate=rotate,
-            nfits=nfits,
-            zerocap=zerocap,
-            verbose=verbose,
         )
+        self.verbose = verbose
 
         # Set up list of classes
         self.iq = [
             ImageQuantDifferentialEvolutionSingle(
                 img=i,
                 roi=r,
-                sigma=sigma,
-                periodic=periodic,
-                thickness=thickness,
-                freedom=freedom,
-                itp=itp,
-                rol_ave=rol_ave,
-                parallel=parallel,
-                cores=cores,
-                rotate=rotate,
-                zerocap=zerocap,
-                nfits=nfits,
-                iterations=iterations,
-                interp=interp,
-                bg_subtract=bg_subtract,
+                **kwargs,
             )
             for i, r in zip(self.img, self.roi)
         ]
@@ -397,9 +372,9 @@ class ImageQuantDifferentialEvolutionMulti(ImageQuantBase):
         self.roi = [iq.roi for iq in self.iq]
 
         # Save target/simulated/residuals images
-        self.target_full = [iq.straight_filtered for iq in self.iq]
-        self.sim_full = [iq.straight_fit for iq in self.iq]
-        self.resids_full = [iq.straight_resids for iq in self.iq]
+        self.straight_images = [iq.straight_filtered for iq in self.iq]
+        self.straight_images_sim = [iq.straight_fit for iq in self.iq]
+        self.straight_images_resids = [iq.straight_resids for iq in self.iq]
 
         if self.verbose:
             print("Time elapsed: %.2f seconds " % (time.time() - t))

@@ -15,10 +15,10 @@ from .funcs import (
     straighten,
 )
 from .roi import interp_roi, offset_coordinates
-from .quantifier_base import ImageQuantBase
+from .model_base import ImageQuantBase
 
 """
-To do:
+TODO:
 - use a spline based method for nfits
 
 """
@@ -37,10 +37,10 @@ class ImageQuantGradientDescent(ImageQuantBase):
         nfits: int | None = 100,
         iterations: int = 2,
         lr: float = 0.01,
-        descent_steps: int = 300,
+        descent_steps: int = 400,
         adaptive_sigma: bool = False,
         batch_norm: bool = False,
-        freedom: float = 10,
+        freedom: float = 25,
         roi_knots: int = 20,
         fit_outer: bool = True,
         zerocap: bool = False,
@@ -51,23 +51,16 @@ class ImageQuantGradientDescent(ImageQuantBase):
         super().__init__(
             img=img,
             roi=roi,
-            periodic=periodic,
-            thickness=thickness,
-            rol_ave=rol_ave,
-            rotate=rotate,
-            nfits=nfits,
-            zerocap=zerocap,
-            save_training=save_training,
-            save_sims=save_sims,
-            verbose=verbose,
         )
 
+        # Model parameters
+        self.periodic = periodic
+        self.thickness = thickness
+        self.rol_ave = rol_ave
+        self.rotate = rotate
+        self.nfits = nfits
+        self.zerocap = zerocap
         self.roi_knots = roi_knots
-
-        # Normalisation
-        self.batch_norm = batch_norm
-
-        # Extra parameters
         self.iterations = iterations
         self.rol_ave = rol_ave
         self.rotate = rotate
@@ -77,14 +70,23 @@ class ImageQuantGradientDescent(ImageQuantBase):
         self.freedom = freedom
         self.fit_outer = fit_outer
         self.swish_factor = 10
-
-        # Learning
+        self.batch_norm = batch_norm
         self.adaptive_sigma = adaptive_sigma
+
+        # Misc
+        self.save_training = save_training
+        self.save_sims = save_sims
+        self.verbose = verbose
 
         # Tensors
         self.cyts_t = None
         self.mems_t = None
         self.offsets_t = None
+
+        # Interpolated results
+        self.mems_full = None
+        self.cyts_full = None
+        self.offsets_full = None
 
     """
     Run
@@ -117,7 +119,8 @@ class ImageQuantGradientDescent(ImageQuantBase):
         Steps:
         - Straighten according to ROI
         - Apply rolling average
-        - Either interpolated to a common length (self.nfits) or pad to length of largest image if nfits is not speficied
+        - Either interpolated to a common length (self.nfits) or pad to length of
+            largest image if nfits is not speficied
         - Normalise images, either to themselves or globally
 
         """
@@ -188,7 +191,8 @@ class ImageQuantGradientDescent(ImageQuantBase):
 
     def _sim_images(self) -> tuple[tf.Tensor, tf.Tensor]:
         """
-        Simulates images according to current membrane and cytoplasm concentration estimates and offsets
+        Simulates images according to current membrane and cytoplasm concentration
+        estimates and offsets
         """
 
         nimages = self.mems_t.shape[0]
@@ -269,7 +273,8 @@ class ImageQuantGradientDescent(ImageQuantBase):
 
     def _losses_full(self) -> tf.Tensor:
         """
-        Calculates the mean squared error (MSE) loss between the simulated and target images.
+        Calculates the mean squared error (MSE) loss between the simulated and target
+        images.
         """
 
         # Simulate images
@@ -390,7 +395,7 @@ class ImageQuantGradientDescent(ImageQuantBase):
 
         # Interpolated sim images
         if self.nfits is not None:
-            self.sim_full, self.target_full = (
+            self.straight_images_sim, self.straight_images = (
                 [
                     interp1d(np.arange(self.nfits), data, axis=-1)(
                         np.linspace(0, self.nfits - 1, len(roi[:, 0]))
@@ -400,12 +405,14 @@ class ImageQuantGradientDescent(ImageQuantBase):
                 for dataset in [self.sim_both, self.target]
             )
         else:
-            self.sim_full, self.target_full = (
+            self.straight_images_sim, self.straight_images = (
                 [data.T[mask == 1].T for data, mask in zip(dataset, self.masks)]
                 for dataset in [self.sim_both, self.target]
             )
 
-        self.resids_full = [i - j for i, j in zip(self.target_full, self.sim_full)]
+        self.straight_images_resids = [
+            i - j for i, j in zip(self.straight_images, self.straight_images_sim)
+        ]
 
         # Save adaptable params
         if self.sigma is not None:
