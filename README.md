@@ -7,7 +7,6 @@
 [![Tests](https://github.com/goehringlab/par-segmentation/actions/workflows/test.yaml/badge.svg)](https://github.com/goehringlab/par-segmentation/actions/workflows/test.yaml)
 [![PyPi version](https://badgen.net/pypi/v/par-segmentation/)](https://pypi.org/project/par-segmentation)
 [![Documentation Status](https://readthedocs.org/projects/par-segmentation/badge/?version=latest)](https://par-segmentation.readthedocs.io/en/latest/?badge=latest)
-[![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?logo=anaconda)](https://docs.conda.io/en/latest/)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/goehringlab/par-segmentation/HEAD?filepath=%2Fscripts/Tutorial.ipynb)
 [![codecov](https://codecov.io/gh/goehringlab/par-segmentation/branch/master/graph/badge.svg?token=QCFC9AWK0R)](https://codecov.io/gh/goehringlab/par-segmentation)
 
