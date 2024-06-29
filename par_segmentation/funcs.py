@@ -1,13 +1,13 @@
 import glob
 import os
 
-import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.interpolate import CubicSpline
 from scipy.ndimage.interpolation import map_coordinates
 from skimage import io
 from scipy.special import erf
+from skimage.draw import polygon
 
 from .roi import offset_coordinates
 
@@ -539,8 +539,10 @@ def make_mask(shape: tuple, roi: np.ndarray) -> np.ndarray:
         binary mask
 
     """
-
-    return cv2.fillPoly(np.zeros(shape) * np.nan, [np.int32(roi)], 1)
+    mask = np.zeros(shape) * np.nan
+    rr, cc = polygon(roi[:, 1], roi[:, 0])
+    mask[rr, cc] = 1
+    return mask
 
 
 def readnd(path: str) -> dict:

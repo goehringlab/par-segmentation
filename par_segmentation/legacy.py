@@ -1,5 +1,5 @@
 import numpy as np
-import cv2
+from skimage.draw import polygon
 from .funcs import offset_coordinates
 
 
@@ -17,11 +17,10 @@ def polycrop(img: np.ndarray, polyline: np.ndarray, enlarge: float) -> np.ndarra
 
     """
 
-    newcoors = np.int32(
-        offset_coordinates(polyline, enlarge * np.ones([len(polyline[:, 0])]))
-    )
+    newcoors = offset_coordinates(polyline, enlarge * np.ones([len(polyline[:, 0])]))
     mask = np.zeros(img.shape)
-    mask = cv2.fillPoly(mask, [newcoors], 1)
+    rr, cc = polygon(newcoors[:, 1], newcoors[:, 0])
+    mask[rr, cc] = 1
     newimg = img * mask
     return newimg
 
