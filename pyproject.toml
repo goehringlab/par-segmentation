@@ -19,7 +19,6 @@ dependencies = [
     "matplotlib",
     "scipy",
     "scikit-image",
-    "opencv-python",
     "joblib",
     "tqdm",
     "pandas",
@@ -49,6 +48,7 @@ dev = [
     "black",
     "pip-tools",
     "pytest-cov",
+    # Also must install jax and tensorflow for tests
 ]
 
 doc = [
