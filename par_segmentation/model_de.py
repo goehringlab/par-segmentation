@@ -107,15 +107,14 @@ class ImageQuantDifferentialEvolutionSingle(ImageQuantBase):
 
         # Background curves
         self.cytbg = (
-            1
-            + error_func(np.arange(thickness * 2), thickness, (self.sigma * np.sqrt(2)))
+            1 + error_func(np.arange(thickness * 2), thickness, self.sigma)
         ) / 2
         self.cytbg_itp = (
             1
             + error_func(
                 np.arange(2 * self.thickness_itp),
                 self.thickness_itp,
-                (self.sigma * np.sqrt(2)) * self.itp,
+                self.sigma * self.itp,
             )
         ) / 2
         self.membg = gaus(np.arange(thickness * 2), thickness, self.sigma)
