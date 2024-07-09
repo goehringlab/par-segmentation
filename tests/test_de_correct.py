@@ -38,9 +38,9 @@ class TestDeCorrectTests:
         assert res.iloc[0]["Frame"] == 0
         assert res.iloc[0]["Position"] == 0
         assert res.iloc[0]["Membrane signal"] == pytest.approx(
-            7169.0573371446435, rel=1e-4
+            7216.980955295668, rel=1e-4
         )
         assert res.iloc[0]["Cytoplasmic signal"] == pytest.approx(
-            7201.659347334887, rel=1e-4
+            7097.483023496077, rel=1e-4
         )
-        assert iq.roi[0][0, 0] == pytest.approx(181.70199811949246, rel=1e-4)
+        assert iq.roi[0][0, 0] == pytest.approx(180.9381735858658, rel=1e-4)

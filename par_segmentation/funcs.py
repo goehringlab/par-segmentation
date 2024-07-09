@@ -4,7 +4,7 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.interpolate import CubicSpline
-from scipy.ndimage.interpolation import map_coordinates
+from scipy.ndimage import map_coordinates
 from skimage import io
 from scipy.special import erf
 from skimage.draw import polygon

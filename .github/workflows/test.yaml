@@ -25,7 +25,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install .[dev,tensorflow,jax]
+          pip install .[all]
 
       - name: Test with pytest
         run: pytest --cov=./ --cov-report=xml

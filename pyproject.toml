@@ -24,6 +24,7 @@ dependencies = [
     "pandas",
     "absl-py",
     "matplotlib-polyroi>=0.1.6",
+    "ipykernel",
     "ipympl",
 ]
 
@@ -32,6 +33,8 @@ Documentation = "https://par-segmentation.readthedocs.io/"
 Source = "https://github.com/goehringlab/par-segmentation"
 
 [project.optional-dependencies]
+
+all = ["par_segmentation[tensorflow,jax,dev,doc]"]
 
 tensorflow = [
     "tensorflow>=2.9.1",
@@ -48,10 +51,10 @@ dev = [
     "black",
     "pip-tools",
     "pytest-cov",
-    # Also must install jax and tensorflow for tests
+    "nbformat",
+    "nbconvert",
 ]
 
 doc = [
     "sphinx_rtd_theme==1.0.0",
 ]
-

@@ -50,9 +50,9 @@ Depending on the underlying model you chose to use, you may have to install addi
 
     pip install par-segmentation[tensorflow,jax]
 
-If you want to make changes to the code you can download/clone this folder, navigate to it, and run:
+If you want to make changes to the code, you can download/clone this repository, navigate to it, and run:
 
-    pip install -e .[dev,tensorflow,jax]
+    pip install -e .[all]
 
 ## Methods
 
